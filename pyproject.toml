@@ -1,0 +1,5 @@
+[dependency-groups]
+dev = ["jsonschema>=4.26,<5", "referencing>=0.37,<0.38"]
+
+[tool.uv]
+package = false

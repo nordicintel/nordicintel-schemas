@@ -9,6 +9,7 @@ node_modules/
 .artifacts/
 .cache/
 __pycache__/
+*.egg-info/
 dist/
 
 # Machine-local files
