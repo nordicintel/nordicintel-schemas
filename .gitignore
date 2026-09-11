@@ -1,0 +1,17 @@
+# Local environments and secrets
+.env
+.env.*
+!.env.example
+.venv/
+node_modules/
+
+# Generated validation/build output
+.artifacts/
+.cache/
+__pycache__/
+dist/
+
+# Machine-local files
+.DS_Store
+Thumbs.db
+*.code-workspace
