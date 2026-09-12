@@ -203,6 +203,9 @@ added here when a demonstrated need arises; they are not prerequisites for 1.0.0
 
 ## Remaining work
 
+The database/API decision record now lives in `DATABASE.md` in the separate
+`nordicintel-catalog-api` repository, alongside its implementation planning.
+
 The [roadmap](ROADMAP.md) separates publication of the foundational contracts from
 parallel catalog API and worker implementation. End-to-end application readiness
 is not a prerequisite for releasing this collection.
