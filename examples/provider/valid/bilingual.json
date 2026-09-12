@@ -1,0 +1,12 @@
+{
+  "code": "scb",
+  "label": {
+    "sv": "Statistiska centralbyrån",
+    "en": "Statistics Sweden"
+  },
+  "description": {
+    "en": "Sweden's national statistical agency."
+  },
+  "country_code": "SE",
+  "website": "https://www.scb.se/"
+}

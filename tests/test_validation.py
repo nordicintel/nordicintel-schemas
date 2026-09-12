@@ -87,6 +87,16 @@ class ValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Duplicate JSON key"):
             parse('{"a": 1, "a": 2}')
 
+    def test_uri_format_is_enforced_by_validation(self):
+        self.schema["format"] = "uri"
+        self.collection()
+        self.write("examples/value/valid/string.json", "https://example.org/about")
+        self.write("examples/value/invalid/number.json", "https://example.org/%zz")
+        self.check()
+        self.write("examples/value/valid/string.json", "https://example.org/%zz")
+        with self.assertRaisesRegex(ValueError, "Unexpected validation result"):
+            self.check()
+
     def test_release_clean_tree_and_tag(self):
         self.collection()
         def git(*args):

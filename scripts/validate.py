@@ -9,7 +9,7 @@ import sys
 from urllib.parse import urlsplit
 from urllib.request import urlopen
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry
 from referencing.jsonschema import DRAFT202012
 
@@ -92,7 +92,9 @@ def validate(root, release=False, published=False):
         path, schema = documents[uri]
         relative = path.relative_to(root / "schemas")
         example_dir = root / "examples" / relative.parent / path.name.removesuffix(".schema.json")
-        validator = Draft202012Validator(schema, registry=registry)
+        validator = Draft202012Validator(
+            schema, registry=registry, format_checker=FormatChecker(formats=["uri"])
+        )
         for kind in ("valid", "invalid"):
             examples = sorted((example_dir / kind).glob("*.json"))
             require(examples, f"Missing {kind} examples: {example_dir}")

@@ -10,7 +10,8 @@ uses `examples/common/code/valid/` and `examples/common/code/invalid/`.
 Each schema requires at least one example of each kind. Store the instance
 itself, without an extra wrapper. Unmatched example files fail validation.
 
-Draft 2020-12 `format` remains an annotation; it does not enforce content rules.
-Specify required validation behavior explicitly in the contracts.
+The validation command explicitly enforces `format: "uri"`. Other formats
+remain annotations. Consumers must likewise enable URI format checking when
+validating provider websites; the schema also requires HTTP(S) and a host.
 
 Use synthetic or public information only; never include credentials.

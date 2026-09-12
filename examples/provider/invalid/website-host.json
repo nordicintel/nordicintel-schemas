@@ -1,0 +1,7 @@
+{
+  "code": "example_provider",
+  "label": {
+    "en": "Example provider"
+  },
+  "website": "https://:443/about"
+}

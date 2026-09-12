@@ -16,3 +16,6 @@ dist/
 .DS_Store
 Thumbs.db
 *.code-workspace
+
+# Local folder for temporary, experimental or reference files
+tmp/*

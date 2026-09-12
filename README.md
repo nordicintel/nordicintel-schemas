@@ -2,7 +2,7 @@
 
 Shared JSON contracts for the NordicIntel catalog and harvesting system.
 
-Status: initial local scaffold, pre-1.0. No contracts are defined or published yet.
+Status: pre-1.0, with the first provider contract defined locally. Nothing is published yet.
 The intended public repository is `nordicintel/nordicintel-schemas`; publishing
 will be a separate step once version 1.0.0 is ready.
 
@@ -29,6 +29,28 @@ Start with provider identity, dataset identity, and language. Define small
 contracts and examples together, then add automated validation before adopting
 them in applications. JSON Schemas are the source of truth; language-specific
 models can consume them later.
+
+## Provider contract
+
+[Provider schema](schemas/provider.schema.json) defines a provider's identity and
+descriptive information. `code` and `label` are required; `description`,
+`country_code`, `website`, and `extension` are optional. Omit absent optional
+fields rather than setting them to `null`.
+
+`code` is stable across display-name and adapter changes; other documents refer
+to it as `provider_code`. Labels and descriptions contain nonblank `sv` and/or
+`en` translations, independently of adapter language support. The optional
+country identifies the provider's home country, not its dataset coverage.
+
+Unknown top-level fields are rejected. Additional descriptive information can
+go inside `extension`, including nested objects and arbitrary JSON values.
+Adapter selection, endpoints, and request settings belong outside this document,
+including outside `extension`; that ownership rule is documented, not something
+the schema can infer from arbitrary extension contents.
+
+Websites must be absolute HTTP(S) URIs with a host. Validation enables URI format
+checking explicitly; consumers must do the same. See the
+[provider examples](examples/provider) for valid and invalid documents.
 
 ## Validation
 

@@ -1,5 +1,5 @@
 [dependency-groups]
-dev = ["jsonschema>=4.26,<5", "referencing>=0.37,<0.38"]
+dev = ["jsonschema>=4.26,<5", "referencing>=0.37,<0.38", "rfc3986-validator>=0.1.1,<0.2"]
 
 [tool.uv]
 package = false
