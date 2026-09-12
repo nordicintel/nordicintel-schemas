@@ -1,0 +1,8 @@
+{
+  "adapter": "kolada",
+  "languages": [
+    "sv"
+  ],
+  "rate_limit": -1,
+  "config": {}
+}

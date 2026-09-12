@@ -1,0 +1,16 @@
+{
+  "adapter": "pxweb_v1",
+  "provider_code": "example",
+  "language": "sv",
+  "rate_limit": 0.5,
+  "config": {
+    "base_api_url": "https://example.org/PXWeb/api/v1",
+    "database_ids": [
+      "main",
+      "archive"
+    ],
+    "extension": {
+      "extra_input": true
+    }
+  }
+}

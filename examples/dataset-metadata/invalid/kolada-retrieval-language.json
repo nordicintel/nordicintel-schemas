@@ -1,0 +1,27 @@
+{
+  "identity": {
+    "provider_code": "example",
+    "dataset_code": "N12345",
+    "language": "en"
+  },
+  "id": [
+    "year"
+  ],
+  "dimension": {
+    "year": {
+      "label": "År",
+      "category": {
+        "index": {
+          "2024": 0
+        },
+        "label": {
+          "2024": "2024"
+        }
+      }
+    }
+  },
+  "retrieval": {
+    "type": "kolada",
+    "config": {}
+  }
+}

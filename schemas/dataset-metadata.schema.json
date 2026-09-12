@@ -160,7 +160,7 @@
       "$ref": "dataset.schema.json#/$defs/url"
     },
     "retrieval": {
-      "description": "Implementation-owned retrieval config; validate config with the selected implementation's schema.",
+      "description": "Dataset-specific retrieval inputs. Identity and dimensions are supplied by the enclosing metadata, not duplicated in config.",
       "type": "object",
       "required": [
         "type",
@@ -176,7 +176,39 @@
           "additionalProperties": true
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "type": {
+              "const": "pxweb_v1"
+            },
+            "config": {
+              "$ref": "adapters/pxweb_v1.schema.json#/$defs/retrieval"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "pxweb_v2"
+            },
+            "config": {
+              "$ref": "adapters/pxweb_v2.schema.json#/$defs/retrieval"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "kolada"
+            },
+            "config": {
+              "$ref": "adapters/kolada.schema.json#/$defs/retrieval"
+            }
+          }
+        }
+      ]
     },
     "extension": {
       "type": "object",
@@ -366,5 +398,34 @@
       },
       "additionalProperties": false
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "retrieval"
+        ],
+        "properties": {
+          "retrieval": {
+            "properties": {
+              "type": {
+                "const": "kolada"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "identity": {
+            "properties": {
+              "language": {
+                "const": "sv"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

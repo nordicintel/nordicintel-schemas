@@ -19,7 +19,8 @@ architecture, ownership and identity rules, and dataset fields.
 
 Define provider records, normalized dataset metadata, shared adapter input
 requirements, and documents exchanged when requesting and reporting Harvests.
-Concrete adapter configuration schemas remain with their adapter implementations.
+The current adapter input contracts live in `schemas/adapters/`; their
+implementations consume those contracts and define their behavior.
 Database migrations and HTTP routes/OpenAPI definitions remain with their applications.
 
 All adapter inputs must require `provider_code` and `language`. Harvest output
@@ -37,7 +38,7 @@ models can consume them later.
 
 [Provider schema](schemas/provider.schema.json) defines a provider's identity and
 descriptive information. `code` and `label` are required; `description`,
-`country_code`, `website`, and `extension` are optional. Omit absent optional
+`country_code`, `website`, `harvest`, and `extension` are optional. Omit absent optional
 fields rather than setting them to `null`.
 
 `code` is stable across display-name and adapter changes; other documents refer
@@ -47,13 +48,39 @@ country identifies the provider's home country, not its dataset coverage.
 
 Unknown top-level fields are rejected. Additional descriptive information can
 go inside `extension`, including nested objects and arbitrary JSON values.
-Adapter selection, endpoints, and request settings belong outside this document,
-including outside `extension`; that ownership rule is documented, not something
-the schema can infer from arbitrary extension contents.
+Adapter selection, endpoints, and request settings live in the dedicated
+`harvest` object alongside public information, not in descriptive `extension`.
+Public-facing provider responses can omit `harvest`.
 
 Websites must be absolute HTTP(S) URIs with a host. Validation enables URI format
 checking explicitly; consumers must do the same. See the
 [provider examples](examples/provider) for valid and invalid documents.
+
+## Harvest and retrieval inputs
+
+[Stored harvest configuration](schemas/harvest-config.schema.json) contains
+`adapter`, `languages`, `rate_limit`, and adapter-specific `config`.
+[Resolved harvest input](schemas/harvest-input.schema.json) contains `adapter`,
+`provider_code`, one `language`, `rate_limit`, and `config`; all are required.
+`rate_limit` is minimum seconds between request starts, not requests per second.
+It accepts a nonnegative number; zero means no added delay.
+
+| Adapter | Harvest `config` | Metadata `retrieval.config` |
+| --- | --- | --- |
+| `pxweb_v1` | `base_api_url`, nonempty `database_ids` string array | Absolute `data_url` |
+| `pxweb_v2` | `base_api_url` | Absolute `data_url` |
+| `kolada` | `{}` | `{}` |
+
+These contracts are in [schemas/adapters](schemas/adapters). Optional `extension`
+objects allow extra adapter inputs. Provider-specific branches in adapter code
+are fine; these schemas do not require a declarative rule system. Kolada uses
+Swedish only and covers municipality and OU datasets under one provider.
+
+Retrieval uses metadata identity and dimensions plus its own config, without
+reconstructing harvest initialization. PXWeb URLs preserve the complete endpoint,
+including database/path/language where applicable. Kolada resolves KPI and data
+kind from dataset code; the exact code convention will be finalized with the
+adapter merge. These contracts do not implement retrieval or that merge.
 
 ## Dataset contracts
 

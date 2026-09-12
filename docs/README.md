@@ -20,9 +20,11 @@ executed one at a time globally. Observation storage is outside the current scop
 | Harvesting configuration | Inputs required to initialize a harvest adapter |
 | Dataset-specific retrieval configuration | Information needed to retrieve observations for a particular dataset |
 
-Shared contracts live here as versioned JSON Schemas. Implementation-specific
-input schemas live alongside their implementations; the catalog stores the
-configuration values. Database migrations belong to the catalog. Release and
+Shared contracts live here as versioned JSON Schemas. The current adapter input
+contracts are also defined here under `schemas/adapters/`, and consumed by their
+implementations. The catalog stores configuration values alongside provider
+descriptions in the provider's dedicated `harvest` object. Database migrations
+belong to the catalog. Release and
 direct schema URL conventions are documented in the [root README](../README.md#versioned-schemas).
 
 ### Identity and language
@@ -49,9 +51,29 @@ Our documents omit `class`, `version`, `size`, and observation `value`.
 Detailed metadata can contain optional `retrieval`, produced by harvesting and
 interpreted by a separate retrieval implementation. Together with dimension
 metadata, it must describe retrieval without reconstructing harvest initialization
-or relying on provider descriptions. Retrieval implementations own their config
-schemas and request/response logic. Credentials and operational request limits
-remain deployment concerns.
+or relying on provider descriptions. Retrieval implementations own request/response
+logic and consume their config contracts from this repository. Credentials remain
+deployment concerns. Harvest inputs require `rate_limit`, a nonnegative number
+of seconds between request starts; zero means no added delay. Enforcement belongs
+to the request mechanism, including concurrent requests within one execution.
+Coordinating limits across separate retrieval/harvest processes is an application
+concern, not behavior enforced by JSON Schema.
+
+Stored `harvest` requires `adapter`, `languages`, `rate_limit`, and `config`.
+Resolved harvest input uses `provider_code` from the provider's `code`, a selected
+`language`, and the same `adapter`, `rate_limit`, and `config`. The application
+checks that the selected language belongs to the configured list. Kolada accepts
+only `sv`; PXWeb accepts `sv` or `en`, subject to actual upstream support.
+
+PXWeb v1 harvest config requires `base_api_url` and a nonempty `database_ids`
+string array. PXWeb v2 requires `base_api_url`. Kolada needs no adapter-specific
+settings. Extra inputs go in config `extension`. Small provider-specific behavior,
+such as marking a particular database discontinued, may be implemented directly
+in adapter code; no generic configuration machinery is required.
+
+Both PXWeb retrieval configs require an absolute `data_url`. Kolada's can be empty;
+it uses dataset code to determine KPI and municipality/OU kind. Finalizing that
+code convention and merging the backend's two Kolada providers remain later work.
 
 A future public API will resolve a dataset identifier and dimension selections,
 load the metadata, delegate retrieval, and format a PxWeb API 2-compatible
@@ -122,8 +144,8 @@ not automatically an input to observation retrieval.
   These describe thematic membership, never access routes or dataset access keys.
 - **Contact:** optional `name`, `organization`, `mail`, `phone`, `raw`, and
   `extension`.
-- **Retrieval:** required `type` and object-valued `config`. The implementation
-  defines and validates the contents of `config`.
+- **Retrieval:** required `type` (`pxweb_v1`, `pxweb_v2`, or `kolada`) and
+  object-valued `config`, validated against the corresponding adapter contract.
 
 Dimension-level behavior such as `elimination` can live in `extension` without
 becoming mandatory for every source.
@@ -138,7 +160,7 @@ allow extra fields only in `extension`; retrieval `config` is implementation-own
 Require essential identity, language, and dimension structure. Keep descriptive
 fields optional; omit unavailable values instead of inventing defaults. Reject
 unknown fields on defined objects while allowing arbitrary JSON inside
-`extension`. Retrieval `config` follows its implementation-owned schema.
+`extension`. Retrieval `config` follows its adapter-specific schema.
 
 Ordering must be explicit and internally consistent: dimension codes correspond
 to `id`, category positions are unique and contiguous, and associated category
@@ -150,8 +172,8 @@ positions. Equality between dimension keys and `id`, unique/contiguous position
 values across a category mapping, category-map correspondence, role references,
 and identity agreement between the two documents require application validation.
 These application-level relationships are not checked by the repository's
-structural schema/example validator. Retrieval config contents and actual text
-language also require implementation validation.
+structural schema/example validator. Actual text language, upstream URL meaning,
+and upstream language support require implementation validation.
 
 The validation command enforces URI, date, and date-time formats. Update/release
 dates accept a calendar date or a timestamp with timezone; period strings retain

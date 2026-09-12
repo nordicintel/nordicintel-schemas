@@ -115,7 +115,7 @@
   ],
   "metadata_url": "https://example.org/api/population/metadata",
   "retrieval": {
-    "type": "example_api",
+    "type": "pxweb_v2",
     "config": {
       "data_url": "https://example.org/api/population/data"
     }

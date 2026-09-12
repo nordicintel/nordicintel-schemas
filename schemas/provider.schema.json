@@ -2,16 +2,21 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v0.1.0/schemas/provider.schema.json",
   "title": "Provider",
-  "description": "A statistical provider's stable identity and descriptive information. Adapter configuration belongs outside this document, including outside extension.",
+  "description": "A provider's stable identity and descriptive information, with optional stored harvest configuration.",
   "type": "object",
-  "required": ["code", "label"],
+  "required": [
+    "code",
+    "label"
+  ],
   "additionalProperties": false,
   "properties": {
     "code": {
       "description": "Stable provider identity, independent of display names and adapters. Other documents reference this value as provider_code.",
       "type": "string",
       "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$",
-      "not": {"pattern": "\\s"}
+      "not": {
+        "pattern": "\\s"
+      }
     },
     "label": {
       "description": "Display names. Available translations do not declare adapter language support.",
@@ -35,9 +40,12 @@
       "pattern": "^[hH][tT][tT][pP][sS]?://(?:[^/?#@]*@)?(?:\\[[^\\]]+\\]|[^/?#:@]+)(?::[0-9]*)?(?:[/?#]|$)"
     },
     "extension": {
-      "description": "Additional descriptive information; arbitrary JSON values are allowed. Do not store adapter settings here.",
+      "description": "Additional descriptive information. Harvest settings belong in harvest, not extension.",
       "type": "object",
       "additionalProperties": true
+    },
+    "harvest": {
+      "$ref": "harvest-config.schema.json"
     }
   },
   "$defs": {
@@ -46,8 +54,14 @@
       "minProperties": 1,
       "additionalProperties": false,
       "properties": {
-        "sv": {"type": "string", "pattern": "\\S"},
-        "en": {"type": "string", "pattern": "\\S"}
+        "sv": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "en": {
+          "type": "string",
+          "pattern": "\\S"
+        }
       }
     }
   }
