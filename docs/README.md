@@ -2,15 +2,15 @@
 
 The system decisions below are agreed architectural direction, not a claim that
 the applications already implement them. Provider, dataset, harvest-input, and
-adapter config contracts are implemented locally at version 0.1.0 and remain
-unpublished. See the [schema index](../schemas/README.md) for their locations.
+adapter config contracts form version 1.0.0. See the [schema index](../schemas/README.md) for their locations.
 
 ## Agreed system decisions
 
 ### Hosting and responsibilities
 
 A hosted PostgreSQL catalog is managed through an authenticated API. Harvest
-workers access that API rather than connecting directly to the database.
+workers access that API rather than connecting directly to the database. The
+catalog API and Harvest worker are separate repositories and applications.
 Initially, Harvests are manually requested through the API, queued durably, and
 executed one at a time globally. Observation storage is outside the current scope.
 
@@ -72,8 +72,8 @@ such as marking a particular database discontinued, may be implemented directly
 in adapter code; no generic configuration machinery is required.
 
 Both PXWeb retrieval configs require an absolute `data_url`. Kolada's can be empty;
-it uses dataset code to determine KPI and municipality/OU kind. Finalizing that
-code convention and merging the backend's two Kolada providers remain later work.
+it uses dataset code to determine KPI and municipality/OU kind. Municipality datasets retain the KPI code; OU datasets append `_OU`.
+Implementing the provider merge belongs to the worker project.
 
 A future public API will resolve a dataset identifier and dimension selections,
 load the metadata, delegate retrieval, and format a PxWeb API 2-compatible
@@ -195,16 +195,17 @@ their original notation. Versioning and publication remain separate steps.
    the original harvest configuration. Missing retrieval means observation
    fetching is not configured for that metadata document.
 
-The stored configuration and resolved input contracts exist. Harvest job requests,
-status/progress messages, and the envelope for submitting dataset pairs do not yet
-have schemas here. Likewise, these files do not implement API storage or retrieval.
+The stored configuration and resolved input contracts exist. The catalog API owns
+CRUD routes, atomic pair persistence, retry semantics, and the initial Harvest job
+requests, progress/outcomes, and submission envelopes in its OpenAPI contract.
+It reuses these shared document schemas. Separate lifecycle JSON Schemas can be
+added here when a demonstrated need arises; they are not prerequisites for 1.0.0.
 
 ## Remaining work
 
-The [roadmap](ROADMAP.md) tracks the remaining work. Backend integration is
-underway with another agent; the next contract work here is dataset-pair submission
-and the minimum Harvest lifecycle documents. Application integration and public
-API readiness are separate from defining these schemas.
+The [roadmap](ROADMAP.md) separates publication of the foundational contracts from
+parallel catalog API and worker implementation. End-to-end application readiness
+is not a prerequisite for releasing this collection.
 
 ## Real-data check, 2026-09-12
 

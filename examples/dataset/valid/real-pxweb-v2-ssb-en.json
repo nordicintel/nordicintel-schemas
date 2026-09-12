@@ -1,0 +1,14 @@
+{
+  "identity": {
+    "provider_code": "ssb",
+    "dataset_code": "13618",
+    "language": "en"
+  },
+  "label": "13618: Population, by labour force status, age and sex. Break adjusted figures 2009-2025",
+  "updated": "2026-02-11T07:00:00Z",
+  "time_unit": "Annual",
+  "first_period": "2009",
+  "last_period": "2025",
+  "discontinued": false,
+  "source_url": "https://www.ssb.no/en/statbank/table/en/table/13618"
+}

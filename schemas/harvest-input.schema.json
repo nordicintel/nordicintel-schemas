@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v0.1.0/schemas/harvest-input.schema.json",
+  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/harvest-input.schema.json",
   "title": "Resolved input for one Harvest",
   "description": "Built from provider.code, provider.harvest, and one selected language. The application checks configured language membership before invocation.",
   "type": "object",

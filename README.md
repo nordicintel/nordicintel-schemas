@@ -2,11 +2,9 @@
 
 Shared JSON contracts for the NordicIntel catalog and harvesting system.
 
-Status: pre-1.0, with provider, dataset, harvest-input, and adapter configuration
-contracts defined locally. Nothing is published yet; backend integration is underway
-in the backend project with another agent.
-The intended public repository is `nordicintel/nordicintel-schemas`; publishing
-will be a separate step once version 1.0.0 is ready.
+Version **1.0.0** defines eight foundational contracts for independently developed
+catalog API and Harvest worker projects. Consume the exact versioned JSON URLs
+below; `main` is development content.
 
 ## Structure
 
@@ -20,8 +18,9 @@ The [roadmap](docs/ROADMAP.md) tracks completed work, integration, and the path 
 
 ## Intended scope
 
-Define provider records, normalized dataset metadata, shared adapter input
-requirements, and documents exchanged when requesting and reporting Harvests.
+Define provider records, basic dataset information, detailed metadata, and shared
+harvest and retrieval configuration. The catalog API owns CRUD, persistence, and
+initial Harvest job/submission interfaces through its OpenAPI contract.
 The current adapter input contracts live in `schemas/adapters/`; their
 implementations consume those contracts and define their behavior.
 Database migrations and HTTP routes/OpenAPI definitions remain with their applications.
@@ -82,8 +81,8 @@ Swedish only; the contract is designed for municipality and OU datasets under on
 Retrieval uses metadata identity and dimensions plus its own config, without
 reconstructing harvest initialization. PXWeb URLs preserve the complete endpoint,
 including database/path/language where applicable. Kolada resolves KPI and data
-kind from dataset code; the exact code convention will be finalized with the
-adapter merge. These contracts do not implement retrieval or that merge.
+kind from dataset code; municipality codes retain the KPI code and OU codes append `_OU`. These contracts
+do not implement retrieval or the adapter merge.
 
 ## Dataset contracts
 
@@ -111,12 +110,13 @@ The same commands run on pushes to `main`. An empty scaffold passes ordinary
 validation but cannot be released. See [examples](examples/README.md) for the
 example layout. Validation resolves references locally without network access.
 
-Examples demonstrate contract structure. They do not establish that real adapter
-outputs or live data retrieval already work with these contracts.
+Examples include five complete pairs projected from saved real adapter outputs;
+see their [provenance](examples/README.md#real-dataset-pairs). These demonstrate
+contract compatibility, not completed worker/catalog integration.
 
 ## Versioned schemas
 
-`VERSION` is the single collection version, initially `0.1.0`. Use matching Git
+`VERSION` is the single collection version, currently `1.0.0`. Use matching Git
 tags such as `v1.0.0`. Before 1.0, contracts may change; after 1.0, incompatible
 changes require a major version, compatible additions a minor version, and
 nonbreaking corrections a patch version. Describe changes in GitHub release notes.
@@ -126,31 +126,42 @@ Schemas use JSON Schema Draft 2020-12. Each `schemas/*.schema.json` file declare
 
 - `$schema`: `https://json-schema.org/draft/2020-12/schema`
 - `$id`: its exact versioned URL, for example
-  `https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v0.1.0/schemas/provider.schema.json`
+  `https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/provider.schema.json`
 
 Use relative `$ref` links between files and fragments for local definitions.
 Keep `$id` at file roots; use `$defs` for subschemas. Update all file identifiers
-when changing `VERSION`. These future URLs become accessible when the public
-repository and corresponding tag exist. Consume release URLs, not `main`.
+when changing `VERSION`. Consume release URLs, not `main`.
+
+## Direct schema URLs
+
+- [Provider](https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/provider.schema.json)
+- [Dataset](https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/dataset.schema.json)
+- [Dataset metadata](https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/dataset-metadata.schema.json)
+- [Harvest config](https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/harvest-config.schema.json)
+- [Harvest input](https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/harvest-input.schema.json)
+- [PXWeb v1](https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/adapters/pxweb_v1.schema.json)
+- [PXWeb v2](https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/adapters/pxweb_v2.schema.json)
+- [Kolada](https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/adapters/kolada.schema.json)
 
 ## Manual release
 
-The repository remains local until publication is explicitly requested.
-When creating the public repository, enable **release immutability** in GitHub's
-repository settings before publishing the first release.
+Release publication is manual. Keep **release immutability** enabled in GitHub's
+repository settings. Validate the intended commit and wait for its CI to pass
+before publishing.
 
 1. Update `VERSION` and schema identifiers; commit the intended release on `main`.
 2. Run tests, then `uv run --locked python scripts/validate.py --release`.
    This checks the clean tree, nonempty collection, and unused tag locally and
    on configured remotes. It prints the exact checked commit and creates nothing.
-3. Manually create `v<VERSION>` at that checked commit, push the commit and tag,
-   and publish a GitHub release for that tag with release notes.
+3. Manually create an annotated `v<VERSION>` at that checked commit, push the
+   commit and tag, and prepare a draft GitHub release with release notes.
 4. Check out that tag and run
    `uv run --locked python scripts/validate.py --published`.
    It fetches every schema URL, compares the JSON with the checked-out release,
    and verifies references through the validated collection.
+5. Publish the stable release, then repeat published verification and return to `main`.
 
-Published versions stay unchanged. There is no archive, package registry,
+Published versions stay unchanged. There is no custom archive distribution, package registry,
 automatic publication, or required pull-request process.
 
 ## License

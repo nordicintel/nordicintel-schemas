@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v0.1.0/schemas/adapters/pxweb_v1.schema.json",
+  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/adapters/pxweb_v1.schema.json",
   "title": "pxweb_v1 harvest configuration",
   "description": "Adapter-specific harvest settings. Provider-specific behavior may be implemented directly in adapter code; extension allows additional inputs.",
   "type": "object",

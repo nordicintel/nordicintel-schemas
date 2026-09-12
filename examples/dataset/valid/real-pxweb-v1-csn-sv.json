@@ -1,0 +1,12 @@
+{
+  "identity": {
+    "provider_code": "csn",
+    "dataset_code": "ABAKD12.px",
+    "language": "sv"
+  },
+  "label": "Återkravsskulder efter Folkbokföring län, Skuldberäkningsdatum, Kön och Antal personer, Ingående skuld",
+  "updated": "2026-01-19T14:50:00Z",
+  "time_unit": "Other",
+  "discontinued": false,
+  "source_url": "https://statistik.csn.se/PxWeb/pxweb/sv/CSNstat/CSNstat__AB__AK/ABAKD12.px/"
+}

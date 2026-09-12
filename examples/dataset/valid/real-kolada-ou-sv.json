@@ -1,0 +1,14 @@
+{
+  "identity": {
+    "provider_code": "kolada",
+    "dataset_code": "N11042_OU",
+    "language": "sv"
+  },
+  "label": "Heltidstjänster i förskolan med förskollärarexamen, enskild regi, andel (%) (-2024)",
+  "description": "Andel anställda omräknat till heltidstjänster (årsarbetare) inom förskola som har förskollärarexamen i enskild regi. Uppgiften avser punktmätning 15/10. Källa: Skolverket",
+  "time_unit": "Annual",
+  "first_period": "2018",
+  "last_period": "2024",
+  "discontinued": true,
+  "source_url": "https://kolada.se/verktyg/fri-sokning/"
+}

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v0.1.0/schemas/dataset.schema.json",
+  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/dataset.schema.json",
   "title": "Dataset",
   "description": "Basic catalog information for one dataset language version.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v0.1.0/schemas/provider.schema.json",
+  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/provider.schema.json",
   "title": "Provider",
   "description": "A provider's stable identity and descriptive information, with optional stored harvest configuration.",
   "type": "object",
