@@ -2,7 +2,9 @@
 
 Shared JSON contracts for the NordicIntel catalog and harvesting system.
 
-Status: pre-1.0, with provider and dataset contracts defined locally. Nothing is published yet.
+Status: pre-1.0, with provider, dataset, harvest-input, and adapter configuration
+contracts defined locally. Nothing is published yet; backend integration is underway
+in the backend project with another agent.
 The intended public repository is `nordicintel/nordicintel-schemas`; publishing
 will be a separate step once version 1.0.0 is ready.
 
@@ -14,6 +16,7 @@ will be a separate step once version 1.0.0 is ready.
 
 See [system decisions and dataset contracts](docs/README.md) for the agreed
 architecture, ownership and identity rules, and dataset fields.
+The [roadmap](docs/ROADMAP.md) tracks completed work, integration, and the path to 1.0.
 
 ## Intended scope
 
@@ -23,16 +26,16 @@ The current adapter input contracts live in `schemas/adapters/`; their
 implementations consume those contracts and define their behavior.
 Database migrations and HTTP routes/OpenAPI definitions remain with their applications.
 
-All adapter inputs must require `provider_code` and `language`. Harvest output
-must preserve that identity and contain metadata in the requested language.
-These requirements still need to be expressed in the contracts and examples.
+Resolved harvest inputs require `provider_code`, `language`, and `rate_limit`.
+Harvest output must preserve provider/language identity in both dataset documents
+and contain metadata in the requested language. Structural contracts exist;
+actual language and cross-document consistency remain application responsibilities.
 
 ## Working approach
 
-Start with provider identity, dataset identity, and language. Define small
-contracts and examples together, then add automated validation before adopting
-them in applications. JSON Schemas are the source of truth; language-specific
-models can consume them later.
+Keep contracts small and validate examples before adopting them in applications.
+JSON Schemas are the source of truth; language-specific models can consume them.
+See the [roadmap](docs/ROADMAP.md) for the next integration steps.
 
 ## Provider contract
 
@@ -74,7 +77,7 @@ It accepts a nonnegative number; zero means no added delay.
 These contracts are in [schemas/adapters](schemas/adapters). Optional `extension`
 objects allow extra adapter inputs. Provider-specific branches in adapter code
 are fine; these schemas do not require a declarative rule system. Kolada uses
-Swedish only and covers municipality and OU datasets under one provider.
+Swedish only; the contract is designed for municipality and OU datasets under one provider.
 
 Retrieval uses metadata identity and dimensions plus its own config, without
 reconstructing harvest initialization. PXWeb URLs preserve the complete endpoint,
@@ -107,6 +110,9 @@ uv run --locked python -m unittest discover -s tests
 The same commands run on pushes to `main`. An empty scaffold passes ordinary
 validation but cannot be released. See [examples](examples/README.md) for the
 example layout. Validation resolves references locally without network access.
+
+Examples demonstrate contract structure. They do not establish that real adapter
+outputs or live data retrieval already work with these contracts.
 
 ## Versioned schemas
 

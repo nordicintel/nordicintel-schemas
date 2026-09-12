@@ -1,9 +1,9 @@
 # System decisions and dataset contracts
 
 The system decisions below are agreed architectural direction, not a claim that
-the applications already implement them. The provider, [Dataset](../schemas/dataset.schema.json),
-and [Dataset metadata](../schemas/dataset-metadata.schema.json) contracts are
-implemented locally at version 0.1.0 and remain unpublished.
+the applications already implement them. Provider, dataset, harvest-input, and
+adapter config contracts are implemented locally at version 0.1.0 and remain
+unpublished. See the [schema index](../schemas/README.md) for their locations.
 
 ## Agreed system decisions
 
@@ -21,8 +21,8 @@ executed one at a time globally. Observation storage is outside the current scop
 | Dataset-specific retrieval configuration | Information needed to retrieve observations for a particular dataset |
 
 Shared contracts live here as versioned JSON Schemas. The current adapter input
-contracts are also defined here under `schemas/adapters/`, and consumed by their
-implementations. The catalog stores configuration values alongside provider
+contracts are also defined here under `schemas/adapters/`, for consumption by
+their implementations. The intended catalog stores configuration values alongside provider
 descriptions in the provider's dedicated `harvest` object. Database migrations
 belong to the catalog. Release and
 direct schema URL conventions are documented in the [root README](../README.md#versioned-schemas).
@@ -153,7 +153,7 @@ becoming mandatory for every source.
 Category `child` maps parent codes to child-code arrays; `coordinates` maps codes
 to longitude/latitude pairs; `unit` and `note` map codes to unit objects and note
 arrays. Dimension `link` is an open link-relation map. Other defined objects
-allow extra fields only in `extension`; retrieval `config` is implementation-owned.
+allow extra fields only in `extension`; retrieval `config` uses its adapter contract.
 
 ## Validation approach
 
@@ -178,3 +178,53 @@ and upstream language support require implementation validation.
 The validation command enforces URI, date, and date-time formats. Update/release
 dates accept a calendar date or a timestamp with timezone; period strings retain
 their original notation. Versioning and publication remain separate steps.
+
+## How the documents connect
+
+1. Store descriptive provider fields and optional `harvest` together. A provider
+   without `harvest` is still a valid descriptive record, but has no configured
+   harvest execution.
+2. For an execution, copy provider `code` to input `provider_code`; select one
+   configured language; copy `adapter`, `rate_limit`, and `config` from `harvest`.
+   Check that the language is configured and supported by the upstream source.
+3. The adapter produces Dataset and Dataset metadata documents with matching
+   `identity`. Persist them consistently; changing provider settings must not
+   silently change the inputs of an already-running Harvest.
+4. Later, retrieval loads metadata identity, dimensions, and `retrieval`. It
+   dispatches on `retrieval.type` using `retrieval.config` without reconstructing
+   the original harvest configuration. Missing retrieval means observation
+   fetching is not configured for that metadata document.
+
+The stored configuration and resolved input contracts exist. Harvest job requests,
+status/progress messages, and the envelope for submitting dataset pairs do not yet
+have schemas here. Likewise, these files do not implement API storage or retrieval.
+
+## Remaining work
+
+The [roadmap](ROADMAP.md) tracks the remaining work. Backend integration is
+underway with another agent; the next contract work here is dataset-pair submission
+and the minimum Harvest lifecycle documents. Application integration and public
+API readiness are separate from defining these schemas.
+
+## Real-data check, 2026-09-12
+
+107 real Dataset/metadata pairs were projected from 104 successful rerun outputs
+and three additional database samples. All passed the current schemas after
+encoding 22 source-page URLs; no schemas were loosened. Explicit dimension/category
+consistency checks passed for all pairs, with ordering preserved. Ten PXWeb v2
+metadata URLs were replaced with the upstream-advertised language-specific links.
+
+Coverage includes PXWeb v1, SCB and SSB on v2, both Kolada data kinds, both ASUB
+databases, and all three configured Konjunkturinstitutet databases. The StatFin
+archive supplement encountered unavailable branches/rate limiting and timed out;
+it is not covered. Kolada OU N01967 still has no successful source metadata.
+
+Five small observation requests built from projected metadata returned HTTP 200
+(CSN, SCB, SSB, Kolada municipality, Kolada OU). CSN's response contains a synthetic
+ContentsCode outside its dimension order, demonstrating that retrieval also needs
+provider-aware normalization. This is sample evidence, not a complete retrieval
+implementation or an automatic check of the text's actual language.
+
+Local projections, source hashes, exact URL edits, errors, and request/response
+files are saved under ignored `tmp/contract-check/20260912-live-examples/`.
+The scripts are temporary; no backend code or source harvest files were changed.
