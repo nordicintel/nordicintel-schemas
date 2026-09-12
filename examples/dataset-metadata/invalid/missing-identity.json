@@ -1,0 +1,18 @@
+{
+  "id": [
+    "year"
+  ],
+  "dimension": {
+    "year": {
+      "label": "Year",
+      "category": {
+        "index": {
+          "2024": 0
+        },
+        "label": {
+          "2024": "2024"
+        }
+      }
+    }
+  }
+}

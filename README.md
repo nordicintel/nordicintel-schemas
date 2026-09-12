@@ -2,7 +2,7 @@
 
 Shared JSON contracts for the NordicIntel catalog and harvesting system.
 
-Status: pre-1.0, with the first provider contract defined locally. Nothing is published yet.
+Status: pre-1.0, with provider and dataset contracts defined locally. Nothing is published yet.
 The intended public repository is `nordicintel/nordicintel-schemas`; publishing
 will be a separate step once version 1.0.0 is ready.
 
@@ -11,6 +11,9 @@ will be a separate step once version 1.0.0 is ready.
 - `schemas/`: shared JSON Schema definitions.
 - `examples/`: representative JSON documents for the contracts.
 - `docs/`: contract explanations and decisions.
+
+See [system decisions and dataset contracts](docs/README.md) for the agreed
+architecture, ownership and identity rules, and dataset fields.
 
 ## Intended scope
 
@@ -51,6 +54,18 @@ the schema can infer from arbitrary extension contents.
 Websites must be absolute HTTP(S) URIs with a host. Validation enables URI format
 checking explicitly; consumers must do the same. See the
 [provider examples](examples/provider) for valid and invalid documents.
+
+## Dataset contracts
+
+- [Dataset](schemas/dataset.schema.json): required `identity` and `label`, plus
+  optional catalog information.
+- [Dataset metadata](schemas/dataset-metadata.schema.json): required `identity`,
+  `id` (dimension order), and `dimension`, plus optional details and retrieval config.
+
+Both use `identity: {provider_code, dataset_code, language}` with all three fields
+required. Language is `sv` or `en`. The metadata schema references the Dataset
+schema's identity definition directly. See the [contract reference](docs/README.md)
+for nested fields and application-level consistency requirements.
 
 ## Validation
 

@@ -93,7 +93,8 @@ def validate(root, release=False, published=False):
         relative = path.relative_to(root / "schemas")
         example_dir = root / "examples" / relative.parent / path.name.removesuffix(".schema.json")
         validator = Draft202012Validator(
-            schema, registry=registry, format_checker=FormatChecker(formats=["uri"])
+            schema, registry=registry,
+            format_checker=FormatChecker(formats=["uri", "date", "date-time"])
         )
         for kind in ("valid", "invalid"):
             examples = sorted((example_dir / kind).glob("*.json"))

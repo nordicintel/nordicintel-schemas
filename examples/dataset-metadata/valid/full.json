@@ -1,0 +1,128 @@
+{
+  "identity": {
+    "provider_code": "example",
+    "dataset_code": "Population/01",
+    "language": "en"
+  },
+  "id": [
+    "region",
+    "year"
+  ],
+  "dimension": {
+    "region": {
+      "label": "Region",
+      "category": {
+        "index": {
+          "total": 0,
+          "north": 1
+        },
+        "label": {
+          "total": "Total",
+          "north": "North"
+        },
+        "child": {
+          "total": [
+            "north"
+          ]
+        },
+        "coordinates": {
+          "north": [
+            18,
+            60
+          ]
+        },
+        "unit": {
+          "total": {
+            "label": "People",
+            "symbol": "persons",
+            "position": "end",
+            "decimals": 0,
+            "extension": {}
+          }
+        },
+        "note": {
+          "total": [
+            "All regions"
+          ]
+        },
+        "extension": {}
+      },
+      "note": [
+        "Includes totals."
+      ],
+      "link": {
+        "describedby": [
+          {
+            "href": "https://example.org/regions"
+          }
+        ]
+      },
+      "extension": {
+        "elimination": true
+      }
+    },
+    "year": {
+      "label": "Year",
+      "category": {
+        "index": {
+          "2024": 0
+        },
+        "label": {
+          "2024": "2024"
+        }
+      }
+    }
+  },
+  "role": {
+    "time": [
+      "year"
+    ]
+  },
+  "subject": {
+    "code": "population",
+    "label": "Population",
+    "extension": {}
+  },
+  "paths": [
+    {
+      "path": [
+        {
+          "code": "society",
+          "label": "Society"
+        },
+        {
+          "code": "population",
+          "label": "Population"
+        }
+      ],
+      "extension": {}
+    }
+  ],
+  "official_statistics": true,
+  "source": "Example statistical provider",
+  "note": [
+    "Illustrative metadata only."
+  ],
+  "contact": [
+    {
+      "name": "Statistics team",
+      "organization": "Example",
+      "mail": "statistics@example.org",
+      "phone": "+46 123",
+      "raw": "Statistics team",
+      "extension": {}
+    }
+  ],
+  "metadata_url": "https://example.org/api/population/metadata",
+  "retrieval": {
+    "type": "example_api",
+    "config": {
+      "data_url": "https://example.org/api/population/data"
+    }
+  },
+  "extension": {
+    "extra": {
+      "anything": null
+    }
+  }
+}
