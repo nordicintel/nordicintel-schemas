@@ -64,84 +64,54 @@ and are not the baseline for deciding what existing information to discard.
   categories; the note and actual categories explain May-only from 2023. Calling
   that a contradiction without checking temporal scope was incorrect.
 
-The initial inventory and grouped redundancy pass are recorded below. Model
-retention decisions remain open; the rule-based shortlist is not individual
-semantic certification of every surviving value.
+The source inventory is recorded below. The purported nonredundant shortlist
+is withdrawn: its method did not establish semantic redundancy. Model retention
+decisions remain open.
 The field set below is an older **recommendation for
 review**, not an approved contract. No Python model, schema or application rewrite
 has started. Full converted examples and the implementation handoff follow the
 remaining model decisions; do not label that later work complete prematurely.
 
-## Swedish qualifier redundancy audit — results
+## Qualifier audit correction — previous shortlist withdrawn
 
-The local-only extraction covered **19,046 Swedish-language records**. **5,297
- distinct datasets** contain at least one of the five audited fields, accounting
-for **64,548 attribute entries**, including empty/default-like values. All these
-candidates happen to be Swedish providers: SCB 5,253; MSB 39;
-Energimyndigheten 5. There are no language-variant duplicates in these counts.
+**The reported 3,195 datasets / 10,022 nonredundant entries are withdrawn.**
+The scripts promoted failed text/pattern matches into findings of additional
+information. That is not semantic analysis. Do not use that list or its counts
+to justify fields in the model. The extracted source inventory remains useful;
+the classification and claimed completion do not.
 
-The final grouped pass leaves **3,195 datasets / 10,022 attribute entries** after
-recognized redundancy is removed. This is the practical rule-based shortlist,
-not an assertion that every surviving source claim is correct or that every
-possible prose paraphrase has been recognized. It is **not** a decision to retain
-all five fields. In particular, unmatched enum codes are not automatically useful
-model attributes.
+The actual question is: **what would someone misunderstand or be unable to
+interpret if this attribute disappeared, while the title, categories, units,
+notes and time information remained?** Different spelling and the absence of an
+enum's literal name are not additional information. Ordinary statistical meaning
+must be read and understood; it need not be redundantly stated in technical terms.
 
-| Field | Remaining entries | Distinct datasets |
-|---|---:|---:|
-| `refperiod` | 2,093 | 910 |
-| `basePeriod` | 120 | 41 |
-| `measuringType` | 6,502 | 2,333 |
-| `priceType` | 1,198 | 459 |
-| `adjustment` | 109 | 66 |
+Concrete reading of the local documents:
 
-Dataset counts overlap between fields. Separately, **974 entries in 309 datasets**
-have scope/base-interpretation questions, and **28 entries in 28 datasets** refer
-to missing categories. These are exported separately, not presented as confirmed
-unique information or automatically called source errors. The other groups are
-17,358 represented entries, 30,043 explicit default-like enum values, and 6,123
-empty values. All 64,548 entries remain accounted for.
+| Case | Meaning and correction |
+|---|---|
+| TAB4012, `Stock` on “Antal” of foreign citizens | The title and measure already describe a count of people. A separate Stock classification provides no useful clarification of that count. This is separate from whether its December 31 reference adds a date. |
+| TAB1729, `Stock` on counts, means and totals | The category labels distinguish “Antal personer”, two explicitly defined means, and “Totalsumma”. Category notes explain the populations used for the means. Stock does not improve those descriptions and must not be presented as missing information about which operation the measure represents. |
+| TAB4697, `Stock` on gas prices and taxes in öre/kWh | The measures already describe prices/taxes per energy unit. The absence of the word Stock from their labels is not a meaningful information gap. |
+| TAB6516 | Read the complete combination of dimensions: `Arbetskraftstillh` distinguishes population counts and percentages, while `TypData` distinguishes adjustments and changes. Interpreting the lone metric label in isolation loses the actual definition of a selected measure. |
+| EN0102_11.px | Unlike an ordinary repeated coverage year, this local document has no time dimension, empty first/last periods and no 2024 in its title, notes or category labels. Its reference year needs separate consideration as coverage information, not an automatic category-qualifier field. |
 
-### Open the actual lists
+**Current recommendation:** do not add `measuring_type` to the common model on
+the strength of this audit. No need for that field has been demonstrated. This
+is not a claim that Stock/Flow/Average can never convey information; it rejects
+the unsupported proposal and its inflated evidence. Nor does it justify replacing
+these codes with boilerplate notes.
 
-- [Dataset list](tmp/qualifier-audit-sv/final/nonredundant-datasets.csv): one row
-  per remaining dataset, with identity, title and affected fields.
-- [Exact remaining values](tmp/qualifier-audit-sv/final/nonredundant-attributes.csv):
-  provider, dataset, owning dimension/category, category label, field and value.
-- [Grouped JSON](tmp/qualifier-audit-sv/final/nonredundant-datasets.jsonl): the same
-  information grouped by dataset, preserving all specific values.
-- [Scope questions](tmp/qualifier-audit-sv/final/scope-questions.csv).
-- [All decisions](tmp/qualifier-audit-sv/final/decisions.jsonl): includes exclusions
-  and their reasons; full input documents remain in the parent `records.jsonl`.
-- [Reproduction instructions](tools/dataset-audit/README.md). `finish.py` processes
-  saved survivors in one grouped pass; it does not replay earlier rule stages.
+For the other qualifiers, establish the specific missing fact (a reference date,
+an otherwise unstated price basis, an adjustment or an index base) in the full
+measure context before calling it a finding. Review groups of similar measures,
+not records one at a time and not repeated regex passes. Discard obvious semantic
+repetition as a group. Keep source interpretation issues separate.
 
-The final deductions generalize period wording, metric-specific dates/bases,
-statistical meaning already expressed by the described measure, price concepts,
-and adjustment wording. Ordinary annual/quarterly period descriptions are not
-counted again merely because their wording differs. Historical/time-category
-scope and another metric's values are kept distinct. Source defaults remain
-visible separately; absence and an explicit default have not been equated.
-
-### Concrete corrections and results
-
-- **TAB2462:** December 31 is already explained by the dataset note; excluded.
-- **TAB4012 and TAB6658:** December 31 remains additional in the stored Swedish
-  document after comparing descriptive fields and time categories.
-- **TAB3815:** 2008 and 2009 belong to their respective tax-value metric labels;
-  a 2008 metric reference is not wrong because the time category is 2009.
-- **TAB3257:** May/November through 2022 and May-only from 2023 are represented
-  by the actual time categories and the note; excluded, not called a contradiction.
-- **TAB69:** `1994K1` accompanies alternative labels saying `feb 1994=100`.
-  This belongs in the interpretation list, not a clean example of missing base data.
-- **Ownership across all candidates:** 15,949 reference-period entries are
-  attached to metric dimensions, eight to area/energy categories, none to time
-  dimensions. This does not imply each metric has observations in every year.
-
-The CSV source SHA-256 is
-`46a90883b689217a82f65b4be9c10cd05b15711b1280052c3ef90c2868409bba`.
-The final summary records the input-decision and script hashes. No database,
-upstream service, application implementation or deployment was used or changed.
+Raw local extraction: 19,046 `sv` records; 5,297 candidate datasets; 64,548
+attribute entries including empty/default-like values. Those inventory counts
+are not counts of useful or unique information. Existing files under
+`tmp/qualifier-audit-sv/final/` are **withdrawn investigation output**.
 
 ## Local evidence and limitations
 

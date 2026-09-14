@@ -1,5 +1,10 @@
 # Local Swedish qualifier audit
 
+**WITHDRAWN CLASSIFICATION:** `finish.py` and the `nonredundant-*` outputs do
+not establish additional information. They label failed matches as findings.
+Use only the extraction as evidence; see `DATASET-MODEL.md` for the correction.
+Do not rerun this classifier as a substitute for reading the measures.
+
 Design evidence, not a model validator or production normalizer. Reads the local
 `dataset_languages.csv` only; never calls the catalog, an upstream API, or a paid
 service. Dependencies: Python standard library. Run from the repository root.
