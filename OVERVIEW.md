@@ -1,7 +1,8 @@
 # Schema overview
 
-**Current design work:** [DATASET-MODEL.md](DATASET-MODEL.md) records the newer
-common-model decisions, open questions and local corpus audit. The text below
+**Current model:** [DATASET-MODEL.md](DATASET-MODEL.md) defines the agreed combined
+multilingual Python model. See its [implementation handoff](DATASET-MODEL-HANDOFF.md)
+and [complete proposed examples](docs/model-examples/README.md). The text below
 describes the prepared 2.0.0 implementation, not approval to publish it or the
 latest redesign direction.
 

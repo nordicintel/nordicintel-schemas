@@ -1,0 +1,418 @@
+{
+  "identity": {
+    "provider_code": "csn",
+    "dataset_code": "SULESVL11a.px"
+  },
+  "dimensions": [
+    {
+      "code": "Ålder",
+      "categories": [
+        {
+          "code": "0"
+        },
+        {
+          "code": "1"
+        },
+        {
+          "code": "2"
+        },
+        {
+          "code": "3"
+        },
+        {
+          "code": "4"
+        },
+        {
+          "code": "5"
+        }
+      ],
+      "elimination": true,
+      "elimination_value": "0"
+    },
+    {
+      "code": "Folkbokföring län",
+      "categories": [
+        {
+          "code": "0"
+        },
+        {
+          "code": "1"
+        },
+        {
+          "code": "2"
+        },
+        {
+          "code": "3"
+        },
+        {
+          "code": "4"
+        },
+        {
+          "code": "5"
+        },
+        {
+          "code": "6"
+        },
+        {
+          "code": "7"
+        },
+        {
+          "code": "8"
+        },
+        {
+          "code": "9"
+        },
+        {
+          "code": "10"
+        },
+        {
+          "code": "11"
+        },
+        {
+          "code": "12"
+        },
+        {
+          "code": "13"
+        },
+        {
+          "code": "14"
+        },
+        {
+          "code": "15"
+        },
+        {
+          "code": "16"
+        },
+        {
+          "code": "17"
+        },
+        {
+          "code": "18"
+        },
+        {
+          "code": "19"
+        },
+        {
+          "code": "20"
+        },
+        {
+          "code": "21"
+        },
+        {
+          "code": "22"
+        },
+        {
+          "code": "23"
+        }
+      ],
+      "elimination": true,
+      "elimination_value": "0"
+    },
+    {
+      "code": "Läsår",
+      "categories": [
+        {
+          "code": "0"
+        },
+        {
+          "code": "1"
+        },
+        {
+          "code": "2"
+        },
+        {
+          "code": "3"
+        },
+        {
+          "code": "4"
+        },
+        {
+          "code": "5"
+        },
+        {
+          "code": "6"
+        },
+        {
+          "code": "7"
+        },
+        {
+          "code": "8"
+        },
+        {
+          "code": "9"
+        },
+        {
+          "code": "10"
+        },
+        {
+          "code": "11"
+        },
+        {
+          "code": "12"
+        }
+      ],
+      "elimination": false
+    },
+    {
+      "code": "Kön",
+      "categories": [
+        {
+          "code": "0"
+        },
+        {
+          "code": "1"
+        },
+        {
+          "code": "2"
+        }
+      ],
+      "elimination": true
+    },
+    {
+      "code": "Antal personer, Utbetalt belopp",
+      "categories": [
+        {
+          "code": "0"
+        },
+        {
+          "code": "1"
+        }
+      ],
+      "elimination": false
+    }
+  ],
+  "updated": "2026-08-26T15:54:51Z",
+  "time_unit": "other",
+  "official_statistics": true,
+  "subject": {
+    "code": "Studiestöd"
+  },
+  "paths": [
+    [
+      "SU",
+      "L",
+      "LE"
+    ]
+  ],
+  "translations": {
+    "sv": {
+      "label": "Lärlingsersättning efter Ålder, Folkbokföring län, Läsår, Kön och Antal personer, Utbetalt belopp",
+      "dimensions": {
+        "Ålder": {
+          "label": "Ålder",
+          "categories": {
+            "0": {
+              "label": "Totalt",
+              "notes": [
+                "Om 'Totalt' väljs redovisas nettototalen för alla, vilket innebär att varje person bara räknas en gång. Totaluppgifter i tabellerna svarar mot summan av samtliga värden som är möjliga att välja för en delpopulation eller en redovisningsgrupp. Totalen innebär alltså inte en summering av valda värden."
+              ]
+            },
+            "1": {
+              "label": "16 år eller yngre"
+            },
+            "2": {
+              "label": "17 år"
+            },
+            "3": {
+              "label": "18 år"
+            },
+            "4": {
+              "label": "19 år"
+            },
+            "5": {
+              "label": "20 år eller äldre"
+            }
+          },
+          "notes": [
+            "Ålder vid hösterminens slut respektive läsår. Av tekniska skäl kan det i vissa fall förekomma att en person förekommer under flera åldrar och åldersintervall."
+          ]
+        },
+        "Folkbokföring län": {
+          "label": "Folkbokföring län",
+          "categories": {
+            "0": {
+              "label": "Totalt",
+              "notes": [
+                "Om 'Totalt' väljs redovisas nettototalen för alla, vilket innebär att varje person bara räknas en gång. Totaluppgifter i tabellerna svarar mot summan av samtliga värden som är möjliga att välja för en delpopulation eller en redovisningsgrupp. Totalen innebär alltså inte en summering av valda värden."
+              ]
+            },
+            "1": {
+              "label": "-1 Ej folkbokförd i Sverige"
+            },
+            "2": {
+              "label": "00 Sverige"
+            },
+            "3": {
+              "label": "01  Stockholms län"
+            },
+            "4": {
+              "label": "03  Uppsala län"
+            },
+            "5": {
+              "label": "04  Södermanlands län"
+            },
+            "6": {
+              "label": "05  Östergötlands län"
+            },
+            "7": {
+              "label": "06  Jönköpings län"
+            },
+            "8": {
+              "label": "07  Kronobergs län"
+            },
+            "9": {
+              "label": "08  Kalmar län"
+            },
+            "10": {
+              "label": "09  Gotlands län"
+            },
+            "11": {
+              "label": "10  Blekinge län"
+            },
+            "12": {
+              "label": "12  Skåne län"
+            },
+            "13": {
+              "label": "13  Hallands län"
+            },
+            "14": {
+              "label": "14  Västra Götalands län"
+            },
+            "15": {
+              "label": "17  Värmlands län"
+            },
+            "16": {
+              "label": "18  Örebro län"
+            },
+            "17": {
+              "label": "19  Västmanlands län"
+            },
+            "18": {
+              "label": "20  Dalarnas län"
+            },
+            "19": {
+              "label": "21  Gävleborgs län"
+            },
+            "20": {
+              "label": "22  Västernorrlands län"
+            },
+            "21": {
+              "label": "23  Jämtlands län"
+            },
+            "22": {
+              "label": "24  Västerbottens län"
+            },
+            "23": {
+              "label": "25  Norrbottens län"
+            }
+          },
+          "notes": [
+            "Det län som personen var folkbokförd i vid ansökningstillfället eller när ett ärende har skapats hos CSN."
+          ]
+        },
+        "Läsår": {
+          "label": "Läsår",
+          "categories": {
+            "0": {
+              "label": "2013/2014"
+            },
+            "1": {
+              "label": "2014/2015"
+            },
+            "2": {
+              "label": "2015/2016"
+            },
+            "3": {
+              "label": "2016/2017"
+            },
+            "4": {
+              "label": "2017/2018"
+            },
+            "5": {
+              "label": "2018/2019"
+            },
+            "6": {
+              "label": "2019/2020"
+            },
+            "7": {
+              "label": "2020/2021"
+            },
+            "8": {
+              "label": "2021/2022"
+            },
+            "9": {
+              "label": "2022/2023"
+            },
+            "10": {
+              "label": "2023/2024"
+            },
+            "11": {
+              "label": "2024/2025"
+            },
+            "12": {
+              "label": "2025/2026"
+            }
+          },
+          "notes": [
+            "Den tidsram som ingår i begreppet läsår är den 1 juli år 1 till och med den 30 juni år 2. Visar antalet studerande och/eller utbetalt belopp för studier under läsåret."
+          ]
+        },
+        "Kön": {
+          "label": "Kön",
+          "categories": {
+            "0": {
+              "label": "Kvinnor"
+            },
+            "1": {
+              "label": "Män"
+            },
+            "2": {
+              "label": "Totalt"
+            }
+          },
+          "notes": [
+            "Med kön avses det juridiska könet. Personer som har bytt juridiskt kön under tidsperioden kan förekomma i båda könskategorierna."
+          ]
+        },
+        "Antal personer, Utbetalt belopp": {
+          "label": "Antal personer, Utbetalt belopp",
+          "categories": {
+            "0": {
+              "label": "Antal personer",
+              "notes": [
+                "Antal personer. Vid en fördelning på flera olika variabler kan personen vanligen förekomma på fler än ett ställe. Alla totaler är nettoräknade, vilket innebär att varje person bara räknas en gång. Tabellen har sekretessgranskats, vilket innebär att enskilda celler med antal färre än 3 har ersatts med dubbelprick '..'."
+              ]
+            },
+            "1": {
+              "label": "Utbetalt belopp (MSEK)"
+            }
+          }
+        }
+      },
+      "source": "Centrala studiestödsnämnden, CSN.",
+      "subject": "Lärlingsersättning",
+      "paths": [
+        [
+          "Utbetalning av studiestöd",
+          "Läsår (när studierna har skett)",
+          "Lärlingsersättning"
+        ]
+      ],
+      "notes": [
+        "Fotnoter med tabellförklaringar visas längst ned under rubriken 'Fotnoter'.",
+        "Kostnadsersättning för lärlingar (Lärlingsersättning) betalas ut för lärlingar som har rätt till studiehjälp och läser en gymnasial utbildning där delar av utbildningen är förlagd till en arbetsplats. Sedan den 1 augusti 2018 kan lärlingsersättning även lämnas för studier på en lärlingsliknande utbildning vid ett introduktionsprogram. Den 1 januari 2025 höjdes ersättningen från 1 000 kronor per månad till 1 500 kronor per månad. För mer information, se csn.se. Tabellen visar vilken tidsperiod studierna med lärlingsersättning avser."
+      ],
+      "links": {
+        "source": {
+          "href": "https://statistik.csn.se/PxWeb/pxweb/sv/CSNstat/CSNstat__SU__L__LE/SULESVL11a.px/"
+        },
+        "metadata": {
+          "href": "https://statistik.csn.se/PXWeb/api/v1/sv/CSNstat/SU/L/LE/SULESVL11a.px"
+        },
+        "data": {
+          "href": "https://statistik.csn.se/PXWeb/api/v1/sv/CSNstat/SU/L/LE/SULESVL11a.px"
+        }
+      }
+    }
+  }
+}

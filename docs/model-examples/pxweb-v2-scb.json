@@ -1,0 +1,1525 @@
+{
+  "identity": {
+    "provider_code": "scb",
+    "dataset_code": "TAB4707"
+  },
+  "dimensions": [
+    {
+      "code": "Sektor",
+      "categories": [
+        {
+          "code": "010"
+        },
+        {
+          "code": "030"
+        },
+        {
+          "code": "320"
+        },
+        {
+          "code": "409"
+        },
+        {
+          "code": "410"
+        },
+        {
+          "code": "040"
+        }
+      ],
+      "elimination": false
+    },
+    {
+      "code": "Kon",
+      "categories": [
+        {
+          "code": "1"
+        },
+        {
+          "code": "2"
+        },
+        {
+          "code": "1+2"
+        }
+      ],
+      "elimination": false
+    },
+    {
+      "code": "ContentsCode",
+      "categories": [
+        {
+          "code": "0000070M"
+        },
+        {
+          "code": "0000070N"
+        },
+        {
+          "code": "0000070U"
+        },
+        {
+          "code": "0000070V"
+        },
+        {
+          "code": "0000070W"
+        },
+        {
+          "code": "0000070X"
+        }
+      ],
+      "role": "metric",
+      "elimination": false
+    },
+    {
+      "code": "Tid",
+      "categories": [
+        {
+          "code": "2015M04"
+        },
+        {
+          "code": "2015M05"
+        },
+        {
+          "code": "2015M06"
+        },
+        {
+          "code": "2015M07"
+        },
+        {
+          "code": "2015M08"
+        },
+        {
+          "code": "2015M09"
+        },
+        {
+          "code": "2015M10"
+        },
+        {
+          "code": "2015M11"
+        },
+        {
+          "code": "2015M12"
+        },
+        {
+          "code": "2016M01"
+        },
+        {
+          "code": "2016M02"
+        },
+        {
+          "code": "2016M03"
+        },
+        {
+          "code": "2016M04"
+        },
+        {
+          "code": "2016M05"
+        },
+        {
+          "code": "2016M06"
+        },
+        {
+          "code": "2016M07"
+        },
+        {
+          "code": "2016M08"
+        },
+        {
+          "code": "2016M09"
+        },
+        {
+          "code": "2016M10"
+        },
+        {
+          "code": "2016M11"
+        },
+        {
+          "code": "2016M12"
+        },
+        {
+          "code": "2017M01"
+        },
+        {
+          "code": "2017M02"
+        },
+        {
+          "code": "2017M03"
+        },
+        {
+          "code": "2017M04"
+        },
+        {
+          "code": "2017M05"
+        },
+        {
+          "code": "2017M06"
+        },
+        {
+          "code": "2017M07"
+        },
+        {
+          "code": "2017M08"
+        },
+        {
+          "code": "2017M09"
+        },
+        {
+          "code": "2017M10"
+        },
+        {
+          "code": "2017M11"
+        },
+        {
+          "code": "2017M12"
+        },
+        {
+          "code": "2018M01"
+        },
+        {
+          "code": "2018M02"
+        },
+        {
+          "code": "2018M03"
+        },
+        {
+          "code": "2018M04"
+        },
+        {
+          "code": "2018M05"
+        },
+        {
+          "code": "2018M06"
+        },
+        {
+          "code": "2018M07"
+        },
+        {
+          "code": "2018M08"
+        },
+        {
+          "code": "2018M09"
+        },
+        {
+          "code": "2018M10"
+        },
+        {
+          "code": "2018M11"
+        },
+        {
+          "code": "2018M12"
+        },
+        {
+          "code": "2019M01"
+        },
+        {
+          "code": "2019M02"
+        },
+        {
+          "code": "2019M03"
+        },
+        {
+          "code": "2019M04"
+        },
+        {
+          "code": "2019M05"
+        },
+        {
+          "code": "2019M06"
+        },
+        {
+          "code": "2019M07"
+        },
+        {
+          "code": "2019M08"
+        },
+        {
+          "code": "2019M09"
+        },
+        {
+          "code": "2019M10"
+        },
+        {
+          "code": "2019M11"
+        },
+        {
+          "code": "2019M12"
+        },
+        {
+          "code": "2020M01"
+        },
+        {
+          "code": "2020M02"
+        },
+        {
+          "code": "2020M03"
+        },
+        {
+          "code": "2020M04"
+        },
+        {
+          "code": "2020M05"
+        },
+        {
+          "code": "2020M06"
+        },
+        {
+          "code": "2020M07"
+        },
+        {
+          "code": "2020M08"
+        },
+        {
+          "code": "2020M09"
+        },
+        {
+          "code": "2020M10"
+        },
+        {
+          "code": "2020M11"
+        },
+        {
+          "code": "2020M12"
+        },
+        {
+          "code": "2021M01"
+        },
+        {
+          "code": "2021M02"
+        },
+        {
+          "code": "2021M03"
+        },
+        {
+          "code": "2021M04"
+        },
+        {
+          "code": "2021M05"
+        },
+        {
+          "code": "2021M06"
+        },
+        {
+          "code": "2021M07"
+        },
+        {
+          "code": "2021M08"
+        },
+        {
+          "code": "2021M09"
+        },
+        {
+          "code": "2021M10"
+        },
+        {
+          "code": "2021M11"
+        },
+        {
+          "code": "2021M12"
+        },
+        {
+          "code": "2022M01"
+        },
+        {
+          "code": "2022M02"
+        },
+        {
+          "code": "2022M03"
+        },
+        {
+          "code": "2022M04"
+        },
+        {
+          "code": "2022M05"
+        },
+        {
+          "code": "2022M06"
+        },
+        {
+          "code": "2022M07"
+        },
+        {
+          "code": "2022M08"
+        },
+        {
+          "code": "2022M09"
+        },
+        {
+          "code": "2022M10"
+        },
+        {
+          "code": "2022M11"
+        },
+        {
+          "code": "2022M12"
+        },
+        {
+          "code": "2023M01"
+        },
+        {
+          "code": "2023M02"
+        },
+        {
+          "code": "2023M03"
+        },
+        {
+          "code": "2023M04"
+        },
+        {
+          "code": "2023M05"
+        },
+        {
+          "code": "2023M06"
+        },
+        {
+          "code": "2023M07"
+        },
+        {
+          "code": "2023M08"
+        },
+        {
+          "code": "2023M09"
+        },
+        {
+          "code": "2023M10"
+        },
+        {
+          "code": "2023M11"
+        },
+        {
+          "code": "2023M12"
+        },
+        {
+          "code": "2024M01"
+        },
+        {
+          "code": "2024M02"
+        },
+        {
+          "code": "2024M03"
+        },
+        {
+          "code": "2024M04"
+        },
+        {
+          "code": "2024M05"
+        },
+        {
+          "code": "2024M06"
+        },
+        {
+          "code": "2024M07"
+        },
+        {
+          "code": "2024M08"
+        },
+        {
+          "code": "2024M09"
+        },
+        {
+          "code": "2024M10"
+        },
+        {
+          "code": "2024M11"
+        },
+        {
+          "code": "2024M12"
+        },
+        {
+          "code": "2025M01"
+        },
+        {
+          "code": "2025M02"
+        },
+        {
+          "code": "2025M03"
+        },
+        {
+          "code": "2025M04"
+        },
+        {
+          "code": "2025M05"
+        },
+        {
+          "code": "2025M06"
+        },
+        {
+          "code": "2025M07"
+        },
+        {
+          "code": "2025M08"
+        },
+        {
+          "code": "2025M09"
+        },
+        {
+          "code": "2025M10"
+        },
+        {
+          "code": "2025M11"
+        },
+        {
+          "code": "2025M12"
+        },
+        {
+          "code": "2026M01"
+        },
+        {
+          "code": "2026M02"
+        },
+        {
+          "code": "2026M03"
+        },
+        {
+          "code": "2026M04"
+        },
+        {
+          "code": "2026M05"
+        },
+        {
+          "code": "2026M06"
+        }
+      ],
+      "role": "time",
+      "elimination": false
+    }
+  ],
+  "updated": "2026-08-28T06:00:00Z",
+  "time_unit": "monthly",
+  "first_period": "2015M04",
+  "last_period": "2026M06",
+  "official_statistics": true,
+  "subject": {
+    "code": "AM"
+  },
+  "paths": [
+    [
+      "AM",
+      "AM0211",
+      "AM0211A"
+    ]
+  ],
+  "contacts": [
+    {
+      "email": "information@scb.se",
+      "name": "Statistikservice",
+      "phone": "010-479 50 00",
+      "organization": "SCB"
+    },
+    {
+      "email": "anstallningar@scb.se",
+      "name": "Anställningar",
+      "phone": "010-479 50 00",
+      "organization": "SCB"
+    }
+  ],
+  "translations": {
+    "sv": {
+      "label": "Antal pågående anställningar efter anställningstid, kön och sektor. Månad 2015M04-2026M06",
+      "dimensions": {
+        "Sektor": {
+          "label": "sektor",
+          "categories": {
+            "010": {
+              "label": "samtliga sektorer"
+            },
+            "030": {
+              "label": "näringslivet"
+            },
+            "320": {
+              "label": "staten"
+            },
+            "409": {
+              "label": "region"
+            },
+            "410": {
+              "label": "kommun"
+            },
+            "040": {
+              "label": "hushållens icke-vinstdrivande organisationer"
+            }
+          }
+        },
+        "Kon": {
+          "label": "kön",
+          "categories": {
+            "1": {
+              "label": "män"
+            },
+            "2": {
+              "label": "kvinnor"
+            },
+            "1+2": {
+              "label": "totalt"
+            }
+          }
+        },
+        "ContentsCode": {
+          "label": "tabellinnehåll",
+          "categories": {
+            "0000070M": {
+              "label": "Antal pågående anställningar",
+              "unit": "antal"
+            },
+            "0000070N": {
+              "label": "Antal pågående anställningar - anställningstid >6 månader",
+              "unit": "antal"
+            },
+            "0000070U": {
+              "label": "Antal pågående anställningar - anställningstid <=6 månader",
+              "unit": "antal"
+            },
+            "0000070V": {
+              "label": "Årlig förändring av antalet pågående anställningar, procent",
+              "unit": "andel"
+            },
+            "0000070W": {
+              "label": "Årlig förändring av antalet pågående anställningar - anställningstid >6 månader, procent",
+              "unit": "andel"
+            },
+            "0000070X": {
+              "label": "Årlig förändring av antalet pågående anställningar - anställningstid <=6 månader, procent",
+              "unit": "andel"
+            }
+          }
+        },
+        "Tid": {
+          "label": "månad",
+          "categories": {
+            "2015M04": {
+              "label": "2015M04"
+            },
+            "2015M05": {
+              "label": "2015M05"
+            },
+            "2015M06": {
+              "label": "2015M06"
+            },
+            "2015M07": {
+              "label": "2015M07"
+            },
+            "2015M08": {
+              "label": "2015M08"
+            },
+            "2015M09": {
+              "label": "2015M09"
+            },
+            "2015M10": {
+              "label": "2015M10"
+            },
+            "2015M11": {
+              "label": "2015M11"
+            },
+            "2015M12": {
+              "label": "2015M12"
+            },
+            "2016M01": {
+              "label": "2016M01"
+            },
+            "2016M02": {
+              "label": "2016M02"
+            },
+            "2016M03": {
+              "label": "2016M03"
+            },
+            "2016M04": {
+              "label": "2016M04"
+            },
+            "2016M05": {
+              "label": "2016M05"
+            },
+            "2016M06": {
+              "label": "2016M06"
+            },
+            "2016M07": {
+              "label": "2016M07"
+            },
+            "2016M08": {
+              "label": "2016M08"
+            },
+            "2016M09": {
+              "label": "2016M09"
+            },
+            "2016M10": {
+              "label": "2016M10"
+            },
+            "2016M11": {
+              "label": "2016M11"
+            },
+            "2016M12": {
+              "label": "2016M12"
+            },
+            "2017M01": {
+              "label": "2017M01"
+            },
+            "2017M02": {
+              "label": "2017M02"
+            },
+            "2017M03": {
+              "label": "2017M03"
+            },
+            "2017M04": {
+              "label": "2017M04"
+            },
+            "2017M05": {
+              "label": "2017M05"
+            },
+            "2017M06": {
+              "label": "2017M06"
+            },
+            "2017M07": {
+              "label": "2017M07"
+            },
+            "2017M08": {
+              "label": "2017M08"
+            },
+            "2017M09": {
+              "label": "2017M09"
+            },
+            "2017M10": {
+              "label": "2017M10"
+            },
+            "2017M11": {
+              "label": "2017M11"
+            },
+            "2017M12": {
+              "label": "2017M12"
+            },
+            "2018M01": {
+              "label": "2018M01"
+            },
+            "2018M02": {
+              "label": "2018M02"
+            },
+            "2018M03": {
+              "label": "2018M03"
+            },
+            "2018M04": {
+              "label": "2018M04"
+            },
+            "2018M05": {
+              "label": "2018M05"
+            },
+            "2018M06": {
+              "label": "2018M06"
+            },
+            "2018M07": {
+              "label": "2018M07"
+            },
+            "2018M08": {
+              "label": "2018M08"
+            },
+            "2018M09": {
+              "label": "2018M09"
+            },
+            "2018M10": {
+              "label": "2018M10"
+            },
+            "2018M11": {
+              "label": "2018M11"
+            },
+            "2018M12": {
+              "label": "2018M12"
+            },
+            "2019M01": {
+              "label": "2019M01"
+            },
+            "2019M02": {
+              "label": "2019M02"
+            },
+            "2019M03": {
+              "label": "2019M03"
+            },
+            "2019M04": {
+              "label": "2019M04"
+            },
+            "2019M05": {
+              "label": "2019M05"
+            },
+            "2019M06": {
+              "label": "2019M06"
+            },
+            "2019M07": {
+              "label": "2019M07"
+            },
+            "2019M08": {
+              "label": "2019M08"
+            },
+            "2019M09": {
+              "label": "2019M09"
+            },
+            "2019M10": {
+              "label": "2019M10"
+            },
+            "2019M11": {
+              "label": "2019M11"
+            },
+            "2019M12": {
+              "label": "2019M12"
+            },
+            "2020M01": {
+              "label": "2020M01"
+            },
+            "2020M02": {
+              "label": "2020M02"
+            },
+            "2020M03": {
+              "label": "2020M03"
+            },
+            "2020M04": {
+              "label": "2020M04"
+            },
+            "2020M05": {
+              "label": "2020M05"
+            },
+            "2020M06": {
+              "label": "2020M06"
+            },
+            "2020M07": {
+              "label": "2020M07"
+            },
+            "2020M08": {
+              "label": "2020M08"
+            },
+            "2020M09": {
+              "label": "2020M09"
+            },
+            "2020M10": {
+              "label": "2020M10"
+            },
+            "2020M11": {
+              "label": "2020M11"
+            },
+            "2020M12": {
+              "label": "2020M12"
+            },
+            "2021M01": {
+              "label": "2021M01"
+            },
+            "2021M02": {
+              "label": "2021M02"
+            },
+            "2021M03": {
+              "label": "2021M03"
+            },
+            "2021M04": {
+              "label": "2021M04"
+            },
+            "2021M05": {
+              "label": "2021M05"
+            },
+            "2021M06": {
+              "label": "2021M06"
+            },
+            "2021M07": {
+              "label": "2021M07"
+            },
+            "2021M08": {
+              "label": "2021M08"
+            },
+            "2021M09": {
+              "label": "2021M09"
+            },
+            "2021M10": {
+              "label": "2021M10"
+            },
+            "2021M11": {
+              "label": "2021M11"
+            },
+            "2021M12": {
+              "label": "2021M12"
+            },
+            "2022M01": {
+              "label": "2022M01"
+            },
+            "2022M02": {
+              "label": "2022M02"
+            },
+            "2022M03": {
+              "label": "2022M03"
+            },
+            "2022M04": {
+              "label": "2022M04"
+            },
+            "2022M05": {
+              "label": "2022M05"
+            },
+            "2022M06": {
+              "label": "2022M06"
+            },
+            "2022M07": {
+              "label": "2022M07"
+            },
+            "2022M08": {
+              "label": "2022M08"
+            },
+            "2022M09": {
+              "label": "2022M09"
+            },
+            "2022M10": {
+              "label": "2022M10"
+            },
+            "2022M11": {
+              "label": "2022M11"
+            },
+            "2022M12": {
+              "label": "2022M12"
+            },
+            "2023M01": {
+              "label": "2023M01"
+            },
+            "2023M02": {
+              "label": "2023M02"
+            },
+            "2023M03": {
+              "label": "2023M03"
+            },
+            "2023M04": {
+              "label": "2023M04"
+            },
+            "2023M05": {
+              "label": "2023M05"
+            },
+            "2023M06": {
+              "label": "2023M06"
+            },
+            "2023M07": {
+              "label": "2023M07"
+            },
+            "2023M08": {
+              "label": "2023M08"
+            },
+            "2023M09": {
+              "label": "2023M09"
+            },
+            "2023M10": {
+              "label": "2023M10"
+            },
+            "2023M11": {
+              "label": "2023M11"
+            },
+            "2023M12": {
+              "label": "2023M12"
+            },
+            "2024M01": {
+              "label": "2024M01"
+            },
+            "2024M02": {
+              "label": "2024M02"
+            },
+            "2024M03": {
+              "label": "2024M03"
+            },
+            "2024M04": {
+              "label": "2024M04"
+            },
+            "2024M05": {
+              "label": "2024M05"
+            },
+            "2024M06": {
+              "label": "2024M06"
+            },
+            "2024M07": {
+              "label": "2024M07"
+            },
+            "2024M08": {
+              "label": "2024M08"
+            },
+            "2024M09": {
+              "label": "2024M09"
+            },
+            "2024M10": {
+              "label": "2024M10"
+            },
+            "2024M11": {
+              "label": "2024M11"
+            },
+            "2024M12": {
+              "label": "2024M12"
+            },
+            "2025M01": {
+              "label": "2025M01"
+            },
+            "2025M02": {
+              "label": "2025M02"
+            },
+            "2025M03": {
+              "label": "2025M03"
+            },
+            "2025M04": {
+              "label": "2025M04"
+            },
+            "2025M05": {
+              "label": "2025M05"
+            },
+            "2025M06": {
+              "label": "2025M06"
+            },
+            "2025M07": {
+              "label": "2025M07"
+            },
+            "2025M08": {
+              "label": "2025M08"
+            },
+            "2025M09": {
+              "label": "2025M09"
+            },
+            "2025M10": {
+              "label": "2025M10"
+            },
+            "2025M11": {
+              "label": "2025M11"
+            },
+            "2025M12": {
+              "label": "2025M12"
+            },
+            "2026M01": {
+              "label": "2026M01"
+            },
+            "2026M02": {
+              "label": "2026M02"
+            },
+            "2026M03": {
+              "label": "2026M03"
+            },
+            "2026M04": {
+              "label": "2026M04"
+            },
+            "2026M05": {
+              "label": "2026M05"
+            },
+            "2026M06": {
+              "label": "2026M06"
+            }
+          }
+        }
+      },
+      "source": "SCB",
+      "subject": "Arbetsmarknad",
+      "paths": [
+        [
+          "Arbetsmarknad",
+          "Anställningar",
+          "Anställningar"
+        ]
+      ],
+      "notes": [
+        "Observera att målstorheter som redovisas efter näringsgren och regionalt är modellerad utifrån uppgifter på arbetsgivarnivå. För mer information vänligen se dokumentationen Kvalitetsdeklaration.",
+        "Variabeln Antal pågående anställningar innehåller länkade siffror över antalet anställda från undersökningen Kortperiodisk sysselsättningsstatistik (KS). De länkade siffrorna avser perioden 2015M04 – 2019M12 och redovisas både på totalnivå och uppdelat per sektorer."
+      ],
+      "links": {
+        "source": {
+          "href": "https://pxweb2.pages.dev/sv/table/TAB4707"
+        },
+        "metadata": {
+          "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4707/metadata?lang=sv"
+        },
+        "data": {
+          "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4707/data?lang=sv"
+        }
+      }
+    },
+    "en": {
+      "label": "Number of ongoing employments by length of employment, sex and sector. Month 2015M04-2026M06",
+      "dimensions": {
+        "Sektor": {
+          "label": "sector",
+          "categories": {
+            "010": {
+              "label": "all sectors"
+            },
+            "030": {
+              "label": "business sector"
+            },
+            "320": {
+              "label": "central government"
+            },
+            "409": {
+              "label": "region"
+            },
+            "410": {
+              "label": "municipality"
+            },
+            "040": {
+              "label": "non-profit institutions serving households"
+            }
+          }
+        },
+        "Kon": {
+          "label": "sex",
+          "categories": {
+            "1": {
+              "label": "men"
+            },
+            "2": {
+              "label": "women"
+            },
+            "1+2": {
+              "label": "total"
+            }
+          }
+        },
+        "ContentsCode": {
+          "label": "observations",
+          "categories": {
+            "0000070M": {
+              "label": "Number of ongoing employments",
+              "unit": "number"
+            },
+            "0000070N": {
+              "label": "Number of ongoing employments - length of employment >6 months",
+              "unit": "number"
+            },
+            "0000070U": {
+              "label": "Number of ongoing employments - length of employment <=6 months",
+              "unit": "number"
+            },
+            "0000070V": {
+              "label": "Annual change in the number of ongoing employments, percent",
+              "unit": "percentage"
+            },
+            "0000070W": {
+              "label": "Annual change in the number of ongoing employments - length of employment >6 months, percent",
+              "unit": "percentage"
+            },
+            "0000070X": {
+              "label": "Annual change in the number of ongoing employments - length of employment >6 months, percent",
+              "unit": "percentage"
+            }
+          }
+        },
+        "Tid": {
+          "label": "month",
+          "categories": {
+            "2015M04": {
+              "label": "2015M04"
+            },
+            "2015M05": {
+              "label": "2015M05"
+            },
+            "2015M06": {
+              "label": "2015M06"
+            },
+            "2015M07": {
+              "label": "2015M07"
+            },
+            "2015M08": {
+              "label": "2015M08"
+            },
+            "2015M09": {
+              "label": "2015M09"
+            },
+            "2015M10": {
+              "label": "2015M10"
+            },
+            "2015M11": {
+              "label": "2015M11"
+            },
+            "2015M12": {
+              "label": "2015M12"
+            },
+            "2016M01": {
+              "label": "2016M01"
+            },
+            "2016M02": {
+              "label": "2016M02"
+            },
+            "2016M03": {
+              "label": "2016M03"
+            },
+            "2016M04": {
+              "label": "2016M04"
+            },
+            "2016M05": {
+              "label": "2016M05"
+            },
+            "2016M06": {
+              "label": "2016M06"
+            },
+            "2016M07": {
+              "label": "2016M07"
+            },
+            "2016M08": {
+              "label": "2016M08"
+            },
+            "2016M09": {
+              "label": "2016M09"
+            },
+            "2016M10": {
+              "label": "2016M10"
+            },
+            "2016M11": {
+              "label": "2016M11"
+            },
+            "2016M12": {
+              "label": "2016M12"
+            },
+            "2017M01": {
+              "label": "2017M01"
+            },
+            "2017M02": {
+              "label": "2017M02"
+            },
+            "2017M03": {
+              "label": "2017M03"
+            },
+            "2017M04": {
+              "label": "2017M04"
+            },
+            "2017M05": {
+              "label": "2017M05"
+            },
+            "2017M06": {
+              "label": "2017M06"
+            },
+            "2017M07": {
+              "label": "2017M07"
+            },
+            "2017M08": {
+              "label": "2017M08"
+            },
+            "2017M09": {
+              "label": "2017M09"
+            },
+            "2017M10": {
+              "label": "2017M10"
+            },
+            "2017M11": {
+              "label": "2017M11"
+            },
+            "2017M12": {
+              "label": "2017M12"
+            },
+            "2018M01": {
+              "label": "2018M01"
+            },
+            "2018M02": {
+              "label": "2018M02"
+            },
+            "2018M03": {
+              "label": "2018M03"
+            },
+            "2018M04": {
+              "label": "2018M04"
+            },
+            "2018M05": {
+              "label": "2018M05"
+            },
+            "2018M06": {
+              "label": "2018M06"
+            },
+            "2018M07": {
+              "label": "2018M07"
+            },
+            "2018M08": {
+              "label": "2018M08"
+            },
+            "2018M09": {
+              "label": "2018M09"
+            },
+            "2018M10": {
+              "label": "2018M10"
+            },
+            "2018M11": {
+              "label": "2018M11"
+            },
+            "2018M12": {
+              "label": "2018M12"
+            },
+            "2019M01": {
+              "label": "2019M01"
+            },
+            "2019M02": {
+              "label": "2019M02"
+            },
+            "2019M03": {
+              "label": "2019M03"
+            },
+            "2019M04": {
+              "label": "2019M04"
+            },
+            "2019M05": {
+              "label": "2019M05"
+            },
+            "2019M06": {
+              "label": "2019M06"
+            },
+            "2019M07": {
+              "label": "2019M07"
+            },
+            "2019M08": {
+              "label": "2019M08"
+            },
+            "2019M09": {
+              "label": "2019M09"
+            },
+            "2019M10": {
+              "label": "2019M10"
+            },
+            "2019M11": {
+              "label": "2019M11"
+            },
+            "2019M12": {
+              "label": "2019M12"
+            },
+            "2020M01": {
+              "label": "2020M01"
+            },
+            "2020M02": {
+              "label": "2020M02"
+            },
+            "2020M03": {
+              "label": "2020M03"
+            },
+            "2020M04": {
+              "label": "2020M04"
+            },
+            "2020M05": {
+              "label": "2020M05"
+            },
+            "2020M06": {
+              "label": "2020M06"
+            },
+            "2020M07": {
+              "label": "2020M07"
+            },
+            "2020M08": {
+              "label": "2020M08"
+            },
+            "2020M09": {
+              "label": "2020M09"
+            },
+            "2020M10": {
+              "label": "2020M10"
+            },
+            "2020M11": {
+              "label": "2020M11"
+            },
+            "2020M12": {
+              "label": "2020M12"
+            },
+            "2021M01": {
+              "label": "2021M01"
+            },
+            "2021M02": {
+              "label": "2021M02"
+            },
+            "2021M03": {
+              "label": "2021M03"
+            },
+            "2021M04": {
+              "label": "2021M04"
+            },
+            "2021M05": {
+              "label": "2021M05"
+            },
+            "2021M06": {
+              "label": "2021M06"
+            },
+            "2021M07": {
+              "label": "2021M07"
+            },
+            "2021M08": {
+              "label": "2021M08"
+            },
+            "2021M09": {
+              "label": "2021M09"
+            },
+            "2021M10": {
+              "label": "2021M10"
+            },
+            "2021M11": {
+              "label": "2021M11"
+            },
+            "2021M12": {
+              "label": "2021M12"
+            },
+            "2022M01": {
+              "label": "2022M01"
+            },
+            "2022M02": {
+              "label": "2022M02"
+            },
+            "2022M03": {
+              "label": "2022M03"
+            },
+            "2022M04": {
+              "label": "2022M04"
+            },
+            "2022M05": {
+              "label": "2022M05"
+            },
+            "2022M06": {
+              "label": "2022M06"
+            },
+            "2022M07": {
+              "label": "2022M07"
+            },
+            "2022M08": {
+              "label": "2022M08"
+            },
+            "2022M09": {
+              "label": "2022M09"
+            },
+            "2022M10": {
+              "label": "2022M10"
+            },
+            "2022M11": {
+              "label": "2022M11"
+            },
+            "2022M12": {
+              "label": "2022M12"
+            },
+            "2023M01": {
+              "label": "2023M01"
+            },
+            "2023M02": {
+              "label": "2023M02"
+            },
+            "2023M03": {
+              "label": "2023M03"
+            },
+            "2023M04": {
+              "label": "2023M04"
+            },
+            "2023M05": {
+              "label": "2023M05"
+            },
+            "2023M06": {
+              "label": "2023M06"
+            },
+            "2023M07": {
+              "label": "2023M07"
+            },
+            "2023M08": {
+              "label": "2023M08"
+            },
+            "2023M09": {
+              "label": "2023M09"
+            },
+            "2023M10": {
+              "label": "2023M10"
+            },
+            "2023M11": {
+              "label": "2023M11"
+            },
+            "2023M12": {
+              "label": "2023M12"
+            },
+            "2024M01": {
+              "label": "2024M01"
+            },
+            "2024M02": {
+              "label": "2024M02"
+            },
+            "2024M03": {
+              "label": "2024M03"
+            },
+            "2024M04": {
+              "label": "2024M04"
+            },
+            "2024M05": {
+              "label": "2024M05"
+            },
+            "2024M06": {
+              "label": "2024M06"
+            },
+            "2024M07": {
+              "label": "2024M07"
+            },
+            "2024M08": {
+              "label": "2024M08"
+            },
+            "2024M09": {
+              "label": "2024M09"
+            },
+            "2024M10": {
+              "label": "2024M10"
+            },
+            "2024M11": {
+              "label": "2024M11"
+            },
+            "2024M12": {
+              "label": "2024M12"
+            },
+            "2025M01": {
+              "label": "2025M01"
+            },
+            "2025M02": {
+              "label": "2025M02"
+            },
+            "2025M03": {
+              "label": "2025M03"
+            },
+            "2025M04": {
+              "label": "2025M04"
+            },
+            "2025M05": {
+              "label": "2025M05"
+            },
+            "2025M06": {
+              "label": "2025M06"
+            },
+            "2025M07": {
+              "label": "2025M07"
+            },
+            "2025M08": {
+              "label": "2025M08"
+            },
+            "2025M09": {
+              "label": "2025M09"
+            },
+            "2025M10": {
+              "label": "2025M10"
+            },
+            "2025M11": {
+              "label": "2025M11"
+            },
+            "2025M12": {
+              "label": "2025M12"
+            },
+            "2026M01": {
+              "label": "2026M01"
+            },
+            "2026M02": {
+              "label": "2026M02"
+            },
+            "2026M03": {
+              "label": "2026M03"
+            },
+            "2026M04": {
+              "label": "2026M04"
+            },
+            "2026M05": {
+              "label": "2026M05"
+            },
+            "2026M06": {
+              "label": "2026M06"
+            }
+          }
+        }
+      },
+      "source": "Statistics Sweden",
+      "subject": "Labour market",
+      "paths": [
+        [
+          "Labour market",
+          "Employments",
+          "Employments"
+        ]
+      ],
+      "notes": [
+        "Note that target quantities, reported by industry and region, are modeled based on information at the employer level. For more information, please refer to the Quality Declaration documentation.",
+        "The time series for the variable Number of ongoing employments at the total level, as well as broken down by the sector level is extended by the period 2015M04 – 2019M12. The extended time series consists of linked data on the number of employees from the survey Short-term employments."
+      ],
+      "links": {
+        "source": {
+          "href": "https://pxweb2.pages.dev/en/table/TAB4707"
+        },
+        "metadata": {
+          "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4707/metadata?lang=en"
+        },
+        "data": {
+          "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4707/data?lang=en"
+        }
+      }
+    }
+  }
+}

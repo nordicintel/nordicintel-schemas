@@ -1,6 +1,11 @@
 # NordicIntel schemas
 
 Shared JSON contracts for provider descriptions and statistical dataset documents.
+The next model direction is specified in [DATASET-MODEL.md](DATASET-MODEL.md):
+one combined multilingual Dataset, with Python/Pydantic as authority. See the
+[implementation handoff](DATASET-MODEL-HANDOFF.md). It is not yet an application
+or released-contract change; the collection described below remains unchanged.
+
 This branch prepares **2.0.0**, which is **not published**. Existing applications
 continue consuming the immutable [1.0.0 release](https://github.com/nordicintel/nordicintel-schemas/releases/tag/v1.0.0).
 
