@@ -10,5 +10,36 @@
   "first_period": "2018",
   "last_period": "2024",
   "discontinued": true,
-  "source_url": "https://kolada.se/verktyg/fri-sokning/"
+  "source_url": "https://kolada.se/verktyg/fri-sokning/",
+  "source": "Skolverket",
+  "subject": {
+    "code": "kolada:operating_area:F%C3%B6rskoleverksamhet",
+    "label": "Förskoleverksamhet"
+  },
+  "paths": [
+    {
+      "path": [
+        {
+          "code": "kolada:operating_area",
+          "label": "Verksamhetsområde"
+        },
+        {
+          "code": "kolada:operating_area:F%C3%B6rskoleverksamhet",
+          "label": "Förskoleverksamhet"
+        }
+      ]
+    },
+    {
+      "path": [
+        {
+          "code": "kolada:kpi_group",
+          "label": "Nyckeltalsgrupp"
+        },
+        {
+          "code": "G2KPI148789",
+          "label": "Öppna jämförelser - Förskola Fristående regi"
+        }
+      ]
+    }
+  ]
 }

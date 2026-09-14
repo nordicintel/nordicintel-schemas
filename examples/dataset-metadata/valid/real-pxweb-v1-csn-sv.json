@@ -82,7 +82,9 @@
         "elimination": true,
         "eliminationValueCode": "0",
         "show": "value",
-        "position": 0
+        "upstream": {
+          "position": 0
+        }
       }
     },
     "Skuldberäkningsdatum": {
@@ -140,7 +142,9 @@
       "extension": {
         "elimination": false,
         "show": "value",
-        "position": 1
+        "upstream": {
+          "position": 1
+        }
       }
     },
     "Kön": {
@@ -163,7 +167,9 @@
       "extension": {
         "elimination": true,
         "show": "value",
-        "position": 2
+        "upstream": {
+          "position": 2
+        }
       }
     },
     "Antal personer, Ingående skuld": {
@@ -189,12 +195,12 @@
       "extension": {
         "elimination": false,
         "show": "value",
-        "position": 3
+        "upstream": {
+          "position": 3
+        }
       }
     }
   },
-  "official_statistics": true,
-  "source": "Centrala studiestödsnämnden, CSN.",
   "note": [
     "Fotnoter med tabellförklaringar visas längst ned under rubriken 'Fotnoter'.",
     "Tabellen visar antalet personer med återkrav och återkravsbeloppet vid respektive skuldberäkningstillfälle. Återkrav är ett beslut om att återbetala ett belopp man inte haft rätt till och därför blivit direkt återbetalningsskyldig för. Personer vars hela skuld omfattas av skuldsanering ingår inte i statistiken. För mer information om regelverket, se csn.se."
@@ -209,24 +215,6 @@
       "matrix": "ABAKD12",
       "subject-code": "Återbetalning"
     }
-  },
-  "paths": [
-    {
-      "path": [
-        {
-          "code": "AB",
-          "label": "Studieskulder och inbetalning av studiestöd"
-        },
-        {
-          "code": "AK",
-          "label": "Återkrav av studiestöd"
-        }
-      ]
-    }
-  ],
-  "subject": {
-    "code": "Återbetalning",
-    "label": "Återkrav av studiestöd"
   },
   "retrieval": {
     "type": "pxweb_v1",

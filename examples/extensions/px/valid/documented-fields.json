@@ -1,0 +1,44 @@
+{
+  "noteMandatory": {
+    "0": false
+  },
+  "px": {
+    "infofile": "example",
+    "tableid": "example",
+    "decimals": 0,
+    "official-statistics": false,
+    "aggregallowed": false,
+    "copyright": false,
+    "language": "example",
+    "contents": "example",
+    "descriptiondefault": false,
+    "heading": [
+      "example"
+    ],
+    "stub": [
+      "example"
+    ],
+    "matrix": "example",
+    "subject-code": "example",
+    "subject-area": "example",
+    "nextUpdate": "2026-09-14",
+    "survey": "example",
+    "link": "example",
+    "updateFrequency": "example"
+  },
+  "firstPeriod": "example",
+  "lastPeriod": "example",
+  "tags": [
+    "example"
+  ],
+  "discontinued": false,
+  "contact": [
+    {
+      "name": "example",
+      "organization": "example",
+      "phone": "example",
+      "mail": "example",
+      "raw": "example"
+    }
+  ]
+}

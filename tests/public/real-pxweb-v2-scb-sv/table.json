@@ -1,0 +1,44 @@
+{
+  "id": "TAB4723",
+  "language": "sv",
+  "label": "Antal pågående anställningar i näringslivet efter region och näringsgren (SNI 2007). Månad 2020M01-2026M06",
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "sv",
+      "href": "https://catalog.example.org/tables/TAB4723?lang=sv"
+    }
+  ],
+  "variableNames": [
+    "region",
+    "bransch",
+    "tabellinnehåll",
+    "månad"
+  ],
+  "updated": "2026-08-28T06:00:00Z",
+  "discontinued": false,
+  "source": "SCB",
+  "firstPeriod": "2020M01",
+  "lastPeriod": "2026M06",
+  "timeUnit": "Monthly",
+  "subjectCode": "AM",
+  "paths": [
+    [
+      {
+        "id": "AM",
+        "label": "Arbetsmarknad",
+        "sortCode": "Arbetsmarknad"
+      },
+      {
+        "id": "AM0211",
+        "label": "Anställningar",
+        "sortCode": "005"
+      },
+      {
+        "id": "AM0211A",
+        "label": "Anställningar",
+        "sortCode": "001"
+      }
+    ]
+  ]
+}

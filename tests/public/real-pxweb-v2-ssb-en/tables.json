@@ -1,0 +1,111 @@
+{
+  "language": "en",
+  "tables": [
+    {
+      "id": "13618",
+      "label": "13618: Population, by labour force status, age and sex. Break adjusted figures 2009-2025",
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "en",
+          "href": "https://catalog.example.org/tables/13618?lang=en"
+        }
+      ],
+      "variableNames": [
+        "labour force status",
+        "sex",
+        "age",
+        "contents",
+        "year"
+      ],
+      "updated": "2026-02-11T07:00:00Z",
+      "discontinued": false,
+      "source": "Statistics Norway",
+      "firstPeriod": "2009",
+      "lastPeriod": "2025",
+      "timeUnit": "Annual",
+      "subjectCode": "al",
+      "paths": [
+        [
+          {
+            "id": "al",
+            "label": "Labour market and earnings",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al03",
+            "label": "Unemployment",
+            "sortCode": "0000002"
+          },
+          {
+            "id": "aku",
+            "label": "Labour force survey",
+            "sortCode": "0000003"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Comparable time series",
+            "sortCode": "0000100000"
+          }
+        ],
+        [
+          {
+            "id": "al",
+            "label": "Labour market and earnings",
+            "sortCode": "0000001"
+          },
+          {
+            "id": "al06",
+            "label": "Employment",
+            "sortCode": "0000005"
+          },
+          {
+            "id": "aku",
+            "label": "Labour force survey",
+            "sortCode": "0000006"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Comparable time series",
+            "sortCode": "0000100000"
+          }
+        ],
+        [
+          {
+            "id": "in",
+            "label": "Immigration and immigrants",
+            "sortCode": "0000042"
+          },
+          {
+            "id": "in01",
+            "label": "Labour market and earnings",
+            "sortCode": "0000043"
+          },
+          {
+            "id": "aku",
+            "label": "Labour force survey",
+            "sortCode": "0000044"
+          },
+          {
+            "id": "SBMENU9729",
+            "label": "Comparable time series",
+            "sortCode": "0000100000"
+          }
+        ]
+      ]
+    }
+  ],
+  "page": {
+    "pageNumber": 1,
+    "pageSize": 1,
+    "totalElements": 1,
+    "totalPages": 1
+  },
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "en",
+      "href": "https://catalog.example.org/tables?lang=en"
+    }
+  ]
+}

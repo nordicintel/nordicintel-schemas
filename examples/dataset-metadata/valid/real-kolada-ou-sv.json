@@ -15274,7 +15274,6 @@
       "ou"
     ]
   },
-  "source": "Skolverket",
   "metadata_url": "https://api.kolada.se/v3/kpi/N11042",
   "extension": {
     "kolada": {
@@ -15293,36 +15292,6 @@
       ],
       "discontinued_year": 2024
     }
-  },
-  "paths": [
-    {
-      "path": [
-        {
-          "code": "kolada:operating_area",
-          "label": "Verksamhetsområde"
-        },
-        {
-          "code": "kolada:operating_area:F%C3%B6rskoleverksamhet",
-          "label": "Förskoleverksamhet"
-        }
-      ]
-    },
-    {
-      "path": [
-        {
-          "code": "kolada:kpi_group",
-          "label": "Nyckeltalsgrupp"
-        },
-        {
-          "code": "G2KPI148789",
-          "label": "Öppna jämförelser - Förskola Fristående regi"
-        }
-      ]
-    }
-  ],
-  "subject": {
-    "code": "kolada:operating_area:F%C3%B6rskoleverksamhet",
-    "label": "Förskoleverksamhet"
   },
   "retrieval": {
     "type": "kolada",

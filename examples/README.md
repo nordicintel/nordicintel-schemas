@@ -43,3 +43,19 @@ the full audit remain ignored in `tmp/`. Source hashes below identify those file
 - `real-pxweb-v2-ssb-en.json`: `13618`, source `tmp/live-harvest/20260912T031124Z/ssb/en/03-metadata.json`; SHA-256 `1ffbe9b2bee273047bad126d8da5d4e6c1f8cd9fa7f90b9d1b9fbacb45152df5`. URL changes: metadata_url.
 - `real-kolada-municipality-sv.json`: `N00009`, source `tmp/live-harvest/20260912T031124Z/kolada/sv/03-metadata.json`; SHA-256 `d1188f3000fafdf6d79c0c34eb67e3dcf8b94e9ea75623ee1343cce509e0ac5c`. URL changes: none.
 - `real-kolada-ou-sv.json`: `N11042_OU`, source `tmp/live-harvest/20260912T031124Z/kolada_ou/sv/05-metadata.json`; SHA-256 `31a23a4ace7c209df7601294f5170b4fb71910e55c3923dcd204638097387704`. URL changes: none.
+
+## 2.0.0 revision
+
+The five pairs above were migrated without changing identities, dimension order,
+category index maps or category labels. Source/subject/paths moved to basic info;
+contact and official-statistics moved to PX extensions; unit base and path sortCode
+became explicit fields. Loose extras are preserved under named upstream objects.
+Existing PX/Kolada objects remain, and source URLs were not rewritten in this revision.
+
+New synthetic cases cover the documented optional PX fields, enum/type errors,
+named-object extensibility and open retrieval envelopes. Former adapter-setting
+restrictions are now valid retrieval examples; implementation validation is separate.
+Removed provider Harvest configuration is represented by invalid examples.
+
+Public projections live outside this structural example layout under tests/public;
+see their [results and limitations](../tests/public/README.md).

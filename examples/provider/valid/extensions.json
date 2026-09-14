@@ -9,11 +9,13 @@
       "sv": "Källa: Exempel",
       "en": "Source: Example"
     },
-    "tags": [
-      "statistics"
-    ],
-    "reviewed": false,
-    "rank": 1,
-    "notes": null
+    "upstream": {
+      "tags": [
+        "statistics"
+      ],
+      "reviewed": false,
+      "rank": 1,
+      "notes": null
+    }
   }
 }

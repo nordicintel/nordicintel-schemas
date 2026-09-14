@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v2.0.0/schemas/extensions/px.schema.json",
+  "title": "PX metadata extensions",
+  "type": "object",
+  "properties": {
+    "noteMandatory": {
+      "$ref": "#/$defs/jsonstat-noteMandatory"
+    },
+    "px": {
+      "type": "object",
+      "properties": {
+        "infofile": {
+          "type": "string"
+        },
+        "tableid": {
+          "type": "string"
+        },
+        "decimals": {
+          "type": "integer"
+        },
+        "official-statistics": {
+          "type": "boolean"
+        },
+        "aggregallowed": {
+          "type": "boolean"
+        },
+        "copyright": {
+          "type": "boolean"
+        },
+        "language": {
+          "type": "string"
+        },
+        "contents": {
+          "type": "string"
+        },
+        "descriptiondefault": {
+          "type": "boolean"
+        },
+        "heading": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stub": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "matrix": {
+          "type": "string"
+        },
+        "subject-code": {
+          "type": "string"
+        },
+        "subject-area": {
+          "type": "string"
+        },
+        "nextUpdate": {
+          "$ref": "#/$defs/updated"
+        },
+        "survey": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        },
+        "updateFrequency": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "firstPeriod": {
+      "type": "string"
+    },
+    "lastPeriod": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "discontinued": {
+      "$ref": "#/$defs/Discontinued"
+    },
+    "contact": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Contact"
+      }
+    }
+  },
+  "additionalProperties": {
+    "type": "object",
+    "additionalProperties": true
+  },
+  "$defs": {
+    "jsonstat-noteMandatory": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "updated": {
+      "type": "string",
+      "anyOf": [
+        {
+          "format": "date"
+        },
+        {
+          "format": "date-time"
+        }
+      ]
+    },
+    "Discontinued": {
+      "type": "boolean"
+    },
+    "Contact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "organization": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "mail": {
+          "type": "string"
+        },
+        "raw": {
+          "type": "string"
+        },
+        "extension": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Codelists": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CodelistInformation"
+      }
+    },
+    "CodelistInformation": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "type",
+        "links"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/CodelistType"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Link"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CodelistType": {
+      "type": "string",
+      "enum": [
+        "Aggregation",
+        "Valueset"
+      ]
+    },
+    "Link": {
+      "type": "object",
+      "required": [
+        "rel",
+        "hreflang",
+        "href"
+      ],
+      "properties": {
+        "rel": {
+          "type": "string"
+        },
+        "hreflang": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MeasuringType": {
+      "type": "string",
+      "enum": [
+        "Stock",
+        "Flow",
+        "Average",
+        "Other"
+      ]
+    },
+    "PriceType": {
+      "type": "string",
+      "enum": [
+        "NotApplicable",
+        "Current",
+        "Fixed"
+      ]
+    },
+    "Adjustment": {
+      "type": "string",
+      "enum": [
+        "None",
+        "SesOnly",
+        "WorkOnly",
+        "WorkAndSes"
+      ]
+    },
+    "BasePeriod": {
+      "type": "string"
+    },
+    "dimension": {
+      "type": "object",
+      "properties": {
+        "elimination": {
+          "type": "boolean"
+        },
+        "eliminationValueCode": {
+          "type": "string"
+        },
+        "noteMandatory": {
+          "$ref": "#/$defs/jsonstat-noteMandatory"
+        },
+        "categoryNoteMandatory": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/jsonstat-noteMandatory"
+          }
+        },
+        "refperiod": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "show": {
+          "type": "string"
+        },
+        "codelists": {
+          "$ref": "#/$defs/Codelists"
+        },
+        "measuringType": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/MeasuringType"
+          }
+        },
+        "priceType": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/PriceType"
+          }
+        },
+        "adjustment": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/Adjustment"
+          }
+        },
+        "basePeriod": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/BasePeriod"
+          }
+        },
+        "alternativeText": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "unit": {
+      "allOf": [
+        {
+          "$ref": "../common/jsonstat.schema.json#/$defs/unitFields"
+        }
+      ],
+      "properties": {
+        "base": {
+          "type": "string"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "category": {
+      "allOf": [
+        {
+          "$ref": "../common/jsonstat.schema.json#/$defs/categoryFields"
+        }
+      ],
+      "properties": {
+        "unit": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/unit"
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "dimensionValue": {
+      "allOf": [
+        {
+          "$ref": "../common/jsonstat.schema.json#/$defs/dimensionFields"
+        }
+      ],
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/category"
+        },
+        "extension": {
+          "$ref": "#/$defs/dimension"
+        }
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/provider.schema.json",
+  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v2.0.0/schemas/provider.schema.json",
   "title": "Provider",
-  "description": "A provider's stable identity and descriptive information, with optional stored harvest configuration.",
+  "description": "Stable provider identity and descriptive information. Harvest configuration is owned by the Harvest project.",
   "type": "object",
   "required": [
     "code",
@@ -40,12 +40,11 @@
       "pattern": "^[hH][tT][tT][pP][sS]?://(?:[^/?#@]*@)?(?:\\[[^\\]]+\\]|[^/?#:@]+)(?::[0-9]*)?(?:[/?#]|$)"
     },
     "extension": {
-      "description": "Additional descriptive information. Harvest settings belong in harvest, not extension.",
       "type": "object",
-      "additionalProperties": true
-    },
-    "harvest": {
-      "$ref": "harvest-config.schema.json"
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   },
   "$defs": {

@@ -23,5 +23,6 @@
   "retrieval": {
     "type": "kolada",
     "config": {}
-  }
+  },
+  "extension": {}
 }

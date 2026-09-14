@@ -1,0 +1,115 @@
+{
+  "real-kolada-municipality-sv/table": [
+    {
+      "path": "/",
+      "validator": "required",
+      "message": "'updated' is a required property"
+    }
+  ],
+  "real-kolada-municipality-sv/tables": [
+    {
+      "path": "/tables/0",
+      "validator": "required",
+      "message": "'updated' is a required property"
+    }
+  ],
+  "real-kolada-municipality-sv/metadata": [],
+  "real-kolada-ou-sv/table": [
+    {
+      "path": "/",
+      "validator": "required",
+      "message": "'updated' is a required property"
+    }
+  ],
+  "real-kolada-ou-sv/tables": [
+    {
+      "path": "/tables/0",
+      "validator": "required",
+      "message": "'updated' is a required property"
+    }
+  ],
+  "real-kolada-ou-sv/metadata": [],
+  "real-pxweb-v1-csn-sv/table": [
+    {
+      "path": "/",
+      "validator": "required",
+      "message": "'firstPeriod' is a required property"
+    },
+    {
+      "path": "/",
+      "validator": "required",
+      "message": "'lastPeriod' is a required property"
+    },
+    {
+      "path": "/updated",
+      "validator": "pattern",
+      "message": "'2026-01-19T14:50:00Z' does not match '^((19|20)\\\\d\\\\d)\\\\-(0?[1-9]|1[012])\\\\-(0?[1-9]|[12][0-9]|3[01])$'"
+    }
+  ],
+  "real-pxweb-v1-csn-sv/tables": [
+    {
+      "path": "/tables/0",
+      "validator": "required",
+      "message": "'firstPeriod' is a required property"
+    },
+    {
+      "path": "/tables/0",
+      "validator": "required",
+      "message": "'lastPeriod' is a required property"
+    },
+    {
+      "path": "/tables/0/updated",
+      "validator": "pattern",
+      "message": "'2026-01-19T14:50:00Z' does not match '^((19|20)\\\\d\\\\d)\\\\-(0?[1-9]|1[012])\\\\-(0?[1-9]|[12][0-9]|3[01])$'"
+    }
+  ],
+  "real-pxweb-v1-csn-sv/metadata": [
+    {
+      "path": "/updated",
+      "validator": "pattern",
+      "message": "'2026-01-19T14:50:00Z' does not match '^((19|20)\\\\d\\\\d)\\\\-(0?[1-9]|1[012])\\\\-(0?[1-9]|[12][0-9]|3[01])$'"
+    }
+  ],
+  "real-pxweb-v2-scb-sv/table": [
+    {
+      "path": "/updated",
+      "validator": "pattern",
+      "message": "'2026-08-28T06:00:00Z' does not match '^((19|20)\\\\d\\\\d)\\\\-(0?[1-9]|1[012])\\\\-(0?[1-9]|[12][0-9]|3[01])$'"
+    }
+  ],
+  "real-pxweb-v2-scb-sv/tables": [
+    {
+      "path": "/tables/0/updated",
+      "validator": "pattern",
+      "message": "'2026-08-28T06:00:00Z' does not match '^((19|20)\\\\d\\\\d)\\\\-(0?[1-9]|1[012])\\\\-(0?[1-9]|[12][0-9]|3[01])$'"
+    }
+  ],
+  "real-pxweb-v2-scb-sv/metadata": [
+    {
+      "path": "/updated",
+      "validator": "pattern",
+      "message": "'2026-08-28T06:00:00Z' does not match '^((19|20)\\\\d\\\\d)\\\\-(0?[1-9]|1[012])\\\\-(0?[1-9]|[12][0-9]|3[01])$'"
+    }
+  ],
+  "real-pxweb-v2-ssb-en/table": [
+    {
+      "path": "/updated",
+      "validator": "pattern",
+      "message": "'2026-02-11T07:00:00Z' does not match '^((19|20)\\\\d\\\\d)\\\\-(0?[1-9]|1[012])\\\\-(0?[1-9]|[12][0-9]|3[01])$'"
+    }
+  ],
+  "real-pxweb-v2-ssb-en/tables": [
+    {
+      "path": "/tables/0/updated",
+      "validator": "pattern",
+      "message": "'2026-02-11T07:00:00Z' does not match '^((19|20)\\\\d\\\\d)\\\\-(0?[1-9]|1[012])\\\\-(0?[1-9]|[12][0-9]|3[01])$'"
+    }
+  ],
+  "real-pxweb-v2-ssb-en/metadata": [
+    {
+      "path": "/updated",
+      "validator": "pattern",
+      "message": "'2026-02-11T07:00:00Z' does not match '^((19|20)\\\\d\\\\d)\\\\-(0?[1-9]|1[012])\\\\-(0?[1-9]|[12][0-9]|3[01])$'"
+    }
+  ]
+}

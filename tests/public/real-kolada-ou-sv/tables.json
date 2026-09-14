@@ -1,0 +1,62 @@
+{
+  "language": "sv",
+  "tables": [
+    {
+      "id": "N11042_OU",
+      "label": "Heltidstjänster i förskolan med förskollärarexamen, enskild regi, andel (%) (-2024)",
+      "links": [
+        {
+          "rel": "self",
+          "hreflang": "sv",
+          "href": "https://catalog.example.org/tables/N11042_OU?lang=sv"
+        }
+      ],
+      "variableNames": [
+        "Enhet",
+        "År"
+      ],
+      "description": "Andel anställda omräknat till heltidstjänster (årsarbetare) inom förskola som har förskollärarexamen i enskild regi. Uppgiften avser punktmätning 15/10. Källa: Skolverket",
+      "discontinued": true,
+      "source": "Skolverket",
+      "firstPeriod": "2018",
+      "lastPeriod": "2024",
+      "timeUnit": "Annual",
+      "subjectCode": "kolada:operating_area:F%C3%B6rskoleverksamhet",
+      "paths": [
+        [
+          {
+            "id": "kolada:operating_area",
+            "label": "Verksamhetsområde"
+          },
+          {
+            "id": "kolada:operating_area:F%C3%B6rskoleverksamhet",
+            "label": "Förskoleverksamhet"
+          }
+        ],
+        [
+          {
+            "id": "kolada:kpi_group",
+            "label": "Nyckeltalsgrupp"
+          },
+          {
+            "id": "G2KPI148789",
+            "label": "Öppna jämförelser - Förskola Fristående regi"
+          }
+        ]
+      ]
+    }
+  ],
+  "page": {
+    "pageNumber": 1,
+    "pageSize": 1,
+    "totalElements": 1,
+    "totalPages": 1
+  },
+  "links": [
+    {
+      "rel": "self",
+      "hreflang": "sv",
+      "href": "https://catalog.example.org/tables?lang=sv"
+    }
+  ]
+}

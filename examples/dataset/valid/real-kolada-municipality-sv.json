@@ -10,5 +10,24 @@
   "first_period": "1998",
   "last_period": "2015",
   "discontinued": false,
-  "source_url": "https://kolada.se/verktyg/fri-sokning/"
+  "source_url": "https://kolada.se/verktyg/fri-sokning/",
+  "source": "SCB",
+  "subject": {
+    "code": "kolada:operating_area:Kommunen%2C%20%C3%B6vergripande",
+    "label": "Kommunen, övergripande"
+  },
+  "paths": [
+    {
+      "path": [
+        {
+          "code": "kolada:operating_area",
+          "label": "Verksamhetsområde"
+        },
+        {
+          "code": "kolada:operating_area:Kommunen%2C%20%C3%B6vergripande",
+          "label": "Kommunen, övergripande"
+        }
+      ]
+    }
+  ]
 }

@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v2.0.0/schemas/common/jsonstat.schema.json",
+  "title": "Normalized JSON-stat structures",
+  "$ref": "#/$defs/dimension",
+  "$defs": {
+    "dimension": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/dimensionFields"
+        }
+      ],
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/category"
+        },
+        "extension": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "category": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/categoryFields"
+        }
+      ],
+      "properties": {
+        "unit": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/unit"
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "unit": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/unitFields"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "role": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "geo": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "metric": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "note": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "unitFields": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "position": {
+          "enum": [
+            "start",
+            "end"
+          ]
+        },
+        "decimals": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "extension": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "categoryFields": {
+      "type": "object",
+      "required": [
+        "index",
+        "label"
+      ],
+      "properties": {
+        "index": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minProperties": 1
+        },
+        "label": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "minProperties": 1
+        },
+        "child": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "\\S"
+            },
+            "uniqueItems": true
+          }
+        },
+        "coordinates": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              },
+              {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2,
+            "description": "Longitude, latitude."
+          }
+        },
+        "note": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "extension": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "dimensionFields": {
+      "type": "object",
+      "required": [
+        "label",
+        "category"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "note": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "link": {
+          "$ref": "#/$defs/link"
+        }
+      }
+    }
+  }
+}

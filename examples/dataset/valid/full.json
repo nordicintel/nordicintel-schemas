@@ -15,11 +15,34 @@
   "source_url": "https://example.org/population",
   "doc_url": "https://example.org/methodology",
   "extension": {
-    "tags": [
-      "population"
-    ],
     "extra": {
       "reviewed": true
+    },
+    "upstream": {
+      "tags": [
+        "population"
+      ]
     }
-  }
+  },
+  "source": "Example statistical provider",
+  "subject": {
+    "code": "population",
+    "label": "Population",
+    "extension": {}
+  },
+  "paths": [
+    {
+      "path": [
+        {
+          "code": "society",
+          "label": "Society"
+        },
+        {
+          "code": "population",
+          "label": "Population"
+        }
+      ],
+      "extension": {}
+    }
+  ]
 }

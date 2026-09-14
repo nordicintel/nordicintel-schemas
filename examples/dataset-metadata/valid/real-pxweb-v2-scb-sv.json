@@ -107,15 +107,13 @@
         "unit": {
           "00000710": {
             "decimals": 0,
-            "extension": {
-              "base": "antal"
-            }
+            "extension": {},
+            "base": "antal"
           },
           "00000713": {
             "decimals": 1,
-            "extension": {
-              "base": "andel"
-            }
+            "extension": {},
+            "base": "andel"
           }
         }
       },
@@ -327,51 +325,12 @@
       "ContentsCode"
     ]
   },
-  "official_statistics": true,
-  "source": "SCB",
   "note": [
     "Observera att målstorheter som redovisas efter näringsgren och regionalt är modellerad utifrån uppgifter på arbetsgivarnivå. För mer information vänligen se dokumentationen Kvalitetsdeklaration.",
     "Observera att data för tidigare tidpunkter kan revideras i samband med att ny statistik publiceras."
   ],
-  "contact": [
-    {
-      "raw": " Anställningar, SCB# +46 010-479 50 00#anstallningar@scb.se",
-      "mail": "anstallningar@scb.se",
-      "name": "Anställningar",
-      "phone": "010-479 50 00",
-      "organization": "SCB"
-    }
-  ],
   "metadata_url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4723/metadata?lang=sv",
   "extension": {
-    "links": [
-      {
-        "rel": "self",
-        "hreflang": "sv",
-        "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4723?lang=sv"
-      },
-      {
-        "rel": "alternate",
-        "hreflang": "en",
-        "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4723?lang=en"
-      },
-      {
-        "rel": "metadata",
-        "hreflang": "sv",
-        "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4723/metadata?lang=sv"
-      },
-      {
-        "rel": "data",
-        "hreflang": "sv",
-        "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4723/data?lang=sv&outputFormat=json-stat2"
-      }
-    ],
-    "variable_names": [
-      "region",
-      "bransch",
-      "tabellinnehåll",
-      "månad"
-    ],
     "noteMandatory": {
       "0": true,
       "1": true
@@ -397,38 +356,46 @@
       "matrix": "TAB4723",
       "subject-code": "AM",
       "subject-area": "Arbetsmarknad"
-    }
-  },
-  "paths": [
-    {
-      "path": [
+    },
+    "contact": [
+      {
+        "raw": " Anställningar, SCB# +46 010-479 50 00#anstallningar@scb.se",
+        "mail": "anstallningar@scb.se",
+        "name": "Anställningar",
+        "phone": "010-479 50 00",
+        "organization": "SCB"
+      }
+    ],
+    "upstream": {
+      "links": [
         {
-          "code": "AM",
-          "label": "Arbetsmarknad",
-          "extension": {
-            "sortCode": "Arbetsmarknad"
-          }
+          "rel": "self",
+          "hreflang": "sv",
+          "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4723?lang=sv"
         },
         {
-          "code": "AM0211",
-          "label": "Anställningar",
-          "extension": {
-            "sortCode": "005"
-          }
+          "rel": "alternate",
+          "hreflang": "en",
+          "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4723?lang=en"
         },
         {
-          "code": "AM0211A",
-          "label": "Anställningar",
-          "extension": {
-            "sortCode": "001"
-          }
+          "rel": "metadata",
+          "hreflang": "sv",
+          "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4723/metadata?lang=sv"
+        },
+        {
+          "rel": "data",
+          "hreflang": "sv",
+          "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4723/data?lang=sv&outputFormat=json-stat2"
         }
+      ],
+      "variable_names": [
+        "region",
+        "bransch",
+        "tabellinnehåll",
+        "månad"
       ]
     }
-  ],
-  "subject": {
-    "code": "AM",
-    "label": "Arbetsmarknad"
   },
   "retrieval": {
     "type": "pxweb_v2",

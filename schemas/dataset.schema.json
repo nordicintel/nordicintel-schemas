@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v1.0.0/schemas/dataset.schema.json",
+  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v2.0.0/schemas/dataset.schema.json",
   "title": "Dataset",
   "description": "Basic catalog information for one dataset language version.",
   "type": "object",
@@ -49,7 +49,81 @@
     },
     "extension": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "source": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "label": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "extension": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "code"
+          ]
+        },
+        {
+          "required": [
+            "label"
+          ]
+        }
+      ]
+    },
+    "paths": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path"
+        ],
+        "properties": {
+          "path": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/pathNode"
+            },
+            "minItems": 1
+          },
+          "extension": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sort_code": {
+      "type": "string"
     }
   },
   "additionalProperties": false,
@@ -94,6 +168,34 @@
     "url": {
       "description": "Absolute HTTP(S) URL with a host.",
       "$ref": "provider.schema.json#/properties/website"
+    },
+    "pathNode": {
+      "type": "object",
+      "required": [
+        "code",
+        "label"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "label": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "extension": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "sort_code": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

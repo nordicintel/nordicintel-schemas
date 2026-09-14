@@ -25,5 +25,6 @@
     "config": {
       "data_url": "https://example.org/api/sv/database/path/table"
     }
-  }
+  },
+  "extension": {}
 }

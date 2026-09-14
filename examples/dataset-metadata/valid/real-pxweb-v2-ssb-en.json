@@ -175,27 +175,23 @@
         "unit": {
           "Personer": {
             "decimals": 0,
-            "extension": {
-              "base": "1000 persons"
-            }
+            "extension": {},
+            "base": "1000 persons"
           },
           "Feilmargin": {
             "decimals": 0,
-            "extension": {
-              "base": "1000 persons"
-            }
+            "extension": {},
+            "base": "1000 persons"
           },
           "Prosent": {
             "decimals": 1,
-            "extension": {
-              "base": "per cent"
-            }
+            "extension": {},
+            "base": "per cent"
           },
           "FeilmarginProsent": {
             "decimals": 1,
-            "extension": {
-              "base": "per cent"
-            }
+            "extension": {},
+            "base": "per cent"
           }
         }
       },
@@ -292,80 +288,12 @@
       "ContentsCode"
     ]
   },
-  "official_statistics": true,
-  "source": "Statistics Norway",
   "note": [
     "The figures are break adjusted because of a break between 2020 and 2021, see [About the statistics](https://www.ssb.no/en/aku) for more information. The break adjusted figures have been adjusted on the basis of break estimations for four groups: employed men and women aged 15-24 år and 25-74 (https://journals.sagepub.com/doi/full/10.1177/0282423X241235267). For subgroups of these four groups, the break estimates are based on an assumption of proportional distribution of the break. This assumption is generally difficult to verify, and means that one should be careful when interpreting the figures for subgroups when comparing figures before and after the break in 2021. This applies particularly to subgroups of employed women aged 25-74, where the assumption of proportional distribution of the break appears to be less realistic.",
     "The margin of error expresses how accurate an estimate is. An estimate of 100 000 with a margin of error of +/- 12 000 (at the 95% level) has a confidence interval where the upper limit is 112 000 and the lower limit is 88 000. This means that we are 95% sure that this interval contains the real value."
   ],
-  "contact": [
-    {
-      "raw": " Arbeidsmarked, Statistics Norway# +47 62 88 50 00#arbeidsmarked@ssb.no",
-      "mail": "arbeidsmarked@ssb.no",
-      "name": "Arbeidsmarked",
-      "phone": "62 88 50 00",
-      "organization": "Statistics Norway"
-    },
-    {
-      "raw": "Erik Herstad Horgen, Statistics Norway# +47 93 08 68 62#heh@ssb.no",
-      "mail": "heh@ssb.no",
-      "name": "Erik Herstad Horgen",
-      "phone": "93 08 68 62",
-      "organization": "Statistics Norway"
-    },
-    {
-      "raw": "Sophie Brennvall Sæternes, Statistics Norway# +47 98 67 14 26#hie@ssb.no",
-      "mail": "hie@ssb.no",
-      "name": "Sophie Brennvall Sæternes",
-      "phone": "98 67 14 26",
-      "organization": "Statistics Norway"
-    },
-    {
-      "raw": "Ingebjørg Aamodt, Statistics Norway# +47 92 62 38 40#iaa@ssb.no",
-      "mail": "iaa@ssb.no",
-      "name": "Ingebjørg Aamodt",
-      "phone": "92 62 38 40",
-      "organization": "Statistics Norway"
-    },
-    {
-      "raw": "Håvard Hungnes Lien, Statistics Norway# +47 40 90 26 06#ien@ssb.no",
-      "mail": "ien@ssb.no",
-      "name": "Håvard Hungnes Lien",
-      "phone": "40 90 26 06",
-      "organization": "Statistics Norway"
-    }
-  ],
   "metadata_url": "https://data.ssb.no/api/pxwebapi/v2/tables/13618/metadata?lang=en",
   "extension": {
-    "links": [
-      {
-        "rel": "self",
-        "hreflang": "en",
-        "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618?lang=en"
-      },
-      {
-        "rel": "alternate",
-        "hreflang": "no",
-        "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618?lang=no"
-      },
-      {
-        "rel": "metadata",
-        "hreflang": "en",
-        "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618/metadata?lang=en"
-      },
-      {
-        "rel": "data",
-        "hreflang": "en",
-        "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618/data?lang=en&outputFormat=json-stat2"
-      }
-    ],
-    "variable_names": [
-      "labour force status",
-      "sex",
-      "age",
-      "contents",
-      "year"
-    ],
     "px": {
       "infofile": "None",
       "tableid": "13618",
@@ -388,109 +316,75 @@
       "matrix": "13618",
       "subject-code": "al",
       "subject-area": "Labour market and earnings"
-    }
-  },
-  "paths": [
-    {
-      "path": [
-        {
-          "code": "al",
-          "label": "Labour market and earnings",
-          "extension": {
-            "sortCode": "0000001"
-          }
-        },
-        {
-          "code": "al03",
-          "label": "Unemployment",
-          "extension": {
-            "sortCode": "0000002"
-          }
-        },
-        {
-          "code": "aku",
-          "label": "Labour force survey",
-          "extension": {
-            "sortCode": "0000003"
-          }
-        },
-        {
-          "code": "SBMENU9729",
-          "label": "Comparable time series",
-          "extension": {
-            "sortCode": "0000100000"
-          }
-        }
-      ]
     },
-    {
-      "path": [
+    "contact": [
+      {
+        "raw": " Arbeidsmarked, Statistics Norway# +47 62 88 50 00#arbeidsmarked@ssb.no",
+        "mail": "arbeidsmarked@ssb.no",
+        "name": "Arbeidsmarked",
+        "phone": "62 88 50 00",
+        "organization": "Statistics Norway"
+      },
+      {
+        "raw": "Erik Herstad Horgen, Statistics Norway# +47 93 08 68 62#heh@ssb.no",
+        "mail": "heh@ssb.no",
+        "name": "Erik Herstad Horgen",
+        "phone": "93 08 68 62",
+        "organization": "Statistics Norway"
+      },
+      {
+        "raw": "Sophie Brennvall Sæternes, Statistics Norway# +47 98 67 14 26#hie@ssb.no",
+        "mail": "hie@ssb.no",
+        "name": "Sophie Brennvall Sæternes",
+        "phone": "98 67 14 26",
+        "organization": "Statistics Norway"
+      },
+      {
+        "raw": "Ingebjørg Aamodt, Statistics Norway# +47 92 62 38 40#iaa@ssb.no",
+        "mail": "iaa@ssb.no",
+        "name": "Ingebjørg Aamodt",
+        "phone": "92 62 38 40",
+        "organization": "Statistics Norway"
+      },
+      {
+        "raw": "Håvard Hungnes Lien, Statistics Norway# +47 40 90 26 06#ien@ssb.no",
+        "mail": "ien@ssb.no",
+        "name": "Håvard Hungnes Lien",
+        "phone": "40 90 26 06",
+        "organization": "Statistics Norway"
+      }
+    ],
+    "upstream": {
+      "links": [
         {
-          "code": "al",
-          "label": "Labour market and earnings",
-          "extension": {
-            "sortCode": "0000001"
-          }
+          "rel": "self",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618?lang=en"
         },
         {
-          "code": "al06",
-          "label": "Employment",
-          "extension": {
-            "sortCode": "0000005"
-          }
+          "rel": "alternate",
+          "hreflang": "no",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618?lang=no"
         },
         {
-          "code": "aku",
-          "label": "Labour force survey",
-          "extension": {
-            "sortCode": "0000006"
-          }
+          "rel": "metadata",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618/metadata?lang=en"
         },
         {
-          "code": "SBMENU9729",
-          "label": "Comparable time series",
-          "extension": {
-            "sortCode": "0000100000"
-          }
+          "rel": "data",
+          "hreflang": "en",
+          "href": "https://data.ssb.no/api/pxwebapi/v2/tables/13618/data?lang=en&outputFormat=json-stat2"
         }
-      ]
-    },
-    {
-      "path": [
-        {
-          "code": "in",
-          "label": "Immigration and immigrants",
-          "extension": {
-            "sortCode": "0000042"
-          }
-        },
-        {
-          "code": "in01",
-          "label": "Labour market and earnings",
-          "extension": {
-            "sortCode": "0000043"
-          }
-        },
-        {
-          "code": "aku",
-          "label": "Labour force survey",
-          "extension": {
-            "sortCode": "0000044"
-          }
-        },
-        {
-          "code": "SBMENU9729",
-          "label": "Comparable time series",
-          "extension": {
-            "sortCode": "0000100000"
-          }
-        }
+      ],
+      "variable_names": [
+        "labour force status",
+        "sex",
+        "age",
+        "contents",
+        "year"
       ]
     }
-  ],
-  "subject": {
-    "code": "al",
-    "label": "Labour market and earnings"
   },
   "retrieval": {
     "type": "pxweb_v2",

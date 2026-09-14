@@ -1,0 +1,23 @@
+{
+  "identity": {
+    "provider_code": "example",
+    "dataset_code": "Population/01",
+    "language": "en"
+  },
+  "label": "Population",
+  "tags": [
+    "population"
+  ],
+  "sort_code": "01",
+  "paths": [
+    {
+      "path": [
+        {
+          "code": "theme",
+          "label": "Theme",
+          "sort_code": "1"
+        }
+      ]
+    }
+  ]
+}

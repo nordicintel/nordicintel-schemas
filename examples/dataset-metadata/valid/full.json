@@ -78,40 +78,8 @@
       "year"
     ]
   },
-  "subject": {
-    "code": "population",
-    "label": "Population",
-    "extension": {}
-  },
-  "paths": [
-    {
-      "path": [
-        {
-          "code": "society",
-          "label": "Society"
-        },
-        {
-          "code": "population",
-          "label": "Population"
-        }
-      ],
-      "extension": {}
-    }
-  ],
-  "official_statistics": true,
-  "source": "Example statistical provider",
   "note": [
     "Illustrative metadata only."
-  ],
-  "contact": [
-    {
-      "name": "Statistics team",
-      "organization": "Example",
-      "mail": "statistics@example.org",
-      "phone": "+46 123",
-      "raw": "Statistics team",
-      "extension": {}
-    }
   ],
   "metadata_url": "https://example.org/api/population/metadata",
   "retrieval": {
@@ -123,6 +91,19 @@
   "extension": {
     "extra": {
       "anything": null
+    },
+    "contact": [
+      {
+        "name": "Statistics team",
+        "organization": "Example",
+        "mail": "statistics@example.org",
+        "phone": "+46 123",
+        "raw": "Statistics team",
+        "extension": {}
+      }
+    ],
+    "px": {
+      "official-statistics": true
     }
   }
 }
