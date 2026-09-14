@@ -1,5 +1,10 @@
 # Schema overview
 
+**Current design work:** [DATASET-MODEL.md](DATASET-MODEL.md) records the newer
+common-model decisions, open questions and local corpus audit. The text below
+describes the prepared 2.0.0 implementation, not approval to publish it or the
+latest redesign direction.
+
 **2.0.0 is prepared on this branch, not published.** Applications still consume 1.0.0.
 
 - Shared schemas describe provider information and statistical documents, using
