@@ -38,10 +38,110 @@ and are not the baseline for deciding what existing information to discard.
 
 ## Work status
 
-The local value audit is complete. The field set below is a **recommendation for
+**Latest decisions and corrections:**
+
+- Keep `contents`.
+- Use `municipality: {code, label}` for the OU-to-municipality relationship.
+- Use ordered arrays for dimensions and categories, with explicit codes.
+- Language representation remains undecided. The earlier recommendation for
+  separate language documents based on mismatch counts is withdrawn: inspection
+  of all 30 Swedish-provider code mismatches found 29 whitespace-only cases and
+  one membership difference (SCB TAB1226). These exceptions do not determine the
+  core model. Do not silently trim upstream request codes without a mapping.
+- The proposal to retain five separate category qualifier fields is withdrawn
+  pending a cross-field redundancy audit. Presence and nonconstant values alone
+  do not establish additional information. Compare labels, alternative labels,
+  descriptions, notes, time fields and units before recommending retention.
+- Concrete corrections: TAB3840 already states the fixed-price basis in its
+  category label; TAB3815 labels contain the 2008/2009 reference years; TAB6406
+  labels identify seasonal adjustment. TAB2462 already states 31 December in a
+  dataset note. Conversely, inspection of TAB4012 found that date only in its
+  reference-period value within the stored document.
+- Audit reference periods at their owning dimension/category and against the
+  actual time categories, not merely the title's coverage. TAB3815's `2008`
+  belongs to the metric labelled "Totalt taxeringsvärde 2008" although its time
+  category is `2009`. TAB3257's May/November summary agrees with historical
+  categories; the note and actual categories explain May-only from 2023. Calling
+  that a contradiction without checking temporal scope was incorrect.
+
+The initial inventory and grouped redundancy pass are recorded below. Model
+retention decisions remain open; the rule-based shortlist is not individual
+semantic certification of every surviving value.
+The field set below is an older **recommendation for
 review**, not an approved contract. No Python model, schema or application rewrite
 has started. Full converted examples and the implementation handoff follow the
 remaining model decisions; do not label that later work complete prematurely.
+
+## Swedish qualifier redundancy audit — results
+
+The local-only extraction covered **19,046 Swedish-language records**. **5,297
+ distinct datasets** contain at least one of the five audited fields, accounting
+for **64,548 attribute entries**, including empty/default-like values. All these
+candidates happen to be Swedish providers: SCB 5,253; MSB 39;
+Energimyndigheten 5. There are no language-variant duplicates in these counts.
+
+The final grouped pass leaves **3,195 datasets / 10,022 attribute entries** after
+recognized redundancy is removed. This is the practical rule-based shortlist,
+not an assertion that every surviving source claim is correct or that every
+possible prose paraphrase has been recognized. It is **not** a decision to retain
+all five fields. In particular, unmatched enum codes are not automatically useful
+model attributes.
+
+| Field | Remaining entries | Distinct datasets |
+|---|---:|---:|
+| `refperiod` | 2,093 | 910 |
+| `basePeriod` | 120 | 41 |
+| `measuringType` | 6,502 | 2,333 |
+| `priceType` | 1,198 | 459 |
+| `adjustment` | 109 | 66 |
+
+Dataset counts overlap between fields. Separately, **974 entries in 309 datasets**
+have scope/base-interpretation questions, and **28 entries in 28 datasets** refer
+to missing categories. These are exported separately, not presented as confirmed
+unique information or automatically called source errors. The other groups are
+17,358 represented entries, 30,043 explicit default-like enum values, and 6,123
+empty values. All 64,548 entries remain accounted for.
+
+### Open the actual lists
+
+- [Dataset list](tmp/qualifier-audit-sv/final/nonredundant-datasets.csv): one row
+  per remaining dataset, with identity, title and affected fields.
+- [Exact remaining values](tmp/qualifier-audit-sv/final/nonredundant-attributes.csv):
+  provider, dataset, owning dimension/category, category label, field and value.
+- [Grouped JSON](tmp/qualifier-audit-sv/final/nonredundant-datasets.jsonl): the same
+  information grouped by dataset, preserving all specific values.
+- [Scope questions](tmp/qualifier-audit-sv/final/scope-questions.csv).
+- [All decisions](tmp/qualifier-audit-sv/final/decisions.jsonl): includes exclusions
+  and their reasons; full input documents remain in the parent `records.jsonl`.
+- [Reproduction instructions](tools/dataset-audit/README.md). `finish.py` processes
+  saved survivors in one grouped pass; it does not replay earlier rule stages.
+
+The final deductions generalize period wording, metric-specific dates/bases,
+statistical meaning already expressed by the described measure, price concepts,
+and adjustment wording. Ordinary annual/quarterly period descriptions are not
+counted again merely because their wording differs. Historical/time-category
+scope and another metric's values are kept distinct. Source defaults remain
+visible separately; absence and an explicit default have not been equated.
+
+### Concrete corrections and results
+
+- **TAB2462:** December 31 is already explained by the dataset note; excluded.
+- **TAB4012 and TAB6658:** December 31 remains additional in the stored Swedish
+  document after comparing descriptive fields and time categories.
+- **TAB3815:** 2008 and 2009 belong to their respective tax-value metric labels;
+  a 2008 metric reference is not wrong because the time category is 2009.
+- **TAB3257:** May/November through 2022 and May-only from 2023 are represented
+  by the actual time categories and the note; excluded, not called a contradiction.
+- **TAB69:** `1994K1` accompanies alternative labels saying `feb 1994=100`.
+  This belongs in the interpretation list, not a clean example of missing base data.
+- **Ownership across all candidates:** 15,949 reference-period entries are
+  attached to metric dimensions, eight to area/energy categories, none to time
+  dimensions. This does not imply each metric has observations in every year.
+
+The CSV source SHA-256 is
+`46a90883b689217a82f65b4be9c10cd05b15711b1280052c3ef90c2868409bba`.
+The final summary records the input-decision and script hashes. No database,
+upstream service, application implementation or deployment was used or changed.
 
 ## Local evidence and limitations
 
@@ -82,8 +182,9 @@ These scripts are local investigation helpers, not a new model package.
 - **Statistical qualifications are used.** There are 23,602 Stock, 32,700 Flow
   and 8,361 Average category-value occurrences; 3,332 Current and 1,026 Fixed
   price occurrences; 191 seasonal-only, 333 working-day-only and 348 combined
-  adjustment occurrences. These include language variants. Keep the meanings
-  as typed category fields, not notes or adapter extensions.
+  adjustment occurrences. These include language variants. These presence counts
+  do not establish additional information; the earlier recommendation to retain
+  five typed category fields is withdrawn pending the redundancy audit.
 - **Unit text is in `unit.extension.base`.** Examples include `1000 ha`, `%`,
   `antal`, `number` and `index`. Map this to unit `label`. Category precision
   overrides dataset precision in 12,759 unit occurrences across 3,653 datasets;
@@ -154,7 +255,7 @@ The omission-versus-null wire policy for other optional fields is still open.
 | Object | Required | Optional |
 |---|---|---|
 | Dimension | `code`, `label`, nonempty ordered `categories` | `role`, `elimination`, `elimination_value`, `notes`, `links`, `codelists` |
-| Category | `code`, `label` | `alternative_label`, `unit`, `reference_period`, `base_period`, `measuring_type`, `price_type`, `adjustment`, `municipality`, `notes`, `links` |
+| Category | `code`, `label` | `alternative_label`, `unit`, `municipality`, `notes`, `links`; five statistical qualifier fields below remain withdrawn/pending |
 | Unit | At least one supplied unit/precision attribute | `label`, `symbol`, `decimals` |
 | Note | Nonblank `text` | `mandatory` boolean; absent does not invent a source declaration |
 | Contact | At least one populated contact attribute | `name`, `organization`, `email`, `phone`, `raw` |
@@ -168,8 +269,9 @@ The omission-versus-null wire policy for other optional fields is still open.
 specific relation or a broader typed geographic reference is preferable remains
 a focused decision; do not introduce a generic relationships bag.
 
-Category statistical qualifiers remain optional even outside a metric dimension.
-Their source maps are keyed by category, not one scalar per dimension:
+**Withdrawn field proposal, retained here only as audit vocabulary:** the five
+qualifiers below are not an accepted part of Category or Unit. Their source maps
+are keyed by category, not one scalar per dimension:
 
 - `measuring_type`: `stock`, `flow`, `average`, `other`.
 - `price_type`: `not_applicable`, `current`, `fixed`.
@@ -190,7 +292,8 @@ them already.
 
 ## Language and ordering: recommendation and real comparison
 
-**Recommend initially retaining one complete document per language**, using the
+**Previous recommendation, now withdrawn as a conclusion from the audit:**
+retain one complete document per language, using the
 same Dataset class for both. Keep provider/dataset identity language-independent
 and `language` alongside it. Updating Swedish replaces only the Swedish document;
 English remains untouched. This is still one common model and one document per
@@ -213,7 +316,7 @@ under `tmp/dataset-value-audit/bilingual_{sv,en}.source.json`.
 The two alternative shapes will be shown from that exact pair below; neither
 shape authorizes rewriting adapters before the language decision.
 
-Ordered arrays are recommended for dimensions/categories: array position is
+Ordered arrays are agreed for dimensions/categories: array position is
 order, `code` is identity. Conversion must sort categories by the existing index,
 never alphabetically. Root `id` remains the authority for dimension order;
 source UI positioning hints are not a second ordering mechanism.
@@ -381,11 +484,11 @@ exactly; long-text samples are illustrative, not a global frequency ranking.
 | `dimension.extension.position` | 14,492 | 14,492/9,215 | 4,879/3,530 | 3 | Remove redundant source position; use checked root id order. |
 | `dimension.extension.noteMandatory` | 894 | 894/518 | 890/515 | {"0": true} | Attach mandatory flag to the indexed dimension note. |
 | `dimension.extension.categoryNoteMandatory` | 2,874 | 2,874/1,805 | 2,871/1,802 | {"0": {"0": true}} | Attach mandatory flag to the indexed category note; validate both references. |
-| `dimension.extension.refperiod` | 16,356 | 12,573/10,580 | 5,180/3,187 | {"0000070M": "Månad", "0000070N": "Månad", "0000070U": "Månad"} | Move each populated value into Category.reference_period; unresolved category references must be diagnosed. |
-| `dimension.extension.basePeriod` | 923 | 923/638 | 634/349 | {"AM0301AC": "2008M01", "AM0301AD": "2008M01"} | Move into Category.base_period; distinct from unit label. |
-| `dimension.extension.measuringType` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "Stock", "0000070N": "Stock", "0000070U": "Stock"} | Move into Category.measuring_type enum. |
-| `dimension.extension.priceType` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "NotApplicable", "0000070N": "NotApplicable", "0000070U": "NotApplicable"} | Move into Category.price_type enum; preserve explicit not_applicable. |
-| `dimension.extension.adjustment` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "None", "0000070N": "None", "0000070U": "None"} | Move into Category.adjustment enum; preserve explicit none. |
+| `dimension.extension.refperiod` | 16,356 | 12,573/10,580 | 5,180/3,187 | {"0000070M": "Månad", "0000070N": "Månad", "0000070U": "Månad"} | Pending cross-field and category/time-scope audit; earlier direct Category-field mapping withdrawn. Preserve source evidence until decided. |
+| `dimension.extension.basePeriod` | 923 | 923/638 | 634/349 | {"AM0301AC": "2008M01", "AM0301AD": "2008M01"} | Pending cross-field and category/time-scope audit; earlier direct Category-field mapping withdrawn. Preserve source evidence until decided. |
+| `dimension.extension.measuringType` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "Stock", "0000070N": "Stock", "0000070U": "Stock"} | Pending cross-field and category/time-scope audit; earlier direct Category-field mapping withdrawn. Preserve source evidence until decided. |
+| `dimension.extension.priceType` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "NotApplicable", "0000070N": "NotApplicable", "0000070U": "NotApplicable"} | Pending cross-field and category/time-scope audit; earlier direct Category-field mapping withdrawn. Preserve source evidence until decided. |
+| `dimension.extension.adjustment` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "None", "0000070N": "None", "0000070U": "None"} | Pending cross-field and category/time-scope audit; earlier direct Category-field mapping withdrawn. Preserve source evidence until decided. |
 | `dimension.extension.alternativeText` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "Antal pågående anställningar", "0000070N": "Antal pågående anställningar … | Keep different values as Category.alternative_label; derive/omit exact duplicates. |
 | `dimension.extension.codelists` | 16,268 | 5,839/4,516 | 2,978/1,655 | [{"id": "vs_Region99LanGU", "type": "Valueset", "label": "County"}, {"id": "vs_RegionRi… | Keep typed references: id->code, label, type->valueset/aggregation, links. Omit empty lists. |
 | `dimension.extension.show` | 28,418 | 28,418/20,672 | 12,136/7,818 | "value" | Omit code/label display preference; code and label both retained. |
@@ -486,8 +589,8 @@ disposable; there is no data-preservation migration project here.
 1. Agree statistical fields and deliberate exclusions; finish Kolada
    classification/publication semantics. Official status nullable and the
    seven-value time enum are already settled.
-2. Choose language-specific documents versus inline translations, arrays versus
-   maps, and link/reference policy using the real examples above.
+2. Choose language-specific documents versus inline translations and finish
+   link/reference policy. Ordered dimension/category arrays are already agreed.
 3. Convert complete representative PXWeb v1/v2, bilingual and both Kolada-kind
    documents to the accepted shape. Verify identity/order/units/notes/qualifiers
    and account for every dropped source value. Add rare-field cases.
