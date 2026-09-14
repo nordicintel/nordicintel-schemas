@@ -22,194 +22,479 @@ and are not the baseline for deciding what existing information to discard.
 - A dimension has **one optional role**, limited to `time`, `geo`, or `metric`.
   Do not introduce arrays of roles per dimension.
 - `official_statistics` is a first-class dataset field and important for discovery.
-  The latest proposal treats absence as unknown rather than defaulting to false;
-  requiring its presence for publication has not been agreed.
-- Define a `time_unit` enum. Period coverage remains part of the model. Normalized
+  **Agreed:** `bool | None`; unknown is allowed. Model optionality is separate
+  from publication policy.
+- **Agreed `time_unit` enum:** `annual`, `semiannual`, `quarterly`, `monthly`,
+  `weekly`, `daily`, `other`. Period coverage remains part of the model. Normalized
   time-category values are the next standardization target, not an adapter extension.
 - All URL-bearing resources use link objects with `href`.
 - Public IDs are `provider_code:dataset_code`; Swedish is the default language.
-- The agreed publication policy requires actual `updated`, `first_period`,
-  `last_period`, and `time_unit`, plus usable metadata. PostgreSQL maintains
-  eligibility and blocking reasons. Revisit only through an explicit decision.
+- Earlier publication-policy discussions are separate from this model exercise.
+  Do not turn optional-field questions into database/publication questions.
 - Existing development documents are disposable. No migration/backfill or
   compatibility rollout for preserving those documents is needed.
 - Exact PxWeb UI compatibility no longer drives the core model. JSON-stat
   concepts remain useful; public encodings can be derived.
 
-## Verified local corpus: child/hierarchy support
+## Work status
 
-Source: `C:\Users\ruben\Github\nordicintel-project\tmp\dataset_languages.csv`.
-Use this local export for further corpus investigation; do not use the hosted
-paid service when the local export answers the question.
+The local value audit is complete. The field set below is a **recommendation for
+review**, not an approved contract. No Python model, schema or application rewrite
+has started. Full converted examples and the implementation handoff follow the
+remaining model decisions; do not label that later work complete prematurely.
 
-| Evidence | Result |
-|---|---:|
-| File size | 920,922,425 bytes |
-| File modified (UTC) | 2026-09-14 09:06:00 |
-| Audit completed (UTC) | 2026-09-14 14:57:09 |
-| Parsed language records | 36,791 |
-| Distinct `(provider_code, dataset_code)` pairs | 28,199 |
-| Dimensions inspected, including language variants | 140,671 |
-| Dimensions containing a `category.child` key | **0** |
-| Nonempty child maps | **0** |
-| Distinct datasets with child maps | **0** |
+## Local evidence and limitations
 
-All rows were read, all metadata documents parsed, and their identities checked
-against the CSV identity columns. There were no skipped or failed rows. The CSV
-has no header, 17 columns, comma delimiter, double-quote quote character and
-**apostrophe escape character**; metadata is column 15 (zero-based 14). A default
-CSV reader without that escape setting splits documents incorrectly.
+Source: `C:/Users/ruben/Github/nordicintel-project/tmp/dataset_languages.csv`;
+920,922,425 bytes, modified 2026-09-14 09:06 UTC. All 36,791 records were read;
+there were no skipped rows. This is an export audit, not a live-database query.
 
-**Revised proposal: omit category `children`/`child` and hierarchy validation from
-the initial model.** The previous inclusion had no evidence in this corpus. This
-does not remove thematic dataset paths or the OU-to-municipality relationship;
-those are different information.
+| Scope | Language records | Distinct provider/dataset identities |
+|---|---:|---:|
+| Entire export | 36,791 | 28,199 |
+| Swedish providers | 19,478 | 14,814 |
 
-The audit spans the export's 20 providers, including non-Swedish providers. These
-counts describe the file, not a claim about the current live database. The audit
-script and full field-count output are local, ignored files:
-`tmp/audit_dataset_model.py` and `tmp/dataset-model-audit.json`.
+Swedish means `country_code=SE` in the local Harvest `providers/initial.json` at
+commit `0ed2277e142bcb51da31d267465d9246dc722014`: csn, domstol,
+energimyndigheten, fohm, kolada, konj, lansstyrelsen, msb, riksskog, scb, sjv,
+skogsstyrelsen. This is an explicit audit grouping, not the final launch roster.
 
-## Proposed representation: not yet accepted
+The CSV has no header and 17 columns; metadata JSON is column 15. Its quoted
+fields use apostrophe escaping, but ordinary apostrophes in unquoted text must
+be preserved. The audit reader handles both. Merely setting csv.reader's
+escapechar would remove apostrophes from some ordinary titles/descriptions.
+The final audit uses the corrected reader; those parsing differences are not
+reported as source defects.
 
-- One `Dataset` document instead of independently identified basic and metadata
-  documents; listing summaries remain possible.
-- Identity contains provider and dataset codes. Translated descriptive fields
-  contain `sv` and optional `en`; statistical structure is shared. Language
-  representation and translation update rules still need agreement.
-- Ordered dimension/category arrays with explicit codes. Array positions define
-  order; codes define selection identity. Existing JSON-stat maps are the alternative.
-- Python/Pydantic classes as authority, with generated, versioned JSON Schema and
-  an optionally published Python package. This has been proposed, not approved.
-- Shared helpers construct, parse, normalize and semantically validate our model.
-  Provider-response parsing stays in Harvest; HTTP and persistence stay outside
-  the model package. Generated JSON Schema cannot replace every semantic check.
-- Dataset JSONB plus identity columns, timestamps and DB-maintained publication
-  fields; selected query indexes/derived columns. No per-category SQL tables yet.
-  Exact PostgreSQL layout remains undecided.
+The initial scan found **zero `category.child` and zero category coordinates**
+across 140,671 dimensions. Dense category positions, matching category label
+keys, matching dimension IDs and matching basic/metadata identities passed for
+every record. This does not prove the additional source extras are consistent.
 
-## Candidate core attributes
+Audit/support files and full source samples remain ignored under
+`tmp/dataset-value-audit/`. Reproduce with `uv run --no-sync python` and the
+local scripts `tmp/audit_dataset_values.py`, `tmp/audit_dataset_relationships.py`
+and `tmp/audit_dataset_languages.py`; all use `tmp/local_dataset_csv.py`.
+These scripts are local investigation helpers, not a new model package.
 
-This is a proposal, not a complete approved field set. The unresolved statistical
-fields in the next section must be addressed before calling it complete.
+### Findings that change the recommendation
 
-| Object | Candidate fields |
-|---|---|
-| Dataset | `identity`, `label`, `description`, `official_statistics`, `updated`, `next_release`, `time_unit`, `first_period`, `last_period`, `discontinued`, `source`, `paths`, `dimensions`, `notes`, `contacts`, `links` |
-| Identity | `provider_code`, `dataset_code` |
-| Dimension | `code`, `label`, single optional `role`, `categories`, `elimination`, `elimination_value`, `notes`, `links` |
-| Category | `code`, `label`, `unit`, `notes`, `links`; **no children** |
-| Unit | `label`, `symbol`, `decimals`; source unit-text mapping still needs definition |
-| Note | `text`, optional source-declared `mandatory` |
-| Contact | `name`, `organization`, `email`, `phone`, `raw`; at least one populated value |
-| Thematic node | `code`, `label`; path is a nonempty ordered node sequence |
-| Link | `rel`, `href`, optional `language`, media `type`, and `label` |
+- **Statistical qualifications are used.** There are 23,602 Stock, 32,700 Flow
+  and 8,361 Average category-value occurrences; 3,332 Current and 1,026 Fixed
+  price occurrences; 191 seasonal-only, 333 working-day-only and 348 combined
+  adjustment occurrences. These include language variants. Keep the meanings
+  as typed category fields, not notes or adapter extensions.
+- **Unit text is in `unit.extension.base`.** Examples include `1000 ha`, `%`,
+  `antal`, `number` and `index`. Map this to unit `label`. Category precision
+  overrides dataset precision in 12,759 unit occurrences across 3,653 datasets;
+  keep both levels, with the category value taking precedence for formatting.
+- **Alternative category labels are not all duplicates.** 17,912 occurrences
+  differ from the main category label, across 3,856 datasets. Keep distinct
+  alternative labels; omit identical copies.
+- **Code lists are not simply empty scaffolding.** 4,516 distinct datasets have
+  populated references, including 1,655 Swedish-provider datasets. Preserve
+  the references without implementing code-list operations in this model.
+- **`infofile` is not a URL.** Values include `BE0101`,
+  `2_Skogarnas_aldersfordelning`, and the literal string `None` (7,700 records).
+  Never put these strings in `href` or fabricate documentation URLs from them.
+- **Source identities are not interchangeable.** `px.tableid` can be `111e`
+  while dataset code is `111e.px`. Keep dataset identity unchanged; source
+  aliases do not replace it. The current PX retrieval binding already has an
+  absolute endpoint, so it does not require reconstructing it from matrix IDs.
+- **Source language flags cannot override document language.** 8,673 records
+  have a different `px.language` from the harvested document language.
+  This alone does not establish which language the text is actually in.
+- **Some source references are inconsistent.** 56 reference-period entries
+  across 28 datasets point at a category absent from the actual category map;
+  examples use `ContentsCode/EliminatedValue`. Record these as explicit adapter
+  normalization cases. Never silently attach the text to an arbitrary category.
+- **OU geography is real information.** 629 datasets carry OU-to-municipality
+  mappings. Retain this relationship independently of category hierarchy.
 
-Candidate link relations: `source`, `documentation`, `metadata`, `data`, `related`.
-Whether that is a closed set is **not decided**; existing links need inspection
-before narrowing relationships or dropping their attributes.
+The official-status copy agrees with the first-class field in all 28,089
+records where it occurs. Subject code/label copies also agree wherever present.
+All 24,484 `dimension.link.describedby` entries have no `href`; examples contain
+an opaque classification reference such as `urn:ssb:classification:klass:2` or
+the text `  Region`. They cannot be blindly converted into HTTP links.
 
-Candidate `time_unit` values: `annual`, `semiannual`, `quarterly`, `monthly`,
-`weekly`, `daily`, `other`. Enum requirement is agreed; exact members are proposed.
-The observed export values are Annual (29,034 language rows), Other (4,228),
-Monthly (1,810), Quarterly (1,669), Weekly (50). No value is missing in this export.
-Period granularity is distinct from publication frequency. Missing/unknown must
-not silently become `other`.
+## Recommended common model — pending approval
 
-Future normalized category periods should retain source category codes and order,
-adding explicit standardized period information. No generic extension mechanism
-or silent code replacement is needed. Exact period type is future design work.
+One dataset document replaces the basic/metadata pair. Required means required
+for a structurally usable stored/harvested document, not publication eligibility.
+Optional attributes default to None in Python; no invented dates, false flags,
+units or descriptive text. The agreed nullable official status accepts None.
+The omission-versus-null wire policy for other optional fields is still open.
 
-## Fields the previous proposal failed to account for
+### Dataset
 
-Do not treat an omission from the candidate table as approved deletion. Counts
-below are **key occurrences**, including empty/default values and language
-variants, not proof of meaningful use or distinct-dataset counts.
+| Field | Type / requiredness | Meaning |
+|---|---|---|
+| `identity` | Required object | `provider_code`, `dataset_code`; unchanged identity rules |
+| `language` | Required `sv` or `en`, if language-specific documents are chosen | Language of all descriptive text in this document |
+| `label` | Required nonblank text | Dataset title |
+| `dimensions` | Required nonempty ordered array | Dimension definitions; codes remain selection keys |
+| `description` | Optional text | Longer explanation |
+| `contents` | Optional nonblank text | Short statistical contents description; not automatically equivalent to title/description |
+| `official_statistics` | **Agreed optional bool or None** | Source-declared official status; unknown is valid |
+| `updated`, `next_release` | Optional date or timezone-aware timestamp | Source update and announced next release; never ingestion time |
+| `time_unit` | Optional agreed seven-value enum | Period granularity, not publication frequency |
+| `first_period`, `last_period` | Optional nonblank text | Original coverage notation; normalized periods are future work |
+| `discontinued` | Optional bool | Source-declared publication status |
+| `source` | Optional text | Attribution |
+| `subject` | Optional `{code?, label?}`, at least one | Primary source subject; retain separately from multiple thematic paths |
+| `paths` | Optional ordered thematic chains | Typed code/label nodes; never retrieval routes |
+| `decimals` | Optional nonnegative integer | Dataset default display precision; does not round stored/retrieved observations |
+| `aggregation_allowed` | Optional bool | Preserve source-declared aggregation permission; not proof that every category is additive |
+| `notes` | Optional Note array | Dataset notes |
+| `contacts` | Optional Contact array | Contact details |
+| `links` | Optional Link array | Human/source/metadata/data/documentation resources |
 
-### Declared active-model fields
+### Dimension, category and helper objects
 
-| Field | Corpus evidence / current disposition |
-|---|---|
-| `subject.code`, `subject.label` | Subject object occurs in all 36,791 rows. Omitting explicit subject in favor of paths is unresolved; do not assume equivalence. |
-| Category `coordinates` | Zero category-coordinate keys observed. Candidate exclusion, not a schema-derived assumption of use. |
-| Unit `position` | Zero observed. Candidate exclusion. |
-| Category `child` | Zero observed. Revised proposal excludes it. |
-| `retrieval.type` / implementation config | Present in all 36,791 documents. Common public model should not contain adapter objects, but necessary private retrieval binding has no completed replacement design yet. |
-| Open extension containers | Removal agreed for the new common model. Contents require explicit mapping, deliberate exclusion, or retention outside the document. |
+| Object | Required | Optional |
+|---|---|---|
+| Dimension | `code`, `label`, nonempty ordered `categories` | `role`, `elimination`, `elimination_value`, `notes`, `links`, `codelists` |
+| Category | `code`, `label` | `alternative_label`, `unit`, `reference_period`, `base_period`, `measuring_type`, `price_type`, `adjustment`, `municipality`, `notes`, `links` |
+| Unit | At least one supplied unit/precision attribute | `label`, `symbol`, `decimals` |
+| Note | Nonblank `text` | `mandatory` boolean; absent does not invent a source declaration |
+| Contact | At least one populated contact attribute | `name`, `organization`, `email`, `phone`, `raw` |
+| Subject | At least one of `code`, `label` | No extension object |
+| Thematic node | `code`, `label` | Source sort hints proposed for exclusion |
+| Municipality reference | `code` | `label`; an OU location relationship, not a category parent |
+| Code-list reference | `code` | `label`, `type` (`valueset` or `aggregation`), `links` |
+| Link | Nonblank `rel`, `href` | `language`, media `type`, `label` |
 
-### Actual PX and shared extras
+`municipality` is a common geographic concept, not a Kolada object. Whether this
+specific relation or a broader typed geographic reference is preferable remains
+a focused decision; do not introduce a generic relationships bag.
 
-| Location / key | Occurrences | Disposition needing agreement |
-|---|---:|---|
-| `extension.px.aggregallowed` | 28,089 | Aggregation permission: define shared field/behavior; not mere presentation. |
-| `extension.px.copyright` | 16,268 | Copyright flag: assess meaning and define treatment. |
-| `extension.px.decimals` | 30,760 | Dataset precision/default versus per-unit precision. |
-| `extension.px.contents` | 26,417 | Statistical contents text: do not assume dataset description replaces it. |
-| `extension.px.infofile` | 17,283 | Inspect references and map meaningful resources into links. |
-| `extension.px.matrix` | 28,089 | Source matrix identity; determine whether retrieval needs it. |
-| `extension.px.descriptiondefault` | 26,417 | Presentation behavior; candidate exclusion. |
-| `extension.px.heading`, `stub` | 16,268 each | Presentation placement; candidate exclusion. |
-| Dimension `refperiod` | 16,356 | Reference-period information: define typed location if meaningful. |
-| Dimension `measuringType`, `priceType`, `adjustment` | 16,268 each | Measurement/price/adjustment semantics: previous proposal wrongly omitted them without assessment. |
-| Dimension `basePeriod` | 923 | Base-period information: define common location if meaningful. |
-| Dimension `alternativeText` | 16,268 | Inspect nonempty values before deciding. |
-| Dimension `codelists` | 69,766 | Inspect populated lists and their fields; do not equate presence with implemented codelist operations. |
-| Dimension `map` | 1,258 | Previously missed entirely; inspect values before deciding. |
-| Dimension `show` | 118,604 | Code/label presentation; candidate exclusion. |
-| Path-node `sortCode` | 97,209 | Source thematic ordering; previous proposal dropped it without a decision. |
-| Unit `extension.base` | 75,518 | Source unit text. Must receive a defined common mapping. |
+Category statistical qualifiers remain optional even outside a metric dimension.
+Their source maps are keyed by category, not one scalar per dimension:
 
-All 76,629 observed unit objects contain `decimals` and `extension`; none contains
-a direct `label`, `symbol`, or `position`. Therefore making unit `label` required
-without first mapping source `base` text would reject current data. Unit text and
-reference/base periods must not be conflated just because both use the word base.
+- `measuring_type`: `stock`, `flow`, `average`, `other`.
+- `price_type`: `not_applicable`, `current`, `fixed`.
+- `adjustment`: `none`, `seasonal`, `working_day`, `seasonal_and_working_day`.
+- `reference_period`: original descriptive period text, e.g. `Månad`.
+- `base_period`: original base-period notation, e.g. `2008M01`.
 
-The following observed extras have candidate equivalents, requiring explicit
-mapping rather than deletion: dimension `position` -> array order; `elimination`
-and `eliminationValueCode` -> direct dimension fields; root/dimension
-`noteMandatory` and dimension `categoryNoteMandatory` -> note flags;
-`variable_names` -> derived labels; root `links` -> link objects; PX `tableid`,
-`language`, `official-statistics`, `description`, `subject-code`, `subject-area`
--> common identity/text/status/classification, with conflicts handled explicitly.
+Explicit `none`, `not_applicable`, false and zero retain their meanings; do not
+collapse them into missing values. Source meanings follow the locally vendored
+PxWeb specification, `tests/reference/pxweb/PxAPI-2.yml` at upstream commit
+`8689b18c2d44d43e03e6e48cea7e95536869be18`; its definitions are evidence about
+source fields, not the authority over our new model.
 
-### Actual Kolada extras
+The remaining vocabulary question is whether `contents` deserves its own field
+and which Kolada classification/publication information to normalize. The ledger
+below makes these explicit instead of silently pretending the proposal covers
+them already.
 
-| Field | Occurrences in language documents |
-|---|---:|
-| `operating_area` | 6,031 |
-| `perspective` | 6,024 |
-| `auspice` | 5,946 |
-| `municipality_type` | 6,031 |
-| `has_ou_data` | 6,031 |
-| `is_divided_by_gender` | 6,031 |
-| `publ_period` | 5,389 |
-| `publication_date` | 5,359 |
-| `prel_publication_date` | 871 |
-| `raw_description` | 937 |
-| `source_origin` | 6,031 |
-| `kpi_groups` (`id`, `title` entries) | 6,031 |
-| `discontinued_year` | 415 |
+## Language and ordering: recommendation and real comparison
 
-The OU dimension also stores category-level `municipality_id` and
-`municipality_label` inside its extension's `category` mapping (629 dimensions
-have that mapping). This is an organizational-unit-to-municipality relationship,
-**not category.child**, and must not disappear as a side effect of dropping
-hierarchy support.
+**Recommend initially retaining one complete document per language**, using the
+same Dataset class for both. Keep provider/dataset identity language-independent
+and `language` alongside it. Updating Swedish replaces only the Swedish document;
+English remains untouched. This is still one common model and one document per
+language, not today's independent basic/metadata pair.
 
-For these fields, decide what is shared statistical meaning, classification,
-retrieval information or raw provenance. Then give useful information proper
-typed fields or an explicit home outside the document. No `extension.kolada`
-replacement under another vague name. No blanket deletion is agreed.
+An inline `{sv, en}` text design remains possible, but a Swedish refresh would
+also need rules for shared category additions/removals, ordering, roles and stale
+English translations. Do not conceal those decisions in a generic merge helper.
 
-## Next decisions and evidence
+Across 8,592 bilingual dataset pairs, 7,547 have identical ordered codes/roles and
+1,045 differ. Detailed causes overlap: 770 role differences, 244 category-order
+differences and 33 category-code differences. No dimension-code or dimension-order
+differences were found. These are differences between saved harvests, not proof
+that a provider intentionally has different structures per language; capture time
+and adapter inference may contribute. In particular, all 244 order differences
+are SCB, and 30 of the 33 category-code differences are SCB.
 
-1. Inspect values (not just key presence) for unresolved fields above, using the
-   local CSV. Finish the keep/map/drop ledger against real stored information.
-2. Agree the full common attributes, including official status and measurement
-   qualifications, before writing classes or schemas.
-3. Settle ordered arrays versus existing maps, language representation, and exact
-   time enum; then decide model-package ownership and PostgreSQL representation.
-4. Define the retrieval binding needed outside the common dataset model.
+Representative matching source pair: `scb:TAB4707`, saved in both `sv` and `en`,
+under `tmp/dataset-value-audit/bilingual_{sv,en}.source.json`.
+The two alternative shapes will be shown from that exact pair below; neither
+shape authorizes rewriting adapters before the language decision.
 
-No model code, application changes, merge, push, tag or release is part of this
-document update. Existing 1.0.0 remains the active contract.
+Ordered arrays are recommended for dimensions/categories: array position is
+order, `code` is identity. Conversion must sort categories by the existing index,
+never alphabetically. Root `id` remains the authority for dimension order;
+source UI positioning hints are not a second ordering mechanism.
+
+### Concrete shape comparison (category excerpts, not complete datasets)
+
+These values come from category `0000070M`, the first metric category of
+`scb:TAB4707`. The first option stores each category in its language's document:
+
+```json
+{
+  "sv": {
+    "code": "0000070M",
+    "label": "Antal pågående anställningar",
+    "unit": {
+      "label": "antal",
+      "decimals": 0
+    },
+    "measuring_type": "stock",
+    "price_type": "not_applicable",
+    "adjustment": "none",
+    "reference_period": "Månad"
+  },
+  "en": {
+    "code": "0000070M",
+    "label": "Number of ongoing employments",
+    "unit": {
+      "label": "number",
+      "decimals": 0
+    },
+    "measuring_type": "stock",
+    "price_type": "not_applicable",
+    "adjustment": "none",
+    "reference_period": "Month"
+  }
+}
+```
+
+The inline-translation alternative represents the same category as:
+
+```json
+{
+  "code": "0000070M",
+  "label": {
+    "sv": "Antal pågående anställningar",
+    "en": "Number of ongoing employments"
+  },
+  "unit": {
+    "label": {
+      "sv": "antal",
+      "en": "number"
+    },
+    "decimals": 0
+  },
+  "measuring_type": "stock",
+  "price_type": "not_applicable",
+  "adjustment": "none",
+  "reference_period": {
+    "sv": "Månad",
+    "en": "Month"
+  }
+}
+```
+
+The `sv`/`en` wrapper in the first excerpt compares two documents; it is not a
+proposed extra Dataset field. In both options the source category code and
+position zero remain unchanged. A Swedish-only label correction is independent
+in the first option; in the second it replaces only the sv text. A Swedish
+category deletion requires a shared-structure/English-staleness rule only in
+the second option. That is the actual tradeoff to decide.
+
+## Resource links and private retrieval — pending model decisions
+
+Recommend a `links` array with `href`, open nonblank relation strings, and optional
+language, media type and label. Reserve clear meanings for `source`,
+`documentation`, `metadata`, `data`, `related`, and `alternate`. Upstream `self`
+links must not masquerade as NordicIntel self links. Preserve the actual target
+and describe it as a source resource. External link language is not necessarily
+restricted to our stored sv/en text languages; the corpus includes Norwegian links.
+
+Only actual resource references belong in href. Opaque `infofile` and map names
+are not URLs. Genuine URNs require an explicit URI policy; do not turn every
+classification string into a fake URL.
+
+Recommend keeping a **private retrieval binding outside Dataset**, keyed by
+provider/dataset/language, containing implementation `type` and its validated
+configuration. A PX data link describes a resource, not an entire POST request.
+The retrieval module resolves the binding and uses dataset dimension/category
+codes. No adapter config objects belong in the common Dataset class. Exact
+private storage and submission interfaces are later implementation decisions.
+
+## Complete current-field disposition ledger
+
+All dispositions below are recommendations, except already agreed identity,
+role, enum, official-status and extension-container decisions. **No omission
+from the proposed field list silently authorizes deletion.**
+
+Counts: `R/D` = populated language records / distinct datasets across the full
+export; `SE R/D` uses the Swedish-provider subset. Empty/null/blank values are
+excluded; explicit false and zero count as populated. `present R` also includes
+empty containers. Samples are shortened. Low-cardinality enums are counted
+exactly; long-text samples are illustrative, not a global frequency ranking.
+
+| Source field | present R | populated R/D | SE populated R/D | Representative value | Recommendation / reason |
+|---|---:|---:|---:|---|---|
+| `basic.provider_code` | 36,791 | 36,791/28,199 | 19,478/14,814 | "csn" | Keep in identity; provider-scoped dataset identity. |
+| `basic.dataset_code` | 36,791 | 36,791/28,199 | 19,478/14,814 | "SULESVL11a.px" | Keep in identity unchanged, including case and suffixes. |
+| `basic.language` | 36,791 | 36,791/28,199 | 19,478/14,814 | "sv" | Keep as document language (recommended shape); never source PX flag override. |
+| `basic.label` | 36,791 | 36,791/28,199 | 19,478/14,814 | "Lärlingsersättning efter Ålder, Folkbokföring län, Läsår, Kön och Antal personer, Utbe… | Keep title; nonblank. |
+| `basic.description` | 17,323 | 17,323/13,029 | 8,979/8,113 | "Antal invånare 9 år den 31/12. Källa: SCB." | Keep description; preserve prose. |
+| `basic.updated` | 30,760 | 30,760/22,168 | 13,447/8,783 | "2026-08-26T15:54:51Z" | Keep source update; missing allowed by model. |
+| `basic.next_release` | 0 | 0/0 | 0/0 | — | Keep optional announced date/time; absent in this export. |
+| `basic.time_unit` | 36,791 | 36,791/28,199 | 19,478/14,814 | "Other" | Normalize case into the agreed seven-value enum. |
+| `basic.first_period` | 35,154 | 35,154/26,898 | 18,903/14,332 | "2001M01" | Keep original coverage notation. |
+| `basic.last_period` | 35,154 | 35,154/26,898 | 18,903/14,332 | "2026M07" | Keep original coverage notation. |
+| `basic.discontinued` | 11,496 | 11,496/10,968 | 7,529/7,001 | "f" | Keep nullable bool; CSV t/f is export encoding only. |
+| `basic.source_url` | 36,791 | 36,791/28,199 | 19,478/14,814 | "https://statistik.csn.se/PxWeb/pxweb/sv/CSNstat/CSNstat__SU__L__LE/SULESVL11a.px/" | Map to links with rel=source and href. |
+| `basic.doc_url` | 0 | 0/0 | 0/0 | — | Map to links with rel=documentation; absent in export. |
+| `basic.extension` | 36,791 | 0/0 | 0/0 | — | Remove container; no populated contents in corpus. |
+| `metadata.identity` | 36,791 | 36,791/28,199 | 19,478/14,814 | {"language": "sv", "dataset_code": "SULESVL11a.px", "provider_code": "csn"} | Combine with basic identity; copies checked equal. |
+| `metadata.id` | 36,791 | 36,791/28,199 | 19,478/14,814 | ["Ålder", "Folkbokföring län", "Läsår"] | Map to dimension array order without sorting. |
+| `metadata.dimension` | 36,791 | 36,791/28,199 | 19,478/14,814 | ["Ålder", "Folkbokföring län", "Läsår"] | Map definitions into ordered dimensions; nested fields listed below. |
+| `metadata.role` | 35,572 | 35,572/27,264 | 19,198/14,582 | {"time": ["månad"]} | Map each assignment to its dimension.role; max one role per dimension. |
+| `metadata.subject` | 36,791 | 36,791/28,199 | 19,478/14,814 | {"code": "Studiestöd", "label": "Lärlingsersättning", "extension": {}} | Keep explicit subject code/label; not assumed equivalent to paths. |
+| `metadata.paths` | 36,791 | 36,791/28,199 | 19,478/14,814 | [{"path": [{"code": "SU", "label": "Utbetalning av studiestöd", "extension": {}}, {"cod… | Keep thematic chains and node codes/labels; drop empty wrappers/extensions. |
+| `metadata.official_statistics` | 28,089 | 28,089/20,343 | 12,045/7,727 | true | Keep first-class bool or None; agreed. |
+| `metadata.source` | 36,727 | 36,721/28,154 | 19,415/14,772 | "Centrala studiestödsnämnden, CSN." | Keep attribution. |
+| `metadata.note` | 22,236 | 22,234/15,590 | 9,354/5,912 | ["Fotnoter med tabellförklaringar visas längst ned under rubriken 'Fotnoter'.", "Kostna… | Map strings to notes[].text; attach matched mandatory flags. |
+| `metadata.contact` | 16,268 | 16,268/12,953 | 8,568/5,253 | [{"raw": " Statistikservice, SCB# +46 010-479 50 00#information@scb.se", "mail": "infor… | Map to contacts; mail -> email; retain name, organization, phone, raw. |
+| `metadata.metadata_url` | 36,791 | 36,791/28,199 | 19,478/14,814 | "https://statistik.csn.se/PXWeb/api/v1/sv/CSNstat/SU/L/LE/SULESVL11a.px" | Map to links rel=metadata, href. |
+| `metadata.retrieval` | 36,791 | 36,791/28,199 | 19,478/14,814 | {"type": "pxweb_v1", "config": {"data_url": "https://statistik.csn.se/PXWeb/api/v1/sv/C… | Move operational binding outside Dataset; never delete required retrieval context. |
+| `metadata.extension` | 36,791 | 36,791/28,199 | 19,478/14,814 | {"px": {"matrix": "SULESVL11a", "decimals": 0, "language": "sv"}} | Remove container; every observed child handled below. |
+| `metadata.extension.links` | 16,268 | 16,268/12,953 | 8,568/5,253 | [{"rel": "self", "href": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4707?lang=… | Map rel/href/hreflang into Link; upstream self remains upstream resource. |
+| `metadata.extension.variable_names` | 16,268 | 16,268/12,953 | 8,568/5,253 | ["sektor", "kön", "tabellinnehåll"] | Derive from dimension labels; no separately stored copy. |
+| `metadata.extension.noteMandatory` | 5,974 | 5,974/3,610 | 5,717/3,353 | {"0": true, "1": true} | Map indexed flags to corresponding dataset notes; validate references. |
+| `metadata.extension.px` | 30,760 | 30,760/22,168 | 13,447/8,783 | {"matrix": "SULESVL11a", "decimals": 0, "language": "sv"} | Remove container; child dispositions below. |
+| `metadata.extension.kolada` | 6,031 | 6,031/6,031 | 6,031/6,031 | {"auspice": "X", "kpi_groups": [], "has_ou_data": false} | Remove container; child dispositions below. |
+| `metadata.extension.px.aggregallowed` | 28,089 | 28,089/20,343 | 12,045/7,727 | true | Keep as aggregation_allowed; permission is not proof of additivity. |
+| `metadata.extension.px.copyright` | 16,268 | 16,268/12,953 | 8,568/5,253 | false | Propose omit legacy flag (all false); this does not declare a licence or remove attribution. |
+| `metadata.extension.px.decimals` | 30,760 | 30,760/22,168 | 13,447/8,783 | 0 | Keep dataset default decimals; category unit precision overrides. |
+| `metadata.extension.px.contents` | 26,417 | 26,417/19,378 | 11,596/7,375 | "01. Avgjorda mål med ändrad utgång vid hovrätt per målkategori" | Recommend keep contents; concise statistical description can differ from title. |
+| `metadata.extension.px.infofile` | 17,283 | 17,283/13,717 | 9,415/5,878 | "BE0101" | Do not treat as URL. Resolve to documentation link only with known source mapping; otherwise exclude opaque lookup ID from Dataset, record source mapping in Harvest. |
+| `metadata.extension.px.matrix` | 28,089 | 28,089/20,343 | 12,045/7,727 | "SULESVL11a" | Exclude source matrix alias; identity and absolute retrieval binding already serve access. Explicit loss of source alias, not claimed duplicate. |
+| `metadata.extension.px.tableid` | 21,173 | 21,173/15,552 | 8,648/5,294 | "A10" | Exclude source table alias from common document; it may differ from dataset_code. Preserve binding endpoint. |
+| `metadata.extension.px.language` | 28,089 | 28,089/20,343 | 12,045/7,727 | "sv" | Exclude source flag; use requested/validated document language. Copies can disagree. |
+| `metadata.extension.px.official-statistics` | 28,089 | 28,089/20,343 | 12,045/7,727 | true | Map into official_statistics; identical copies in audit. |
+| `metadata.extension.px.subject-code` | 28,089 | 28,089/20,343 | 12,045/7,727 | "Studiestöd" | Combine into subject.code; identical copies in audit. |
+| `metadata.extension.px.subject-area` | 26,417 | 26,417/19,378 | 11,596/7,375 | "Överklagande- och ändringsfrekvens" | Combine into subject.label; identical copies in audit. |
+| `metadata.extension.px.description` | 11,292 | 11,292/6,998 | 2,948/2,082 | "01. Avgjorda mål med ändrad utgång vid hovrätt per målkategori. År 2006-2025." | Combine with description; compare after correct CSV decoding, not assumed duplicate. |
+| `metadata.extension.px.descriptiondefault` | 26,417 | 26,417/19,378 | 11,596/7,375 | true | Omit source display preference; own display policy. |
+| `metadata.extension.px.heading` | 16,268 | 16,268/12,953 | 8,568/5,253 | ["ContentsCode", "Tid"] | Omit source pivot columns; does not determine observation ordering. |
+| `metadata.extension.px.stub` | 16,268 | 15,817/12,574 | 8,417/5,174 | ["Sektor", "Kon"] | Omit source pivot rows; dimensions retain their actual order. |
+| `dimension.label` | 36,791 | 36,791/28,199 | 19,478/14,814 | "Kön" | Keep dimension label. |
+| `dimension.category` | 36,791 | 36,791/28,199 | 19,478/14,814 | {"index": {"0": 0, "1": 1, "2": 2}, "label": {"0": "Kvinnor", "1": "Män", "2": "Totalt"… | Map each code/index to an ordered Category object. |
+| `dimension.note` | 6,384 | 6,384/4,526 | 1,886/1,244 | ["Med kön avses det juridiska könet. Personer som har bytt juridiskt kön under tidsperi… | Map to dimension notes[].text. |
+| `dimension.link` | 11,480 | 11,480/9,120 | 788/481 | {"describedby": [{"extension": {"Region": "  Region"}}]} | Map genuine links; describedby entries need separate reference treatment below. |
+| `dimension.link.related` | 6,405 | 6,405/6,405 | 0/0 | [{"href": "https://www.ssb.no/en/klass/klassifikasjoner/2", "type": "text/html", "label… | Map href/type/label to common links; retain definition relation and move category-scoped links to that Category. |
+| `dimension.link.related[].extension.relation` | 6,405 | 6,405/6,405 | 0/0 | "definitions" | Map definitions to Link.rel; do not retain an extension object. |
+| `dimension.link.related[].extension.category` | 2,656 | 2,656/2,656 | 0/0 | "Arbeidsstyrken" | Move the link to the matching category; validate code membership rather than keeping a loose reference. |
+| `dimension.link.related[].extension.metaid` | 6,405 | 6,405/6,405 | 0/0 | "urn:ssb:classification:klass:2" | Retain genuine URI as reference href if URI policy permits, alongside HTTP link; otherwise explicitly exclude source alias. Pending link policy. |
+| `dimension.link.describedby` | 11,480 | 11,480/9,120 | 788/481 | [{"extension": {"Region": "  Region"}}] | Interpret dimension-code/reference mapping; real URNs are distinct from bare source lookup strings. No fabricated URL. |
+| `dimension.extension` | 36,791 | 36,791/28,199 | 19,478/14,814 | {"show": "value", "position": 3, "elimination": true} | Remove container; child dispositions below. |
+| `dimension.extension.elimination` | 36,791 | 36,791/28,199 | 19,478/14,814 | true | Keep optional bool; preserve source value. |
+| `dimension.extension.eliminationValueCode` | 5,516 | 5,516/3,316 | 1,261/1,031 | "0" | Keep elimination_value category code; validate membership. |
+| `dimension.extension.position` | 14,492 | 14,492/9,215 | 4,879/3,530 | 3 | Remove redundant source position; use checked root id order. |
+| `dimension.extension.noteMandatory` | 894 | 894/518 | 890/515 | {"0": true} | Attach mandatory flag to the indexed dimension note. |
+| `dimension.extension.categoryNoteMandatory` | 2,874 | 2,874/1,805 | 2,871/1,802 | {"0": {"0": true}} | Attach mandatory flag to the indexed category note; validate both references. |
+| `dimension.extension.refperiod` | 16,356 | 12,573/10,580 | 5,180/3,187 | {"0000070M": "Månad", "0000070N": "Månad", "0000070U": "Månad"} | Move each populated value into Category.reference_period; unresolved category references must be diagnosed. |
+| `dimension.extension.basePeriod` | 923 | 923/638 | 634/349 | {"AM0301AC": "2008M01", "AM0301AD": "2008M01"} | Move into Category.base_period; distinct from unit label. |
+| `dimension.extension.measuringType` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "Stock", "0000070N": "Stock", "0000070U": "Stock"} | Move into Category.measuring_type enum. |
+| `dimension.extension.priceType` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "NotApplicable", "0000070N": "NotApplicable", "0000070U": "NotApplicable"} | Move into Category.price_type enum; preserve explicit not_applicable. |
+| `dimension.extension.adjustment` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "None", "0000070N": "None", "0000070U": "None"} | Move into Category.adjustment enum; preserve explicit none. |
+| `dimension.extension.alternativeText` | 16,268 | 16,268/12,953 | 8,568/5,253 | {"0000070M": "Antal pågående anställningar", "0000070N": "Antal pågående anställningar … | Keep different values as Category.alternative_label; derive/omit exact duplicates. |
+| `dimension.extension.codelists` | 16,268 | 5,839/4,516 | 2,978/1,655 | [{"id": "vs_Region99LanGU", "type": "Valueset", "label": "County"}, {"id": "vs_RegionRi… | Keep typed references: id->code, label, type->valueset/aggregation, links. Omit empty lists. |
+| `dimension.extension.show` | 28,418 | 28,418/20,672 | 12,136/7,818 | "value" | Omit code/label display preference; code and label both retained. |
+| `dimension.extension.map` | 1,206 | 1,206/654 | 6/6 | "Sweden_municipality" | Omit opaque source map name initially; it is not geometry or a portable geographic standard. Explicit loss of map hint. |
+| `dimension.extension.category` | 629 | 629/629 | 629/629 | {"V11E100171": {"municipality_id": "1463", "municipality_label": "Mark"}, "V11E100217":… | Move municipality_id/municipality_label into Category.municipality.code/label; no category hierarchy. |
+| `dimension.category.index` | 36,791 | 36,791/28,199 | 19,478/14,814 | {"0": 0, "1": 1, "2": 2} | Derive order from positions; category keys become code. |
+| `dimension.category.label` | 36,791 | 36,791/28,199 | 19,478/14,814 | {"0": "Kvinnor", "1": "Män", "2": "Totalt"} | Move each value to Category.label matched by code. |
+| `dimension.category.unit` | 22,212 | 22,212/16,184 | 9,129/5,644 | {"KUL_YKS": {"decimals": 0, "extension": {}}, "SIS_GWH": {"decimals": 0, "extension": {}}} | Keep category units; nested decimals and base mapping below. |
+| `dimension.category.note` | 9,396 | 9,396/7,021 | 3,524/2,244 | {"0": ["Om 'Totalt' väljs redovisas nettototalen för alla, vilket innebär att varje per… | Move into category notes[].text by code. |
+| `dimension.category.child` | 0 | 0/0 | 0/0 | — | Omit initially: zero observed keys. |
+| `dimension.category.coordinates` | 0 | 0/0 | 0/0 | — | Omit initially: zero observed keys; future geographic normalization is separate. |
+| `dimension.category.extension` | 36,791 | 0/0 | 0/0 | — | Remove empty container; no observed contents. |
+| `dimension.category.unit.{code}.decimals` | 22,212 | 22,212/16,184 | 9,129/5,644 | 0 | Keep Unit.decimals, including zero. |
+| `dimension.category.unit.{code}.label` | 0 | 0/0 | 0/0 | — | Keep optional unit label; absent directly, source base supplies it. |
+| `dimension.category.unit.{code}.symbol` | 0 | 0/0 | 0/0 | — | Keep optional symbol; do not guess it from arbitrary prose. |
+| `dimension.category.unit.{code}.position` | 0 | 0/0 | 0/0 | — | Omit unused source display preference. |
+| `dimension.category.unit.{code}.extension` | 22,212 | 21,511/15,832 | 8,980/5,569 | {"base": "1000 ha"} | Remove container after mapping base. |
+| `dimension.category.unit.{code}.extension.base` | 21,511 | 21,511/15,832 | 8,980/5,569 | "1000 ha" | Rename to Unit.label preserving text; not numeric base-period information. |
+| `metadata.paths[].path[].extension.sortCode` | 16,268 | 16,268/12,953 | 8,568/5,253 | "Arbetsmarknad" | Propose omit source thematic sort preference; preserve path/node sequence and labels. Explicit loss of sibling sorting hint. |
+| `metadata.extension.kolada.operating_area` | 6,031 | 6,031/6,031 | 6,031/6,031 | "Befolkning" | Combine into existing subject/thematic path; no duplicated source property. |
+| `metadata.extension.kolada.kpi_groups` | 6,031 | 2,762/2,762 | 2,762/2,762 | [{"id": "G2KPI92539", "title": "Kultur/Fritid"}] | Combine id/title into existing thematic paths; preserve every membership, omit empty groups. |
+| `metadata.extension.kolada.perspective` | 6,024 | 6,024/6,024 | 6,024/6,024 | "Volymer" | Recommend an explicit thematic classification chain (e.g. perspective -> Resurser), not a Kolada object. |
+| `metadata.extension.kolada.auspice` | 5,946 | 5,946/5,946 | 5,946/5,946 | "X" | Keep meaning as a typed classification; X/T/E/P/A/O codes are observed but labels must be verified before normalization. Unresolved mapping, not approved deletion. |
+| `metadata.extension.kolada.municipality_type` | 6,031 | 6,031/6,031 | 6,031/6,031 | "A" | K/L/A affects geographic scope/probing; retain operationally and decide typed municipality/region coverage representation before dropping source information. |
+| `metadata.extension.kolada.has_ou_data` | 6,031 | 6,031/6,031 | 6,031/6,031 | false | Keep for discovery/retrieval configuration if used; exclude capability duplicate from public Dataset. Municipality and OU datasets remain separately identified. |
+| `metadata.extension.kolada.is_divided_by_gender` | 6,031 | 6,031/6,031 | 6,031/6,031 | true | Use source flag during construction; resulting category structure is the dataset truth. Do not add a sex role or infer meaning from category count alone. |
+| `metadata.extension.kolada.publ_period` | 5,389 | 5,389/5,389 | 5,389/5,389 | "2026" | Publication-calendar year is not automatically coverage or time_unit. Preserve in private source mapping pending schedule semantics; no fabricated model date. |
+| `metadata.extension.kolada.publication_date` | 5,359 | 5,359/5,359 | 5,359/5,359 | "2027-02-24" | Values include future dates; never copy into updated. Candidate announced next_release only after confirming source schedule meaning. |
+| `metadata.extension.kolada.prel_publication_date` | 871 | 871/871 | 871/871 | "2026-09-28" | Provisional publication date needs explicit meaning/qualifier; do not silently replace a firm next_release date. Unresolved model treatment. |
+| `metadata.extension.kolada.raw_description` | 937 | 937/937 | 937/937 | "Skattekraft, kr/inv. 1 nov fg år. Används som variabel i det kommunala utjämningssyste… | Keep cleaned description once normalization is verified; exclude original whitespace/markup copy from common Dataset. Raw examples remain audit material. |
+| `metadata.extension.kolada.source_origin` | 6,031 | 6,031/6,031 | 6,031/6,031 | "description" | Exclude parsing provenance (description/fallback); keep resulting source attribution. |
+| `metadata.extension.kolada.discontinued_year` | 415 | 415/415 | 415/415 | 2024 | Recommend retain as discontinued_year (optional integer) if precise cessation year matters; separate decision from bool and last_period. |
+
+### Nested fields and empty containers
+
+The ledger groups structural maps/arrays rather than listing every source code as
+a schema field. The remaining defined nested fields are accounted for as follows:
+
+- Identity `provider_code`, `dataset_code`, `language`: as above; language moves
+  alongside identity only if the recommended document shape is accepted.
+- Role `time`, `geo`, `metric`: same three single-role values; no role arrays on
+  individual dimensions.
+- Subject `code`, `label`, `extension`: retain code/label; extension empty, remove.
+- Path wrapper `path`, `extension`: retain the chain; wrapper extension empty.
+  Node `code`, `label`, `extension.sortCode`: covered above.
+- Contact `name`, `organization`, `mail`, `phone`, `raw`, `extension`: retain
+  descriptive fields, rename mail to email; extension empty.
+- Retrieval `type`, `config.data_url`, `config.extension`: private binding;
+  extension empty. Kolada config itself is empty; dataset identity remains needed.
+- Code-list `id`, `label`, `type`, `links[].rel/href/hreflang`: typed code-list
+  reference and common Link; preserve external resource language.
+- Dimension `link.describedby[].extension`: source dimension-code-to-reference
+  strings. A genuine classification URI can become a reference link if the link
+  policy accepts URNs; strings such as `Region` stay source lookup information.
+- Note flags: numeric note indexes and category-code keys are references, not
+  arbitrary user-defined properties. Notes retain their order.
+- Kolada group `id`, `title`: existing thematic code/label membership.
+- OU `municipality_id`, `municipality_label`: typed municipality reference.
+- Unobserved declared category child/coordinates and unit position: proposed
+  exclusions, not claims that the source data contains them.
+- Database `created_at`, `modified_at` (CSV columns 16/17) are ingestion/storage
+  bookkeeping and remain outside the source Dataset model.
+
+### Explicit exclusion list
+
+Proposed removal from the common Dataset: category child/coordinates; unit
+position; generic extension containers; source PX language/tableid/matrix copies;
+heading/stub/show/descriptiondefault; dimension position duplicate; path sortCode;
+opaque map hints; legacy all-false copyright flag; raw-description/source-origin
+copies; variable_names duplicate; raw provider-specific config/capability objects.
+
+This does **not** approve losing meaningful contents hidden inside those objects.
+The unresolved Kolada classification/calendar fields, opaque classification
+references, and source-document lookup IDs are explicitly listed above. Their
+final mappings must be settled before calling the model decision-complete.
+
+## Model package and storage: later decisions, not new implementation
+
+Recommended package shape: Python/Pydantic Dataset and nested types generate
+JSON Schema. One public construction/validation path handles identity, enums,
+ordering and semantic references. Helpers may normalize known enum spellings,
+units and notes; provider-specific extraction stays in Harvest. No HTTP, SQL,
+queues or mutable application state belongs in the model package.
+
+Structural JSON Schema checks cover required fields, types, enums and link
+shape. Python semantic checks cover unique codes, valid references and category
+ordering. Future normalized time values should be typed additional category
+fields that preserve source code/order; do not add them before their rules are
+designed. Distribution as a PyPI package versus bundled classes remains open.
+
+PostgreSQL layout and publication logic are deferred until the model is settled.
+The earlier proposal was JSONB documents with relational identities and selected
+query columns, not category-per-row normalization. Existing development data is
+disposable; there is no data-preservation migration project here.
+
+## Remaining decisions and completion sequence
+
+1. Agree statistical fields and deliberate exclusions; finish Kolada
+   classification/publication semantics. Official status nullable and the
+   seven-value time enum are already settled.
+2. Choose language-specific documents versus inline translations, arrays versus
+   maps, and link/reference policy using the real examples above.
+3. Convert complete representative PXWeb v1/v2, bilingual and both Kolada-kind
+   documents to the accepted shape. Verify identity/order/units/notes/qualifiers
+   and account for every dropped source value. Add rare-field cases.
+4. Settle Python authority/helpers, private retrieval interface and then storage.
+5. Write the implementation handoff only after those decisions. It must cover
+   model regression cases, adapter conversion, catalog replacement and an
+   end-to-end harvest/store/read verification. No application rewrite yet.
+
+Work remains on `public-contract-direction`; no merge, push, tag or publication.
+Published 1.0.0 and the running applications remain untouched.
