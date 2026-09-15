@@ -1,81 +1,213 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v2.0.0/schemas/dataset.schema.json",
-  "title": "Dataset",
-  "description": "Basic catalog information for one dataset language version.",
+  "title": "NordicIntel dataset metadata",
+  "description": "Normalized dataset metadata for one language. Different language versions are separate documents with the same provider_code, dataset_code and dataset_id.",
   "type": "object",
+  "additionalProperties": false,
   "required": [
-    "identity",
-    "label"
+    "provider_code",
+    "dataset_code",
+    "dataset_id",
+    "language",
+    "label",
+    "dimension_ids",
+    "dimension"
   ],
   "properties": {
-    "identity": {
-      "$ref": "#/$defs/identity"
+    "provider_code": {
+      "type": "string",
+      "description": "Stable provider code, e.g. scb.",
+      "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$",
+      "examples": [
+        "scb",
+        "kolada"
+      ]
+    },
+    "dataset_code": {
+      "type": "string",
+      "description": "Opaque, case-sensitive source dataset code, unique within its provider and shared across language versions. Do not slugify.",
+      "pattern": "\\S",
+      "examples": [
+        "TAB335",
+        "ABAKD12.px",
+        "N11730_OU"
+      ]
+    },
+    "dataset_id": {
+      "type": "string",
+      "description": "Language-independent identifier: provider_code + \":\" + dataset_code, e.g. scb:TAB335. Preserve the original dataset code.",
+      "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*:\\S[\\s\\S]*$",
+      "examples": [
+        "scb:TAB335"
+      ]
+    },
+    "language": {
+      "$ref": "#/$defs/language_code",
+      "description": "Language of this metadata document; no silent language fallback.",
+      "examples": [
+        "sv",
+        "en"
+      ]
     },
     "label": {
       "type": "string",
-      "pattern": "\\S"
-    },
-    "description": {
-      "type": "string"
-    },
-    "updated": {
-      "$ref": "#/$defs/dateOrTimestamp"
-    },
-    "next_release": {
-      "$ref": "#/$defs/dateOrTimestamp"
-    },
-    "time_unit": {
-      "type": "string",
-      "pattern": "\\S"
-    },
-    "first_period": {
-      "type": "string",
-      "pattern": "\\S"
-    },
-    "last_period": {
-      "type": "string",
-      "pattern": "\\S"
-    },
-    "discontinued": {
-      "type": "boolean",
-      "description": "Omission means unknown."
-    },
-    "source_url": {
-      "$ref": "#/$defs/url"
-    },
-    "doc_url": {
-      "$ref": "#/$defs/url"
-    },
-    "extension": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "additionalProperties": true
-      }
+      "description": "Human-readable dataset name/title, as given by the provider.",
+      "pattern": "\\S",
+      "examples": [
+        "Befolkning efter region och år"
+      ]
     },
     "source": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Attribution text naming the originating organization or source in this document language. This is not a URL; resource targets belong in links. Omit or use null when unknown.",
+      "examples": [
+        "Statistiska centralbyrån",
+        null
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Longer free-text description of the dataset.",
+      "examples": [
+        "Folkmängd vid årets slut."
+      ]
+    },
+    "discontinued": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null,
+      "description": "Whether the source explicitly reports publication has stopped. False means explicitly active; omission or null means unknown.",
+      "examples": [
+        true,
+        false,
+        null
+      ]
+    },
+    "updated": {
+      "$ref": "#/$defs/dateOrDatetime",
+      "default": null,
+      "description": "Source-reported update date or timezone-aware timestamp, not harvest time. Preserve date-only precision when that is all the source provides. Omit or use null when unknown.",
+      "examples": [
+        "2026-09-15",
+        "2026-09-15T09:00:00+02:00",
+        null
+      ]
+    },
+    "official_statistics": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null,
+      "description": "Source-reported official national statistics status. Preserve true, false and unknown (omitted or null); never infer it solely from provider identity.",
+      "examples": [
+        true,
+        false,
+        null
+      ]
+    },
+    "time_unit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "annual",
+        "semiannual",
+        "quarterly",
+        "monthly",
+        "weekly",
+        "daily",
+        "other",
+        null
+      ],
+      "default": null,
+      "description": "Granularity of statistical time periods, not publication frequency. Use other for a known granularity outside the enum; omit or use null when unknown.",
+      "examples": [
+        "annual",
+        "quarterly",
+        "other",
+        null
+      ]
+    },
+    "first_period": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "First covered period in original source notation; not necessarily a category label.",
+      "pattern": "\\S",
+      "examples": [
+        "2020",
+        "2020K1",
+        null
+      ]
+    },
+    "last_period": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Last covered period in original source notation; not necessarily a category label.",
+      "pattern": "\\S",
+      "examples": [
+        "2025",
+        "2025K4",
+        null
+      ]
+    },
+    "next_release": {
+      "$ref": "#/$defs/dateOrDatetime",
+      "default": null,
+      "description": "Date/datetime of the next expected release of the dataset, as announced by the provider.",
+      "examples": [
+        "2027-02-20",
+        null
+      ]
+    },
+    "notes": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "default": null,
+      "description": "Ordered dataset-level explanatory notes in the document language. Dimension and category notes belong at their corresponding levels.",
+      "examples": [
+        [
+          "Avser årets slut."
+        ]
+      ]
     },
     "subject": {
       "type": "object",
       "properties": {
         "code": {
           "type": "string",
-          "pattern": "\\S"
+          "pattern": "\\S",
+          "description": "Original subject code."
         },
         "label": {
           "type": "string",
-          "pattern": "\\S"
-        },
-        "extension": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": true
-          }
+          "pattern": "\\S",
+          "description": "Subject name in this document language."
         }
       },
+      "description": "Primary thematic classification with code, localized label or both. Omit when unavailable; null and empty objects are not accepted.",
       "additionalProperties": false,
       "anyOf": [
         {
@@ -88,114 +220,466 @@
             "label"
           ]
         }
+      ],
+      "examples": [
+        {
+          "code": "BE",
+          "label": "Befolkning"
+        }
+      ]
+    },
+    "role": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "$ref": "#/$defs/stringArray",
+          "uniqueItems": true,
+          "description": "Existing dimension codes assigned the time role; references and cross-role uniqueness are application checks."
+        },
+        "geo": {
+          "$ref": "#/$defs/stringArray",
+          "uniqueItems": true,
+          "description": "Existing dimension codes assigned the geo role; references and cross-role uniqueness are application checks."
+        },
+        "metric": {
+          "$ref": "#/$defs/stringArray",
+          "uniqueItems": true,
+          "description": "Existing dimension codes assigned the metric role; references and cross-role uniqueness are application checks."
+        }
+      },
+      "description": "Semantic roles assigned to existing dimension codes. Each supplied array is nonempty and unique; array order need not follow dimension order. Applications enforce at most one role per dimension.",
+      "additionalProperties": false,
+      "examples": [
+        {
+          "time": [
+            "Time"
+          ],
+          "geo": [
+            "Region"
+          ]
+        }
+      ]
+    },
+    "dimension_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonblank"
+      },
+      "description": "Complete ordered dimension codes. Array order establishes statistical dimension order, not object-key order. Applications check exact correspondence with dimension keys.",
+      "minItems": 1,
+      "uniqueItems": true,
+      "examples": [
+        [
+          "Region",
+          "Time"
+        ]
+      ]
+    },
+    "dimension": {
+      "type": "object",
+      "description": "Complete dimension metadata keyed by source dimension code, including labels in this document language. Ordering is supplied by dimension_ids.",
+      "additionalProperties": {
+        "$ref": "#/$defs/jstat_dimension"
+      },
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/nonblank"
+      }
+    },
+    "links": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/href_link"
+      },
+      "default": null,
+      "description": "Related resources with explicit relations and optional target language. A data link does not encode request bodies or replace private retrieval settings.",
+      "examples": [
+        [
+          {
+            "rel": "source",
+            "href": "https://example.org/statistics",
+            "hreflang": "sv"
+          }
+        ]
       ]
     },
     "paths": {
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "items": {
-        "type": "object",
-        "required": [
-          "path"
-        ],
-        "properties": {
-          "path": {
-            "type": "array",
-            "items": {
-              "$ref": "#/$defs/pathNode"
+        "$ref": "#/$defs/path_array"
+      },
+      "default": null,
+      "description": "Ordered thematic chains from broader to narrower nodes. Multiple chains describe multiple thematic memberships, never API routes or dataset lookup keys.",
+      "examples": [
+        [
+          [
+            {
+              "id": "population",
+              "label": "Befolkning"
             },
-            "minItems": 1
-          },
-          "extension": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "additionalProperties": true
+            {
+              "id": "count",
+              "label": "Folkmängd"
             }
-          }
-        },
-        "additionalProperties": false
-      }
+          ]
+        ]
+      ]
     },
-    "tags": {
-      "type": "array",
+    "contacts": {
+      "type": [
+        "array",
+        "null"
+      ],
       "items": {
-        "type": "string"
-      }
-    },
-    "sort_code": {
-      "type": "string"
+        "$ref": "#/$defs/contact"
+      },
+      "default": null,
+      "description": "Structured source contacts. Each object requires at least one populated field; omit or use null when unavailable. No raw contact field.",
+      "examples": [
+        [
+          {
+            "organization": "Statistikmyndigheten",
+            "email": "statistics@example.org"
+          }
+        ]
+      ]
     }
   },
-  "additionalProperties": false,
   "$defs": {
-    "identity": {
-      "description": "Provider and dataset codes identify the dataset; language identifies its metadata variant.",
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonblank"
+      },
+      "description": "Nonempty ordered list of nonblank strings; the containing property defines whether these are codes or text.",
+      "minItems": 1
+    },
+    "path_node": {
       "type": "object",
       "required": [
-        "provider_code",
-        "dataset_code",
-        "language"
+        "id",
+        "label"
       ],
       "properties": {
-        "provider_code": {
-          "$ref": "provider.schema.json#/properties/code"
-        },
-        "dataset_code": {
+        "id": {
           "type": "string",
           "pattern": "\\S",
-          "description": "Opaque, case-sensitive code, unique within the provider. Preserve without normalization across languages."
+          "description": "Original thematic node identifier, not a dataset access key."
         },
-        "language": {
-          "enum": [
-            "sv",
-            "en"
+        "label": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Thematic node label in the document language."
+        },
+        "link": {
+          "$ref": "#/$defs/href_link",
+          "description": "Optional classification or documentation resource for this node."
+        }
+      },
+      "description": "One thematic node identified by source code and localized label, with optional supporting resource.",
+      "additionalProperties": false
+    },
+    "path_array": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/path_node"
+      },
+      "description": "A nonempty thematic chain, ordered from broad to narrow classification.",
+      "minItems": 1
+    },
+    "dateOrDatetime": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Source calendar date or RFC 3339 timestamp with timezone; null means unknown. Enable date and date-time format checks.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ]
+    },
+    "href_link": {
+      "required": [
+        "href",
+        "rel"
+      ],
+      "type": "object",
+      "properties": {
+        "rel": {
+          "type": "string",
+          "pattern": "^\\S+$",
+          "examples": [
+            "source",
+            "documentation",
+            "metadata",
+            "data",
+            "alternate",
+            "license"
+          ],
+          "description": "Link relation. Common names are examples, not an exhaustive enum; custom nonblank relation names are allowed."
+        },
+        "href": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^[Hh][Tt][Tt][Pp][Ss]?://[^\\s/?#]+[^\\s]*$",
+          "description": "Absolute HTTP(S) resource URL with a host.",
+          "examples": [
+            "https://example.org/api/tables/TAB335"
+          ]
+        },
+        "hreflang": {
+          "$ref": "#/$defs/language_code",
+          "description": "Optional target language; omit if unknown or not language-specific."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Resource target and its relationship to the dataset or thematic node. Request execution settings remain outside Dataset."
+    },
+    "contact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Contact person or team name."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "pattern": "\\S",
+          "description": "Email address, not a mailto URL; enable email format checking."
+        },
+        "phone": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Telephone number as text, preserving prefixes and extensions."
+        },
+        "organization": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Organization responsible for this contact."
+        },
+        "address": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Postal or visiting address as source text."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^[Hh][Tt][Tt][Pp][Ss]?://[^\\s/?#]+[^\\s]*$",
+          "description": "Absolute HTTP(S) contact page; this field is a direct URL string, not a Link object."
+        }
+      },
+      "description": "Source contact with at least one nonblank field. Unknown keys and null fields are rejected.",
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+    "jstat_dimension": {
+      "type": "object",
+      "required": [
+        "label",
+        "category"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Original dimension name in the document language."
+        },
+        "category": {
+          "$ref": "#/$defs/jstat_category",
+          "description": "Indexed categories and localized labels, with optional notes and units by category."
+        },
+        "note": {
+          "$ref": "#/$defs/stringArray",
+          "description": "Ordered explanatory notes applying to the whole dimension."
+        },
+        "extension": {
+          "type": "object",
+          "description": "Additional metadata with arbitrary JSON contents, including scalar values and nested objects. No adapter-specific schema is required. Do not duplicate defined fields.",
+          "additionalProperties": true,
+          "examples": [
+            {
+              "display_hint": "compact",
+              "source_details": {
+                "flags": [
+                  "a"
+                ],
+                "value": null
+              }
+            }
+          ]
+        },
+        "elimination": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this dimension may be omitted from a data selection. Construction default is false. True does not require an elimination_value; validation inserts neither default.",
+          "examples": [
+            false,
+            true
+          ]
+        },
+        "elimination_value": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "\\S",
+          "default": null,
+          "description": "Optional category code to use when this dimension is omitted. Null when unspecified. A supplied code must exist in the category index; application validation enforces this relationship.",
+          "examples": [
+            null,
+            "00"
+          ]
+        }
+      },
+      "description": "One dimension with localized label and complete category maps. Its code is the enclosing map key.",
+      "additionalProperties": false
+    },
+    "jstat_category": {
+      "type": "object",
+      "required": [
+        "index",
+        "label"
+      ],
+      "description": "Normalized JSON-stat-style category maps. Ordering comes from explicit index values, not map iteration.",
+      "properties": {
+        "index": {
+          "type": "object",
+          "minProperties": 1,
+          "description": "Category code to zero-based integer position. Applications enforce uniqueness and contiguous positions from zero.",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/nonblank"
+          },
+          "examples": [
+            {
+              "00": 0,
+              "01": 1
+            }
+          ]
+        },
+        "label": {
+          "type": "object",
+          "description": "Original localized labels by category code. Applications require labels for exactly the indexed codes.",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/nonblank"
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/nonblank"
+          },
+          "examples": [
+            {
+              "00": "Riket",
+              "01": "Stockholms län"
+            }
+          ]
+        },
+        "note": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/stringArray"
+          },
+          "description": "Category code to ordered notes; each key must reference an existing category.",
+          "propertyNames": {
+            "$ref": "#/$defs/nonblank"
+          }
+        },
+        "unit": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "Unit text in this document language, e.g. antal or number."
+              },
+              "decimals": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Nonnegative decimal places for display; not a statement of measurement accuracy."
+              },
+              "position": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "end"
+                ],
+                "description": "Placement of unit text relative to the displayed value: start or end."
+              }
+            },
+            "additionalProperties": false,
+            "minProperties": 1,
+            "description": "Source unit text and optional display information; at least one field is supplied.",
+            "examples": [
+              {
+                "label": "antal",
+                "decimals": 0,
+                "position": "end"
+              }
+            ]
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/nonblank"
+          },
+          "description": "Units by existing category code, commonly on a metric dimension. Omit unknown units."
+        },
+        "extension": {
+          "type": "object",
+          "description": "Additional metadata with arbitrary JSON contents, including scalar values and nested objects. No adapter-specific schema is required. Do not duplicate defined fields.",
+          "additionalProperties": true,
+          "examples": [
+            {
+              "display_hint": "compact",
+              "source_details": {
+                "flags": [
+                  "a"
+                ],
+                "value": null
+              }
+            }
           ]
         }
       },
       "additionalProperties": false
     },
-    "dateOrTimestamp": {
+    "nonblank": {
       "type": "string",
-      "anyOf": [
-        {
-          "format": "date"
-        },
-        {
-          "format": "date-time"
-        }
-      ]
+      "pattern": "\\S",
+      "description": "At least one non-whitespace character; validation does not trim or normalize text."
     },
-    "url": {
-      "description": "Absolute HTTP(S) URL with a host.",
-      "$ref": "provider.schema.json#/properties/website"
-    },
-    "pathNode": {
-      "type": "object",
-      "required": [
-        "code",
-        "label"
+    "language_code": {
+      "type": "string",
+      "enum": [
+        "sv",
+        "en"
       ],
-      "properties": {
-        "code": {
-          "type": "string",
-          "pattern": "\\S"
-        },
-        "label": {
-          "type": "string",
-          "pattern": "\\S"
-        },
-        "extension": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": true
-          }
-        },
-        "sort_code": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
+      "description": "Supported metadata languages: Swedish (sv) and English (en)."
     }
-  }
+  },
+  "$comment": "Enable format validation. Defaults are annotations, not inserted values. Applications check combined identity, dimension membership, contiguous unique category positions, complete category labels, note/unit/role references, at most one role per dimension, and elimination references. See docs/README.md.",
+  "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v2.0.0/schemas/dataset.schema.json"
 }

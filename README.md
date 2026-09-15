@@ -1,54 +1,45 @@
 # NordicIntel schemas
 
-Shared JSON contracts for provider descriptions and statistical dataset documents.
-The next model direction is specified in [DATASET-MODEL.md](DATASET-MODEL.md):
-one combined multilingual Dataset, with Python/Pydantic as authority. See the
-[implementation handoff](DATASET-MODEL-HANDOFF.md). It is not yet an application
-or released-contract change; the collection described below remains unchanged.
-
-This branch prepares **2.0.0**, which is **not published**. Existing applications
-continue consuming the immutable [1.0.0 release](https://github.com/nordicintel/nordicintel-schemas/releases/tag/v1.0.0).
+Authoritative JSON Schemas for provider descriptions and statistical dataset
+metadata. This branch prepares **2.0.0**, which is **not published**. Existing
+applications continue consuming the immutable
+[1.0.0 release](https://github.com/nordicintel/nordicintel-schemas/releases/tag/v1.0.0).
 
 ## Contracts
 
 | Schema | Purpose |
-| --- | --- |
-| [Provider](schemas/provider.schema.json) | Stable identity and descriptive translations; no Harvest configuration |
-| [Dataset](schemas/dataset.schema.json) | Basic table information, identity, source, subject and thematic paths |
-| [Dataset metadata](schemas/dataset-metadata.schema.json) | Ordered statistical dimensions, PX extensions and implementation-owned retrieval config |
-| [JSON-stat structures](schemas/common/jsonstat.schema.json) | Reusable normalized dimension, category, unit, role, note and link definitions |
-| [PX extensions](schemas/extensions/px.schema.json) | Shared PX metadata vocabulary, independent of the producing adapter |
+|---|---|
+| [Provider](schemas/provider.schema.json) | Stable identity, translated descriptions and descriptive extras; no Harvest configuration |
+| [Dataset](schemas/dataset.schema.json) | Complete metadata for one language, including identity, statistical dimensions, categories and resource links |
 
-See the [contract reference and migration mapping](docs/README.md),
-[overview](OVERVIEW.md), [roadmap](docs/ROADMAP.md), and
-[example provenance](examples/README.md).
+Dataset documents for Swedish and English share a dataset ID and can be refreshed
+independently. This replaces both the former basic/detail split and the proposed
+combined multilingual model. Python/Pydantic model development is shelved;
+Python here is validation tooling only.
 
-JSON Schemas are authoritative for shared documents. Harvest owns adapter inputs,
-registration, controls and its single configuration JSON file. Retrieval implementations
-own their settings. Application OpenAPI describes HTTP behavior; database migrations
-belong to the applications. Adding an adapter alone requires no shared-schema release.
+See [the model](DATASET-MODEL.md), [overview](OVERVIEW.md),
+[contract reference](docs/README.md), [examples](examples/README.md) and
+[next steps](docs/ROADMAP.md). Schemas include descriptions, inline examples and
+documented defaults for implementers.
 
 ## Validation
 
-Use Python 3.12 and uv; development dependencies are locked in `uv.lock`.
+Use Python 3.12 and uv with locked development dependencies:
 
 ```sh
 uv run --locked python scripts/validate.py
 uv run --locked python -m unittest discover -s tests
 ```
 
-Validation is structural only: schema validity, versioned IDs, relative references,
-formats, and valid/invalid examples. No network retrieval is used. Cross-document
-identity, category ordering consistency, references to existing codes, and actual
-text language remain application responsibilities.
+Ordinary validation works offline. It checks Draft 2020-12 structure, versioned
+IDs, local references, document examples, inline examples and defaults against
+their containing definitions. URI, email, date and date-time formats are enforced.
+Defaults are annotations; validation does not populate missing fields.
 
-Tests also check 15 illustrative public responses against pinned offline upstream
-contracts. Their exact known PxWeb incompatibilities are asserted, not hidden.
-See [public example results](tests/public/README.md). These do not claim a working
-public API or complete PxWeb UI compatibility.
-
-The existing read-only GitHub Actions workflow runs both commands on `main`.
-No runtime Python distribution or automated publication is introduced.
+Cross-field identity, category ordering and reference consistency require consumer
+checks described in the contract reference. The validator is structural only;
+there is no runtime model package or public-API compatibility test suite.
+Read-only GitHub Actions runs the same commands on pushes to `main`.
 
 ## Versioning and direct consumption
 

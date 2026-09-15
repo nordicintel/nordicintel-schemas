@@ -1,16 +1,16 @@
-# Roadmap
+# Next steps
 
-1. **Prepared: 2.0.0 shared statistical contracts.** JSON-stat foundation, defined
-   PX extensions, revised basic/detail split, and implementation-owned adapter
-   settings. Examples and offline structural checks are included.
-2. **Review public compatibility gaps.** Resolve API policy for missing dates and
-   periods, contact completeness and upstream specification inconsistencies before
-   claiming full PxWeb compatibility. Test the intended UI in the API project.
-3. **Publish 2.0.0 deliberately.** Review/merge, pass CI, then follow manual release
-   checks. Existing 1.0.0 stays immutable; application adoption is separate.
-4. **Adopt in the separate projects.** Harvest owns configuration and job controls;
-   catalog owns provider/dataset persistence and its public PxWeb-compatible API.
-   Settle execution persistence and write consistency there.
+1. **Prepared here:** Provider and single-language Dataset JSON Schemas, useful
+   inline descriptions/examples and a small structural validation suite.
+2. **Adopt in Harvest:** map output to the complete Dataset shape, preserve source
+   identities/order and add the documented semantic checks. Keep private retrieval
+   settings outside Dataset. Use representative sources for integration checks.
+3. **Adopt in the catalog/API:** store and read independent language documents.
+   Settle persistence and HTTP behavior in that project; development data needs
+   no preservation migration.
+4. **Publish deliberately when requested:** run release checks and CI, then follow
+   the manual publication steps. No push, tag or publication is part of this revision.
 
-No application changes, release, observation retrieval, provider selection or
-recurring scheduling are implemented by this schemas revision.
+JSON Schema is authoritative. Python/Pydantic models are shelved. Exact PxWeb UI
+compatibility, observations and deployment are not prerequisites added by this
+schema change. Existing 1.0.0 applications remain unchanged until adoption.

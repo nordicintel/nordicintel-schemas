@@ -1,5 +1,8 @@
 # PxWeb2 UI requirements for the catalog API
 
+Historical investigation, not the current Dataset contract or an implementation
+requirement. The current direction is in [DATASET-MODEL.md](../DATASET-MODEL.md).
+
 Investigated 2026-09-14 against upstream [PxTools/PxWeb2 commit
 6c46c20d5ed8547c009ec255532c64ca884e762e](https://github.com/PxTools/PxWeb2/tree/6c46c20d5ed8547c009ec255532c64ca884e762e).
 This is a source-code trace, not a browser acceptance test. The upstream checkout

@@ -16,7 +16,11 @@
       "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$",
       "not": {
         "pattern": "\\s"
-      }
+      },
+      "examples": [
+        "scb",
+        "kolada"
+      ]
     },
     "label": {
       "description": "Display names. Available translations do not declare adapter language support.",
@@ -44,7 +48,15 @@
       "additionalProperties": {
         "type": "object",
         "additionalProperties": true
-      }
+      },
+      "description": "Descriptive extras grouped into named objects with arbitrary JSON contents. Harvest configuration belongs outside Provider, including outside this extension.",
+      "examples": [
+        {
+          "organization": {
+            "abbreviation": "SCB"
+          }
+        }
+      ]
     }
   },
   "$defs": {
@@ -55,13 +67,16 @@
       "properties": {
         "sv": {
           "type": "string",
-          "pattern": "\\S"
+          "pattern": "\\S",
+          "description": "Provider text in sv; omit when unavailable."
         },
         "en": {
           "type": "string",
-          "pattern": "\\S"
+          "pattern": "\\S",
+          "description": "Provider text in en; omit when unavailable."
         }
-      }
+      },
+      "description": "One or both supported translations, each nonblank. Does not declare adapter language support."
     }
   }
 }

@@ -65,6 +65,22 @@ def check_references(resource, resolver, top=True):
         check_references(child, resolver.in_subresource(child), top=False)
 
 
+def check_annotations(resource, validator):
+    """Validate examples/defaults as data against their containing subschema."""
+    node = resource.contents
+    if isinstance(node, dict):
+        local = validator.evolve(schema=node)
+        values = [("example", value) for value in node.get("examples", [])]
+        if "default" in node:
+            values.append(("default", node["default"]))
+        for kind, value in values:
+            errors = list(local.iter_errors(value))
+            require(not errors, f"Invalid inline {kind}: {value!r}" +
+                    (f": {errors[0].message}" if errors else ""))
+    for child in resource.subresources():
+        check_annotations(child, validator)
+
+
 def validate(root, release=False, published=False):
     version = (root / "VERSION").read_text(encoding="utf-8").strip()
     require(re.fullmatch(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)", version),
@@ -94,8 +110,9 @@ def validate(root, release=False, published=False):
         example_dir = root / "examples" / relative.parent / path.name.removesuffix(".schema.json")
         validator = Draft202012Validator(
             schema, registry=registry,
-            format_checker=FormatChecker(formats=["uri", "date", "date-time"])
+            format_checker=FormatChecker(formats=["uri", "date", "date-time", "email"])
         )
+        check_annotations(resource, validator)
         for kind in ("valid", "invalid"):
             examples = sorted((example_dir / kind).glob("*.json"))
             require(examples, f"Missing {kind} examples: {example_dir}")

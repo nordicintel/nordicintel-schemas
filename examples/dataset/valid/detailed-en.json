@@ -1,0 +1,140 @@
+{
+  "provider_code": "example",
+  "dataset_code": "POP02",
+  "dataset_id": "example:POP02",
+  "language": "en",
+  "label": "Population by region and year",
+  "dimension_ids": [
+    "Region",
+    "Time"
+  ],
+  "dimension": {
+    "Region": {
+      "label": "Region",
+      "category": {
+        "index": {
+          "00": 0,
+          "01": 1
+        },
+        "label": {
+          "00": "Sweden",
+          "01": "Stockholm County"
+        },
+        "note": {
+          "01": [
+            "Boundaries as defined by the source."
+          ]
+        },
+        "extension": {
+          "classification": {
+            "revision": "2025"
+          }
+        }
+      },
+      "elimination": true,
+      "elimination_value": "00",
+      "note": [
+        "The national category is the total."
+      ],
+      "extension": {
+        "display_hint": "compact"
+      }
+    },
+    "Time": {
+      "label": "Year",
+      "category": {
+        "index": {
+          "2024": 0,
+          "2025": 1
+        },
+        "label": {
+          "2024": "2024",
+          "2025": "2025"
+        },
+        "unit": {
+          "2024": {
+            "label": "number",
+            "decimals": 0,
+            "position": "end"
+          },
+          "2025": {
+            "label": "number",
+            "decimals": 0,
+            "position": "end"
+          }
+        }
+      },
+      "elimination": false,
+      "elimination_value": null
+    }
+  },
+  "source": "Example agency",
+  "description": "Illustrative metadata; no observations included.",
+  "discontinued": false,
+  "updated": "2026-09-15",
+  "official_statistics": null,
+  "time_unit": "annual",
+  "first_period": "2024",
+  "last_period": "2025",
+  "next_release": "2027-02-20T09:00:00+01:00",
+  "notes": [
+    "At the end of the year."
+  ],
+  "subject": {
+    "code": "BE",
+    "label": "Population"
+  },
+  "role": {
+    "geo": [
+      "Region"
+    ],
+    "time": [
+      "Time"
+    ]
+  },
+  "links": [
+    {
+      "rel": "source",
+      "href": "https://example.org/en/population",
+      "hreflang": "en"
+    },
+    {
+      "rel": "metadata",
+      "href": "https://example.org/api/en/POP02"
+    },
+    {
+      "rel": "data",
+      "href": "https://example.org/api/data/POP02"
+    },
+    {
+      "rel": "methodology",
+      "href": "https://example.org/methodology"
+    }
+  ],
+  "paths": [
+    [
+      {
+        "id": "population",
+        "label": "Population",
+        "link": {
+          "rel": "documentation",
+          "href": "https://example.org/classification"
+        }
+      },
+      {
+        "id": "count",
+        "label": "Population count"
+      }
+    ]
+  ],
+  "contacts": [
+    {
+      "name": "Statistics team",
+      "organization": "Example agency",
+      "email": "statistics@example.org",
+      "phone": "+46 8 000 00 00",
+      "address": "Exempelgatan 1",
+      "url": "https://example.org/contact"
+    }
+  ]
+}

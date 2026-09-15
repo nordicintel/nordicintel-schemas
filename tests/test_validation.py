@@ -71,11 +71,38 @@ class ValidationTests(unittest.TestCase):
             self.check()
 
     def test_reference_like_example_data_is_not_a_schema(self):
+        self.schema["type"] = "object"
         self.collection()
+        self.write("examples/value/valid/string.json", {})
         self.write("schemas/value.schema.json", self.schema | {
             "examples": [{"$ref": "ordinary data", "$id": "ordinary data"}]
         })
         self.check()
+
+    def test_inline_annotations_resolve_references_and_enforce_formats(self):
+        self.collection()
+        for keyword in ["examples", "default"]:
+            for format_name, good, bad in [
+                ("email", "stats@example.org", "no-at-sign"),
+                ("uri", "https://example.org/data", "/relative"),
+                ("date", "2026-09-15", "2026-02-30"),
+                ("date-time", "2026-09-15T09:00:00Z", "2026-09-15T09:00:00"),
+            ]:
+                with self.subTest(keyword=keyword, format=format_name):
+                    schema = self.schema | {
+                        "$defs": {
+                            "text": {"type": "string", "format": format_name},
+                            "usage": {"$ref": "#/$defs/text"},
+                        }
+                    }
+                    usage = schema["$defs"]["usage"]
+                    usage[keyword] = [good] if keyword == "examples" else good
+                    self.write("schemas/value.schema.json", schema)
+                    self.check()
+                    usage[keyword] = [bad] if keyword == "examples" else bad
+                    self.write("schemas/value.schema.json", schema)
+                    with self.assertRaisesRegex(ValueError, "Invalid inline"):
+                        self.check()
 
     def test_incorrect_examples(self):
         self.collection()
