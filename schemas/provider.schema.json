@@ -1,82 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v2.0.0/schemas/provider.schema.json",
-  "title": "Provider",
-  "description": "Stable provider identity and descriptive information. Harvest configuration is owned by the Harvest project.",
+  "title": "NordicIntel provider",
+  "description": "Minimal Provider envelope. Only provider_code is stable; all other fields are deliberately unconstrained while the Provider model evolves.",
   "type": "object",
   "required": [
-    "code",
-    "label"
+    "provider_code"
   ],
-  "additionalProperties": false,
   "properties": {
-    "code": {
-      "description": "Stable provider identity, independent of display names and adapters. Other documents reference this value as provider_code.",
+    "provider_code": {
+      "description": "Stable Provider identity used by Dataset documents.",
       "type": "string",
       "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$",
-      "not": {
-        "pattern": "\\s"
-      },
       "examples": [
         "scb",
         "kolada"
       ]
-    },
-    "label": {
-      "description": "Display names. Available translations do not declare adapter language support.",
-      "$ref": "#/$defs/translations"
-    },
-    "description": {
-      "description": "Descriptions of the provider in Swedish, English, or both.",
-      "$ref": "#/$defs/translations"
-    },
-    "country_code": {
-      "description": "Two uppercase letters identifying the provider's home country, not dataset coverage. Assigned-country membership is not checked.",
-      "type": "string",
-      "minLength": 2,
-      "maxLength": 2,
-      "pattern": "^[A-Z]{2}$"
-    },
-    "website": {
-      "description": "Absolute HTTP or HTTPS URI with a host. Consumers must enable URI format validation.",
-      "type": "string",
-      "format": "uri",
-      "pattern": "^[hH][tT][tT][pP][sS]?://(?:[^/?#@]*@)?(?:\\[[^\\]]+\\]|[^/?#:@]+)(?::[0-9]*)?(?:[/?#]|$)"
-    },
-    "extension": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "additionalProperties": true
-      },
-      "description": "Descriptive extras grouped into named objects with arbitrary JSON contents. Harvest configuration belongs outside Provider, including outside this extension.",
-      "examples": [
-        {
-          "organization": {
-            "abbreviation": "SCB"
-          }
-        }
-      ]
     }
   },
-  "$defs": {
-    "translations": {
-      "type": "object",
-      "minProperties": 1,
-      "additionalProperties": false,
-      "properties": {
-        "sv": {
-          "type": "string",
-          "pattern": "\\S",
-          "description": "Provider text in sv; omit when unavailable."
-        },
-        "en": {
-          "type": "string",
-          "pattern": "\\S",
-          "description": "Provider text in en; omit when unavailable."
-        }
-      },
-      "description": "One or both supported translations, each nonblank. Does not declare adapter language support."
-    }
-  }
+  "additionalProperties": true
 }

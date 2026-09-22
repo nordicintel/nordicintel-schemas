@@ -63,7 +63,7 @@
         "null"
       ],
       "default": null,
-      "description": "Attribution text naming the originating organization or source in this document language. This is not a URL; resource targets belong in links. Omit or use null when unknown.",
+      "description": "Attribution text naming the Dataset source according to the Provider, in this document's language. This is not the Provider identity or a URL; resource targets belong in links. Omit or use null when unknown.",
       "examples": [
         "Statistiska centralbyrån",
         null
@@ -86,7 +86,7 @@
         "null"
       ],
       "default": null,
-      "description": "Whether the source explicitly reports publication has stopped. False means explicitly active; omission or null means unknown.",
+      "description": "Whether publication or updates for this Dataset have stopped. False means explicitly active; omission or null means unknown.",
       "examples": [
         true,
         false,
@@ -96,7 +96,7 @@
     "updated": {
       "$ref": "#/$defs/dateOrDatetime",
       "default": null,
-      "description": "Source-reported update date or timezone-aware timestamp, not harvest time. Preserve date-only precision when that is all the source provides. Omit or use null when unknown.",
+      "description": "Provider-reported update date or timezone-aware timestamp, not harvest time. This is the last time the Dataset changed, including observation, structural, or metadata changes. Preserve date-only precision when that is all the Provider supplies. Omit or use null when unknown.",
       "examples": [
         "2026-09-15",
         "2026-09-15T09:00:00+02:00",
@@ -109,7 +109,7 @@
         "null"
       ],
       "default": null,
-      "description": "Source-reported official national statistics status. Preserve true, false and unknown (omitted or null); never infer it solely from provider identity.",
+      "description": "Provider-reported official national statistics status. Preserve true, false and unknown (omitted or null); never infer it solely from provider identity.",
       "examples": [
         true,
         false,
@@ -146,7 +146,7 @@
         "null"
       ],
       "default": null,
-      "description": "First covered period in original source notation; not necessarily a category label.",
+      "description": "First period covered by the Dataset, either reported by the Provider or inferred by a local implementation; not necessarily a category label. Preserve the Provider's original form instead of standardizing it.",
       "pattern": "\\S",
       "examples": [
         "2020",
@@ -160,7 +160,7 @@
         "null"
       ],
       "default": null,
-      "description": "Last covered period in original source notation; not necessarily a category label.",
+      "description": "Last period covered by the Dataset, either reported by the Provider or inferred by a local implementation; not necessarily a category label. Preserve the Provider's original form instead of standardizing it.",
       "pattern": "\\S",
       "examples": [
         "2025",
@@ -680,6 +680,6 @@
       "description": "Supported metadata languages: Swedish (sv) and English (en)."
     }
   },
-  "$comment": "Enable format validation. Defaults are annotations, not inserted values. Applications check combined identity, dimension membership, contiguous unique category positions, complete category labels, note/unit/role references, at most one role per dimension, and elimination references. See docs/README.md.",
+  "$comment": "Defaults are annotations, not inserted values. Applications check combined identity, dimension membership, contiguous unique category positions, complete category labels, note/unit/role references, at most one role per dimension, and elimination references. See ../DATASET-MODEL.md.",
   "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v2.0.0/schemas/dataset.schema.json"
 }

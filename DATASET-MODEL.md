@@ -1,160 +1,134 @@
-# Normalized Dataset model
+# Dataset model
 
-Agreed direction, updated 2026-09-15: **one complete Dataset document per
-language**. This supersedes the combined multilingual model and its Python class
-specification previously in this file. No `translations` container or separate
-basic-information/metadata document pair is proposed.
-
-The authoritative contract is [schemas/dataset.schema.json](schemas/dataset.schema.json),
-using JSON Schema Draft 2020-12. Python/Pydantic model development and schema
-generation are shelved until further notice. Python in this repo is validation
-tooling only. The corrected sibling-project draft was the input to this revision;
-it is no longer the contract consumers should reference.
-
-Swedish providers are the initial focus. Metadata supports `sv` and `en`.
-Statistical discovery and repeatable retrieval are the product goals; exact
-PxWeb UI compatibility does not dictate the model.
+The authoritative contract is [`schemas/dataset.schema.json`](schemas/dataset.schema.json).
+It uses JSON Schema Draft 2020-12 and represents one complete Dataset document in
+one language. The schema itself contains the exact types, descriptions, defaults,
+and field-level examples; this document records the decisions around it.
 
 ## Identity and language
 
-`provider_code`, `dataset_code`, `dataset_id` and `language` are top-level fields.
-Dataset identity is provider plus source dataset code; `dataset_id` is exactly
-`provider_code + ":" + dataset_code`, without slugifying the source code.
-Language distinguishes documents, not the dataset's public identifier.
+`provider_code`, `dataset_code`, `dataset_id`, and `language` are top-level fields.
+The public Dataset identity is `provider_code:dataset_code`; `dataset_id` must be
+that exact value. Source dataset codes remain opaque and case-sensitive.
 
-Each language document contains its own structure and text. A Swedish refresh
-can replace the Swedish document without merging or replacing English content.
-No cross-language structural merge is required. Preserve source identities and
-ordering during adapter normalization; do not invent translations or silently
-substitute another language. Swedish remains the default requested language.
+Swedish and English are separate complete documents with the same Dataset identity.
+Language is therefore part of the document identity, not the public Dataset ID.
+One language can be refreshed without reading, merging, or replacing the other.
+Never invent a translation or silently substitute text from another language.
 
 ## Dataset fields
 
-Only the seven fields marked required below are required. Requiredness here is a
-model rule, not publication eligibility.
+Only these fields are required:
 
-| Field | Required | Shape and meaning |
-|---|---|---|
-| `provider_code` | Yes | Lowercase letters/digits with underscore-separated segments, starting with a letter |
-| `dataset_code` | Yes | Nonblank, opaque, case-sensitive source code, shared across language versions |
-| `dataset_id` | Yes | Combined provider and dataset code, e.g. `scb:TAB335` |
-| `language` | Yes | `sv` or `en` |
-| `label` | Yes | Nonblank original dataset title in this document's language |
-| `source` | No | Attribution string or null; placed immediately after `label` in the schema |
-| `description` | No | Longer description string or null |
-| `discontinued` | No | Boolean or null; unknown is not false |
-| `updated` | No | Source update date, timezone-aware timestamp, or null |
-| `official_statistics` | No | First-class boolean or null; unknown is valid |
-| `time_unit` | No | `annual`, `semiannual`, `quarterly`, `monthly`, `weekly`, `daily`, `other`, or null; time granularity, not release frequency |
-| `first_period`, `last_period` | No | Nonblank source period notation or null; not necessarily category labels |
-| `next_release` | No | Announced source release date, timezone-aware timestamp, or null |
-| `notes` | No | Array of strings or null |
-| `subject` | No | Object with nonblank `code`, `label`, or both |
-| `role` | No | Object with optional `time`, `geo`, `metric` arrays of unique dimension codes |
-| `dimension_ids` | Yes | Nonempty ordered array of unique dimension codes |
-| `dimension` | Yes | Nonempty mapping from dimension codes to Dimension objects |
-| `links` | No | Array of Link objects or null |
-| `paths` | No | Array of nonempty thematic node chains or null |
-| `contacts` | No | Array of Contact objects or null |
+- `provider_code`, `dataset_code`, `dataset_id`, and `language`
+- `label`
+- `dimension_ids` and `dimension`
 
-Optional does not universally mean nullable: `subject` and `role`, for example,
-are omitted when absent and do not accept null. The schema annotates nullable
-Dataset fields with a null default. JSON Schema defaults do not insert values;
-consumers apply construction defaults where needed. Object property order is
-for readability, not semantic ordering.
+Optional metadata includes source attribution, description, discontinued and
+official-statistics status, update and release dates, time coverage, notes,
+subject, dimension roles, links, thematic paths, and contacts. Optional does not
+always mean nullable; the schema is authoritative for that distinction.
+
+Important meanings:
+
+- `source` is a provider-reported attribution for the Dataset, not the Provider.
+- `updated` is the provider-reported last Dataset modification, including data or
+  structural/metadata changes. It is not harvest time.
+- `first_period` and `last_period` preserve the provider's notation. An adapter may
+  infer them when needed, but must not standardize the stored form.
+- `time_unit` is the granularity of time, not publication frequency.
+- `official_statistics` and `discontinued` preserve true, false, and unknown.
+- Private retrieval configuration remains outside the Dataset document.
 
 ## Dimensions and categories
 
-Each Dimension requires a nonblank `label` and a `category` object. Optional fields:
+`dimension_ids` is the canonical dimension order. `dimension` maps those codes to
+Dimension objects. Each Dimension requires a label and a Category object.
 
-- `note`: nonempty array of nonblank strings.
-- `elimination`: boolean, defaults to **false**; whether the dimension can be
-  omitted from a data selection. Null is not accepted.
-- `elimination_value`: nonblank category code or null, defaults to **null**.
-  Always optional, including when elimination is true. A supplied code must exist.
-- `extension`: object with arbitrary additional JSON contents.
+Category requires:
 
-Roles remain in the Dataset's `role` mapping. A dimension has at most one role;
-role arrays need not follow dimension order.
+- `index`, mapping category codes to zero-based positions
+- `label`, mapping the same category codes to their labels
 
-Category contains required nonempty `index` and `label` maps. `index` maps category
-codes to nonnegative integer positions; these positions establish category order.
-`label` maps codes to original nonblank labels. Dictionary iteration order is not
-statistical order.
+Dictionary iteration order has no statistical meaning. Optional category notes
+and units are keyed by category code. Dimension and Category `extension` objects
+are intentionally open for shared metadata that is not yet standardized.
 
-Optional Category fields:
+`elimination` says whether a Dimension may be omitted from a selection and defaults
+to `false`. `elimination_value` optionally identifies the category used when it is
+omitted and defaults to `null`. Defaults are annotations; JSON Schema does not add
+them to documents.
 
-- `note`: category-code map to nonempty arrays of nonblank notes.
-- `unit`: category-code map to Unit objects.
-- `extension`: object with arbitrary additional JSON contents.
+## Semantic invariants
 
-A Unit has optional `label` (nonblank string), `decimals` (nonnegative integer),
-and `position` (`start` or `end`), with at least one supplied field. Unit objects,
-precision/presentation fields, generic dimension/category extensions and link
-arrays are **intentional reintroductions**, not unresolved mistakes. There is no
-new adapter-specific schema or top-level Dataset extension in this contract.
+JSON Schema handles document structure. Consumers must additionally enforce:
 
-## Links, themes and contacts
+- `dataset_id == provider_code + ":" + dataset_code`.
+- `dimension_ids` contains exactly the keys in `dimension`.
+- Category positions are unique and contiguous from zero.
+- Category labels cover exactly the indexed codes; note and unit keys refer to
+  indexed categories.
+- Role entries refer to existing Dimensions, and a Dimension has at most one role.
+- A non-null `elimination_value` refers to an indexed category.
 
-A Link requires `rel` and `href`, with optional `hreflang` (`sv` or `en`). `href`
-is an absolute HTTP(S) resource URL. Relations such as `source`, `documentation`,
-`metadata`, `data`, `alternate` and `license` are examples; custom nonblank relation
-names without whitespace are allowed. Links are an array, not four named slots.
+Adapters own source parsing and mapping into this common model. They should preserve
+source identities, ordering, labels, units, notes, attribution, and status rather
+than deriving meaning from display text. There are no adapter-specific schemas.
 
-Each thematic path is a nonempty ordered array of nodes. A node requires nonblank
-`id` and `label`, with optional `link` using the Link structure. Paths describe
-thematic membership, never dataset access routes.
+## Compact example
 
-Contact allows `name`, `email`, `phone`, `organization`, `address` and `url`, with
-at least one populated field. Fields are nonblank strings; email and URL have
-format checks. The Contact `url` is a direct HTTP(S) string, rather than
-a Link object. No raw contact field is defined.
+```json
+{
+  "provider_code": "example",
+  "dataset_code": "POP01",
+  "dataset_id": "example:POP01",
+  "language": "sv",
+  "label": "Befolkning efter region och år",
+  "source": "Exempelmyndigheten",
+  "updated": "2026-09-15",
+  "official_statistics": true,
+  "time_unit": "annual",
+  "first_period": "2024",
+  "last_period": "2025",
+  "subject": {
+    "code": "BE",
+    "label": "Befolkning"
+  },
+  "role": {
+    "geo": ["Region"],
+    "time": ["Time"]
+  },
+  "dimension_ids": ["Region", "Time"],
+  "dimension": {
+    "Region": {
+      "label": "Region",
+      "elimination": true,
+      "elimination_value": "00",
+      "category": {
+        "index": {"00": 0, "01": 1},
+        "label": {"00": "Riket", "01": "Stockholms län"}
+      }
+    },
+    "Time": {
+      "label": "År",
+      "category": {
+        "index": {"2024": 0, "2025": 1},
+        "label": {"2024": "2024", "2025": "2025"},
+        "unit": {
+          "2024": {"label": "antal", "decimals": 0, "position": "end"},
+          "2025": {"label": "antal", "decimals": 0, "position": "end"}
+        }
+      }
+    }
+  },
+  "links": [
+    {
+      "rel": "source",
+      "href": "https://example.org/sv/population",
+      "hreflang": "sv"
+    }
+  ]
+}
+```
 
-Private retrieval configuration remains outside Dataset. A data link identifies
-a resource; it does not replace implementation settings or a POST request body.
-Kolada's municipality labels and OU-to-municipality mapping remain one separate
-supporting resource, not repeated on dataset categories or a general code-list
-framework. Do not interpret Kolada publication-calendar dates as update dates or
-period coverage.
-
-## Validation and normalization
-
-Defined objects reject unknown properties, except the explicitly open extension
-contents and code-keyed maps. Structural validation checks required fields, types,
-enums, formats and local references. Date/time and URL format checking must be
-enabled explicitly.
-
-Consumer-side semantic validation must check:
-
-- Exact construction of `dataset_id` from the identity fields.
-- Correspondence between `dimension_ids` and `dimension` keys.
-- Unique, contiguous category positions starting at zero.
-- Category labels cover the indexed codes; note and unit keys reference existing
-  categories.
-- Role references exist and no dimension is assigned more than one role.
-- Any non-null `elimination_value` references an existing category.
-
-Adapters own source parsing, code cleanup and mapping into these common fields.
-Preserve original labels, meaningful units, notes, attribution, official status,
-identities and order. Do not derive statistical ordering from display labels.
-Actual text language cannot be proven by JSON Schema. Future standardized time
-category values must preserve the source category codes; their shape is not
-introduced by this documentation update.
-
-## Revision and adoption status
-
-The unpublished 2.0.0 collection now contains Provider and this complete Dataset.
-It replaces the previous basic/detail split and the superseded combined-language
-proposal. The old metadata/helper/PX schemas and multilingual projections have
-been removed. Published 1.0.0 remains unchanged.
-
-See [the three illustrative examples](examples/README.md). They demonstrate the
-current shape, not live exports or full source datasets. Normal validation checks
-the structural schema, examples, inline examples and defaults; the relationship
-checks above remain consumer responsibilities. No runtime model package is added.
-
-Next work belongs in the consuming projects: map Harvest output to this contract,
-then implement catalog storage/read behavior for independent language documents.
-Private retrieval configuration remains external. No preservation migration for
-development documents, database publication rules, application changes or
-deployment are part of this revision.
+This is illustrative metadata, not a live export and not an additional contract.
