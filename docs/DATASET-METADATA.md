@@ -15,7 +15,7 @@ Required fields are `version: "2.0"`, `class: "dataset"`, `value: []`, `id`,
 that same order. Neither changes because observations are omitted. `value` must
 be present and empty. `id` is not a combined Dataset identifier.
 
-Use standard `label`, `source`, `updated`, `note`, `href`, `link`, `role`
+Use standard `label`, `source`, `updated`, `note`, `role`
 and `dimension` wherever applicable. Omit unknown standard fields instead of
 emitting null. Public identifiers and populated observation responses belong to
 consuming systems. Standard tools can read the metadata; tools requiring data
@@ -93,19 +93,33 @@ open object. Shared custom category fields use `nordicintel.categories`; provide
 and adapter extras use their own namespace's `categories`. Keep standard category
 fields in `category`, rather than repeating them in these objects.
 
-## Resources
+## Provider URLs and additional resources
 
-| Resource                      | Standard field           |
-| ----------------------------- | ------------------------ |
-| Provider's Dataset page       | Root `href`              |
-| Documentation or metadata     | `link.describedby` array |
-| Data or other supporting URLs | `link.related` array     |
+The following optional fields belong in `extension.nordicintel`. Each accepts
+an absolute HTTP(S) URL or null when unknown; omission is also allowed.
 
-Each resource entry requires `href` and a descriptive `label`; include `type`
-when its media type is known. Other standard relation names from the published
-schema are accepted. Resolve relative URLs against the provider's page or endpoint.
-Use one representation per resource; do not keep duplicate named URL fields.
-A URL does not encode POST bodies or other retrieval configuration.
+| Field          | Purpose                                             |
+| -------------- | --------------------------------------------------- |
+| `source_url`   | Provider's human-readable Dataset page               |
+| `doc_url`      | Provider's primary documentation or methodology      |
+| `metadata_url` | Provider's metadata endpoint or file, for refetching  |
+| `data_url`     | Provider's observation endpoint or file, for requests |
+
+These URLs point **outward to the provider**. Current adapters supply both
+`metadata_url` and `data_url` so downstream processes can reuse them directly
+instead of reconstructing URLs from API conventions. Keep supplying them even
+when the endpoint could be derived from other metadata. A URL does not encode
+POST bodies or other retrieval configuration.
+
+This model is for harvesters, scrapers and adapters, not the public API.
+Public API data and metadata links point inward to that API's own endpoints;
+they are separate from these provider URLs. Do not replace the named URL fields
+with `href`, `link.describedby` or `link.related` entries.
+
+Standard `href` and `link` remain available for additional resources. Each link
+entry requires `href` and a descriptive `label`; include `type` when known.
+Use `describedby` for additional documentation and `related` for other supporting
+resources. Resolve relative URLs against the provider's page or endpoint.
 
 Dimensions use the same `href` and `link` structures. A dimension resource can
 set `extension.nordicintel.category_id` to an existing category of that dimension;
@@ -145,7 +159,6 @@ One complete metadata document; further field-level examples live in the schema.
   "source": "Exempelmyndigheten",
   "updated": "2026-09-15",
   "note": ["Avser årets slut."],
-  "href": "https://example.org/population",
   "id": ["Region", "Time"],
   "size": [2, 2],
   "role": { "geo": ["Region"], "time": ["Time"] },
@@ -191,31 +204,15 @@ One complete metadata document; further field-level examples live in the schema.
     }
   },
   "value": [],
-  "link": {
-    "describedby": [
-      {
-        "href": "https://example.org/population/methodology",
-        "label": "Metodbeskrivning"
-      },
-      {
-        "href": "https://example.org/api/POP01/metadata",
-        "label": "Metadata",
-        "type": "application/json"
-      }
-    ],
-    "related": [
-      {
-        "href": "https://example.org/api/POP01/data",
-        "label": "Data",
-        "type": "application/json"
-      }
-    ]
-  },
   "extension": {
     "nordicintel": {
       "provider_code": "example",
       "dataset_code": "POP01",
       "language": "sv",
+      "source_url": "https://example.org/population",
+      "doc_url": "https://example.org/population/methodology",
+      "metadata_url": "https://example.org/api/POP01/metadata",
+      "data_url": "https://example.org/api/POP01/data",
       "time_unit": "annual",
       "contacts": [
         {

@@ -46,7 +46,7 @@
     },
     "href": {
       "$ref": "#/$defs/url",
-      "description": "Provider's human-readable page for this Dataset."
+      "description": "Optional standard JSON-stat2 Dataset link. Provider retrieval URLs are defined separately in extension.nordicintel; this field does not replace them."
     },
     "link": {
       "$ref": "#/$defs/links"
@@ -446,6 +446,42 @@
             "kolada"
           ]
         },
+        "source_url": {
+          "anyOf": [
+            { "$ref": "#/$defs/url" },
+            { "type": "null" }
+          ],
+          "default": null,
+          "description": "Provider's human-readable page for this dataset. The field names the original dataset page, not the attribution in source.",
+          "examples": ["https://example.org/population", null]
+        },
+        "doc_url": {
+          "anyOf": [
+            { "$ref": "#/$defs/url" },
+            { "type": "null" }
+          ],
+          "default": null,
+          "description": "Provider's primary documentation or methodology URL for this dataset.",
+          "examples": ["https://example.org/population/methodology", null]
+        },
+        "metadata_url": {
+          "anyOf": [
+            { "$ref": "#/$defs/url" },
+            { "type": "null" }
+          ],
+          "default": null,
+          "description": "Provider's endpoint or file containing metadata for this dataset. Harvesters and adapters supply it for direct metadata refetches, avoiding URL reconstruction. This outward-facing provider URL is not a public API metadata link.",
+          "examples": ["https://example.org/api/POP01/metadata", null]
+        },
+        "data_url": {
+          "anyOf": [
+            { "$ref": "#/$defs/url" },
+            { "type": "null" }
+          ],
+          "default": null,
+          "description": "Provider's endpoint or file for this dataset's observations. Harvesters and adapters supply it for direct data requests, avoiding URL reconstruction. This outward-facing provider URL is not a public API data link. Request bodies and execution settings belong to the retrieval implementation.",
+          "examples": ["https://example.org/api/POP01/data", null]
+        },
         "dataset_code": {
           "type": "string",
           "description": "Opaque, case-sensitive provider dataset code, unique within its provider and shared across language versions. Do not slugify.",
@@ -786,7 +822,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "JSON-stat2 relation map. Use describedby for documentation and metadata, related for data and other supporting resources. Other relation names accepted by the published JSON-stat2 schema are also supported. Avoid duplicate resources."
+      "description": "Optional JSON-stat2 relation map for additional resources. Use the named extension.nordicintel URL fields for the provider's dataset page, primary documentation, metadata endpoint and data endpoint; do not replace those fields with link entries. Other relation names accepted by the published JSON-stat2 schema are also supported."
     },
     "jstat_dimension": {
       "type": "object",
