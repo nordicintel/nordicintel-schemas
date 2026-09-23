@@ -23,6 +23,47 @@ The schemas use JSON Schema Draft 2020-12. The collection version is in [`VERSIO
 The prepared `2.0.0` schemas are not yet published; released `1.0.0` files remain
 available from their immutable Git tag.
 
+## Development hooks
+
+The only development dependency is [Ruff](https://docs.astral.sh/ruff/), for Python
+linting and formatting. The reference generator itself uses only the standard library.
+With Python 3.10+ installed, enable the tracked hook once per clone:
+
+```sh
+python -m pip install ruff==0.16.5
+git config core.hooksPath .githooks
+```
+
+Before each commit, the hook checks staged Python files with `ruff check` and
+`ruff format --check`. Changing `ruff.toml` checks all tracked Python files.
+Failures block the commit; fixes are explicit so partially staged work stays intact:
+
+```sh
+python -m ruff check --fix .githooks
+python -m ruff format .githooks
+```
+
+Review and restage fixes before committing. Ruff checks Python, not JSON or Markdown.
+
+When `schemas/dataset-metadata.schema.json` is staged for addition or modification,
+the hook generates and stages [the property reference](DATASET-METADATA-REFERENCE.md)
+from that **staged version**, not from unstaged schema edits. Other commits skip
+generation. Local or staged manual reference edits are protected; resolve them before
+retrying. The generated reference documents shared objects once, resolves local
+references and keeps arbitrary provider fields out of the fixed property inventory.
+Required flags apply within the containing object; the schema remains authoritative
+for conditional requirements and other validation constraints.
+
+To regenerate manually from the working-tree schema (without staging):
+
+```sh
+python .githooks/pre_commit.py --generate
+```
+
+[GitHub Actions](.github/workflows/checks.yml) runs Ruff lint and formatting checks
+on pushes and pull requests, and verifies that the committed property reference
+matches the schema. CI reports failures; it does not modify or commit files.
+
 ## License
 
 [Apache License 2.0](LICENSE).

@@ -1,0 +1,31 @@
+name: Checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Install Ruff
+        run: python -m pip install ruff==0.16.5
+      - name: Lint Python
+        run: python -m ruff check .
+      - name: Check Python formatting
+        run: python -m ruff format --check .
+      - name: Check generated schema reference
+        run: |
+          python .githooks/pre_commit.py --generate
+          git ls-files --error-unmatch DATASET-METADATA-REFERENCE.md
+          git diff --exit-code -- DATASET-METADATA-REFERENCE.md
