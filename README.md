@@ -1,6 +1,8 @@
 # NordicIntel schemas
 
-Small, authoritative JSON Schemas for NordicIntel statistical metadata.
+JSON Schemas for standardized output from NordicIntel harvesters, scrapers and
+wrappers. They guide implementation of those processes; public identifiers,
+API responses and presentation belong to consuming systems.
 
 This repository intentionally contains no runtime package, validator, test suite,
 generated models, or standalone example collection. The schemas are consumed as

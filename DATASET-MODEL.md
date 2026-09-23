@@ -1,134 +1,171 @@
 # Dataset model
 
-The authoritative contract is [`schemas/dataset.schema.json`](schemas/dataset.schema.json).
-It uses JSON Schema Draft 2020-12 and represents one complete Dataset document in
-one language. The schema itself contains the exact types, descriptions, defaults,
-and field-level examples; this document records the decisions around it.
+[The schema](schemas/dataset.schema.json) defines metadata output from harvesters,
+scrapers and wrappers, one complete document per language. Its field descriptions
+and inline examples guide those implementations. Public identifiers, API response
+formatting and presentation are responsibilities of consuming systems.
 
 ## Identity and language
 
-`provider_code`, `dataset_code`, `dataset_id`, and `language` are top-level fields.
-The public Dataset identity is `provider_code:dataset_code`; `dataset_id` must be
-that exact value. Source dataset codes remain opaque and case-sensitive.
+`provider_code` and the provider's opaque, case-sensitive `dataset_code` identify
+the dataset. `language` identifies its metadata variant. Swedish and English
+documents can be refreshed independently. Preserve provider codes and text;
+do not invent translations or silently substitute languages.
 
-Swedish and English are separate complete documents with the same Dataset identity.
-Language is therefore part of the document identity, not the public Dataset ID.
-One language can be refreshed without reading, merging, or replacing the other.
-Never invent a translation or silently substitute text from another language.
+Required fields: `provider_code`, `dataset_code`, `language`, `label`,
+`dimension_ids`, and `dimension`. Harvesters do not construct a `dataset_id`.
 
-## Dataset fields
+## Provider metadata and dates
 
-Only these fields are required:
+`source` means attribution reported by the provider, which may name another
+originating organization. It does not identify the provider.
 
-- `provider_code`, `dataset_code`, `dataset_id`, and `language`
-- `label`
-- `dimension_ids` and `dimension`
+`updated` means the provider's last reported modification, including data,
+structure or metadata changes. `next_release` is the provider's announced next
+release. Both accept nonblank strings or null. Preserve the provider's value
+as long as a consumer can extract a valid calendar date from it. No timezone,
+RFC 3339 format or normalized timestamp is required. For example,
+`2026-09-15`, `2026-09-15 09:00:00` and `2026-09-15T09:00:00+02:00` are accepted.
+Schema acceptance alone does not establish that a string contains a valid date.
 
-Optional metadata includes source attribution, description, discontinued and
-official-statistics status, update and release dates, time coverage, notes,
-subject, dimension roles, links, thematic paths, and contacts. Optional does not
-always mean nullable; the schema is authoritative for that distinction.
+`first_period` and `last_period` preserve provider period notation; they may be
+inferred by the implementation. `time_unit` describes period granularity.
+Unknown `official_statistics` or `discontinued` values remain omitted or null.
 
-Important meanings:
+Dataset-level `extension` is an optional open object for additional provider
+metadata that cannot be parsed or mapped into the defined Dataset fields.
+It supports scalar values, arrays and nested objects. Always use the existing
+fields wherever they fit; do not duplicate them or introduce aliases in extension.
+URLs belong in the named URL fields or `additional_urls`.
 
-- `source` is a provider-reported attribution for the Dataset, not the Provider.
-- `updated` is the provider-reported last Dataset modification, including data or
-  structural/metadata changes. It is not harvest time.
-- `first_period` and `last_period` preserve the provider's notation. An adapter may
-  infer them when needed, but must not standardize the stored form.
-- `time_unit` is the granularity of time, not publication frequency.
-- `official_statistics` and `discontinued` preserve true, false, and unknown.
-- Private retrieval configuration remains outside the Dataset document.
+## Dimensions
 
-## Dimensions and categories
+`dimension` uses JSON-stat2 dimension objects, defined locally in
+`$defs/jstat_dimension` and `$defs/jstat_category`. `dimension_ids` retains the
+ordered dimension codes for this harvest document. Root `role` identifies time,
+geographic and metric dimensions.
 
-`dimension_ids` is the canonical dimension order. `dimension` maps those codes to
-Dimension objects. Each Dimension requires a label and a Category object.
+The local definitions follow the [JSON-stat2 specification](https://json-stat.org/full/):
+category indexes accept ordered code arrays or position maps; labels may be
+omitted; a sole category can be identified by its label map without an index.
+Notes, hierarchies (`child`), coordinates, units and extensions preserve metadata.
+Unit objects allow optional `label`, `decimals`, `symbol`, `position` and extras;
+`position` places the symbol. Preserve known units even when precision is unknown,
+and omit unavailable `decimals` rather than inventing a value.
 
-Category requires:
+Harvest-specific choices are explicit: dimensions include their categories;
+resource URLs use the fields below, and dates use the permissive rules above.
+This is a harvest metadata document, not a complete JSON-stat2 observation response.
 
-- `index`, mapping category codes to zero-based positions
-- `label`, mapping the same category codes to their labels
+`elimination` and `elimination_value` now belong in each dimension's `extension`.
+They mean that the dimension may be omitted from a selection and, optionally,
+which category to use when omitted. Their defaults remain false and null.
+Other provider extension metadata is allowed. Schema defaults do not insert values.
 
-Dictionary iteration order has no statistical meaning. Optional category notes
-and units are keyed by category code. Dimension and Category `extension` objects
-are intentionally open for shared metadata that is not yet standardized.
+## URLs
 
-`elimination` says whether a Dimension may be omitted from a selection and defaults
-to `false`. `elimination_value` optionally identifies the category used when it is
-omitted and defaults to `null`. Defaults are annotations; JSON Schema does not add
-them to documents.
+Use these optional string fields for their defined purposes; omit or use null
+when unavailable:
 
-## Semantic invariants
+| Field | Meaning |
+|---|---|
+| `source_url` | Provider's human-readable dataset page; unrelated to the attribution in `source` |
+| `doc_url` | Primary dataset documentation or methodology |
+| `metadata_url` | Provider's dataset metadata endpoint or file |
+| `data_url` | Provider's observations endpoint or file |
 
-JSON Schema handles document structure. Consumers must additionally enforce:
+Resolve relative URLs against the provider's page or endpoint. A URL does not
+encode POST bodies or other retrieval configuration.
 
-- `dataset_id == provider_code + ":" + dataset_code`.
-- `dimension_ids` contains exactly the keys in `dimension`.
-- Category positions are unique and contiguous from zero.
-- Category labels cover exactly the indexed codes; note and unit keys refer to
-  indexed categories.
-- Role entries refer to existing Dimensions, and a Dimension has at most one role.
-- A non-null `elimination_value` refers to an indexed category.
+For resources that do not fit those fields, reuse `$defs/additional_url` through
+`additional_urls` at Dataset level or `dimension.<code>.extension.additional_urls`.
+Each entry requires `url` and `label`; `description` and extra properties are optional.
+Within a dimension, optional `category_id` identifies a category-specific resource.
+Omit it for a whole-dimension resource. Dataset-level entries concern the whole
+dataset; put category-specific entries under their dimension.
 
-Adapters own source parsing and mapping into this common model. They should preserve
-source identities, ordering, labels, units, notes, attribution, and status rather
-than deriving meaning from display text. There are no adapter-specific schemas.
+Additional URLs must never replace or duplicate the named URL fields.
+Thematic path nodes use an optional plain `url`.
 
-## Compact example
+## Contacts
+
+Always map parseable contact information to `name`, `email`, `phone`,
+`organization`, `address` and `url`. Extra properties are permitted **only when
+the information cannot be parsed or mapped into those attributes**. Do not
+introduce aliases or raw copies of already represented information. A contact
+must contain at least one property; unknown contact details need not be invented.
+
+## Consumer checks
+
+JSON Schema cannot express all relationships. Consumers check that dimension
+codes match `dimension_ids`, position maps are contiguous and unique from zero,
+and category metadata and hierarchy references identify existing categories.
+Role references must exist and a dimension has at most one role. Non-null
+`extension.elimination_value` and URL `category_id` values refer to categories
+of their enclosing dimension. Consumers also check date extractability and that
+additional URLs do not duplicate named URL fields.
+
+## Example
+
+Illustrative harvester output; further field-level examples live in the schema.
 
 ```json
 {
   "provider_code": "example",
   "dataset_code": "POP01",
-  "dataset_id": "example:POP01",
   "language": "sv",
   "label": "Befolkning efter region och år",
   "source": "Exempelmyndigheten",
-  "updated": "2026-09-15",
-  "official_statistics": true,
+  "updated": "2026-09-15 09:00:00",
   "time_unit": "annual",
-  "first_period": "2024",
-  "last_period": "2025",
-  "subject": {
-    "code": "BE",
-    "label": "Befolkning"
-  },
-  "role": {
-    "geo": ["Region"],
-    "time": ["Time"]
-  },
   "dimension_ids": ["Region", "Time"],
+  "role": {"geo": ["Region"], "time": ["Time"]},
   "dimension": {
     "Region": {
       "label": "Region",
-      "elimination": true,
-      "elimination_value": "00",
       "category": {
-        "index": {"00": 0, "01": 1},
+        "index": ["00", "01"],
         "label": {"00": "Riket", "01": "Stockholms län"}
+      },
+      "extension": {
+        "elimination": true,
+        "elimination_value": "00",
+        "additional_urls": [
+          {
+            "url": "https://example.org/regions/01/boundaries",
+            "label": "Länsgränser",
+            "description": "Kartunderlag för regionen.",
+            "category_id": "01"
+          }
+        ]
       }
     },
     "Time": {
       "label": "År",
       "category": {
         "index": {"2024": 0, "2025": 1},
-        "label": {"2024": "2024", "2025": "2025"},
-        "unit": {
-          "2024": {"label": "antal", "decimals": 0, "position": "end"},
-          "2025": {"label": "antal", "decimals": 0, "position": "end"}
-        }
+        "label": {"2024": "2024", "2025": "2025"}
       }
     }
   },
-  "links": [
+  "source_url": "https://example.org/population",
+  "doc_url": "https://example.org/population/methodology",
+  "metadata_url": "https://example.org/api/POP01/metadata",
+  "data_url": "https://example.org/api/POP01/data",
+  "additional_urls": [
     {
-      "rel": "source",
-      "href": "https://example.org/sv/population",
-      "hreflang": "sv"
+      "url": "https://example.org/population/seminar",
+      "label": "Presentation av statistiken",
+      "description": "Inspelat seminarium.",
+      "media_type": "video/mp4"
+    }
+  ],
+  "contacts": [
+    {
+      "organization": "Exempelmyndigheten",
+      "email": "statistics@example.org",
+      "opening_hours": "Vardagar 09–15"
     }
   ]
 }
 ```
-
-This is illustrative metadata, not a live export and not an additional contract.
