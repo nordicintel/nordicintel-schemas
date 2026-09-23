@@ -10,13 +10,13 @@ JSON files, and their inline descriptions and examples are the primary reference
 
 ## Schemas
 
-- [`dataset.schema.json`](schemas/dataset.schema.json) defines one complete Dataset
-  document in one language.
+- [`dataset-metadata.schema.json`](schemas/dataset-metadata.schema.json) defines a
+  valid JSON-stat2 metadata-only Dataset in one language, with namespaced extensions.
 - [`provider.schema.json`](schemas/provider.schema.json) currently guarantees only
   `provider_code`. All other Provider content is deliberately open while that model
   is still changing.
 
-[`DATASET-MODEL.md`](DATASET-MODEL.md) records the Dataset decisions, semantic
+[`DATASET-METADATA.md`](DATASET-METADATA.md) records the Dataset metadata decisions, semantic
 invariants that JSON Schema cannot express, and a complete compact example.
 
 The schemas use JSON Schema Draft 2020-12. The collection version is in [`VERSION`](VERSION).
