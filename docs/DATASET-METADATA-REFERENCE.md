@@ -1,6 +1,8 @@
+<!-- markdownlint-disable-file MD013 MD033 -->
+
 # Dataset metadata property reference
 
-Generated from [`schemas/dataset-metadata.schema.json`](schemas/dataset-metadata.schema.json); do not edit by hand.
+Generated from [`schemas/dataset-metadata.schema.json`](../schemas/dataset-metadata.schema.json); do not edit by hand.
 
 `required` means required within the containing object, not necessarily at the root. Conditional requirements are noted in descriptions; consult the schema for full constraints.
 

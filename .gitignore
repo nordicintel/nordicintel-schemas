@@ -19,4 +19,4 @@ Thumbs.db
 *.code-workspace
 
 # Local folder for temporary, experimental or reference files
-tmp/*
+/tmp/

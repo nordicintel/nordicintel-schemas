@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 SCHEMA = "schemas/dataset-metadata.schema.json"
-REFERENCE = "DATASET-METADATA-REFERENCE.md"
+REFERENCE = "docs/DATASET-METADATA-REFERENCE.md"
 
 
 def cell(value: str) -> str:
@@ -155,9 +155,11 @@ def render(schema: dict) -> str:
         return rows
 
     output = [
+        "<!-- markdownlint-disable-file MD013 MD033 -->",
+        "",
         "# Dataset metadata property reference",
         "",
-        f"Generated from [`{SCHEMA}`]({SCHEMA}); do not edit by hand.",
+        f"Generated from [`{SCHEMA}`](../{SCHEMA}); do not edit by hand.",
         "",
         "`required` means required within the containing object, not necessarily at the root. "
         "Conditional requirements are noted in descriptions; consult the schema for full constraints.",
@@ -246,6 +248,7 @@ def generate(*, from_index: bool) -> None:
             if staged(REFERENCE) not in (expected, result):
                 raise ValueError(f"Refusing to overwrite staged edits to {REFERENCE}.")
     if not destination.exists() or destination.read_bytes() != result:
+        destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_bytes(result)
     if from_index:
         git("add", "--", REFERENCE)

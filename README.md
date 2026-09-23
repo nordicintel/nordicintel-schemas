@@ -16,7 +16,7 @@ JSON files, and their inline descriptions and examples are the primary reference
   `provider_code`. All other Provider content is deliberately open while that model
   is still changing.
 
-[`DATASET-METADATA.md`](DATASET-METADATA.md) records the Dataset metadata decisions, semantic
+[`DATASET-METADATA.md`](docs/DATASET-METADATA.md) records the Dataset metadata decisions, semantic
 invariants that JSON Schema cannot express, and a complete compact example.
 
 The schemas use JSON Schema Draft 2020-12. The collection version is in [`VERSION`](VERSION).
@@ -46,7 +46,7 @@ python -m ruff format .githooks
 Review and restage fixes before committing. Ruff checks Python, not JSON or Markdown.
 
 When `schemas/dataset-metadata.schema.json` is staged for addition or modification,
-the hook generates and stages [the property reference](DATASET-METADATA-REFERENCE.md)
+the hook generates and stages [the property reference](docs/DATASET-METADATA-REFERENCE.md)
 from that **staged version**, not from unstaged schema edits. Other commits skip
 generation. Local or staged manual reference edits are protected; resolve them before
 retrying. The generated reference documents shared objects once, resolves local

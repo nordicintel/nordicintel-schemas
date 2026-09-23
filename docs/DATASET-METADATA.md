@@ -1,6 +1,6 @@
 # Dataset metadata
 
-[The schema](schemas/dataset-metadata.schema.json) defines a JSON-stat2 metadata-only
+[The schema](../schemas/dataset-metadata.schema.json) defines a JSON-stat2 metadata-only
 Dataset for harvester, scraper and wrapper output, one complete document per
 language. Its definitions are local and require no network access. Standard fields
 follow the [published JSON-stat2 Dataset schema](https://json-stat.org/format/schema/2.0/dataset.json)

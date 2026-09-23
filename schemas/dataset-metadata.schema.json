@@ -819,5 +819,5 @@
       "description": "JSON-stat2 dimension with complete categories. Custom shared metadata belongs in extension.nordicintel; provider or adapter extras belong in sibling namespaces."
     }
   },
-  "$comment": "Self-contained subset of the published JSON-stat2 Dataset schema v1.05 (2025-06-13). Enable format checks. Consumers additionally check id/dimension membership, size/category counts, category positions and references, namespace ownership, role assignments, category-scoped resources and elimination references. Defaults do not insert values. See ../DATASET-METADATA.md."
+  "$comment": "Self-contained subset of the published JSON-stat2 Dataset schema v1.05 (2025-06-13). Enable format checks. Consumers additionally check id/dimension membership, size/category counts, category positions and references, namespace ownership, role assignments, category-scoped resources and elimination references. Defaults do not insert values. See ../docs/DATASET-METADATA.md."
 }

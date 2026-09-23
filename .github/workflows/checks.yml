@@ -27,5 +27,5 @@ jobs:
       - name: Check generated schema reference
         run: |
           python .githooks/pre_commit.py --generate
-          git ls-files --error-unmatch DATASET-METADATA-REFERENCE.md
-          git diff --exit-code -- DATASET-METADATA-REFERENCE.md
+          git ls-files --error-unmatch docs/DATASET-METADATA-REFERENCE.md
+          git diff --exit-code -- docs/DATASET-METADATA-REFERENCE.md
