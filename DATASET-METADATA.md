@@ -25,11 +25,11 @@ still need observations.
 
 Every extension is an object whose keys identify namespaces:
 
-| Namespace                    | Contents                                               |
-| ---------------------------- | ------------------------------------------------------ |
-| `extension.nordicintel`      | Shared fields defined by this schema                    |
-| `extension.<provider_code>`  | Additional metadata specific to a provider              |
-| `extension.<adapter_type>`   | Additional metadata shared by providers using an adapter |
+| Namespace                   | Contents                                                 |
+| --------------------------- | -------------------------------------------------------- |
+| `extension.nordicintel`     | Shared fields defined by this schema                     |
+| `extension.<provider_code>` | Additional metadata specific to a provider               |
+| `extension.<adapter_type>`  | Additional metadata shared by providers using an adapter |
 
 **Every namespace body accepts arbitrary additional properties**, including scalars,
 null, arrays and nested objects. Namespace bodies themselves must be objects.
@@ -95,11 +95,11 @@ fields in `category`, rather than repeating them in these objects.
 
 ## Resources
 
-| Resource                      | Standard field                                          |
-| ----------------------------- | ------------------------------------------------------- |
-| Provider's Dataset page       | Root `href`                                             |
-| Documentation or metadata     | `link.describedby` array                                |
-| Data or other supporting URLs | `link.related` array                                    |
+| Resource                      | Standard field           |
+| ----------------------------- | ------------------------ |
+| Provider's Dataset page       | Root `href`              |
+| Documentation or metadata     | `link.describedby` array |
+| Data or other supporting URLs | `link.related` array     |
 
 Each resource entry requires `href` and a descriptive `label`; include `type`
 when its media type is known. Other standard relation names from the published
