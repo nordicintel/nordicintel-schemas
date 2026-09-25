@@ -11,17 +11,47 @@ JSON files, and their inline descriptions and examples are the primary reference
 ## Schemas
 
 - [`dataset-metadata.schema.json`](schemas/dataset-metadata.schema.json) defines a
-  valid JSON-stat2 metadata-only Dataset in one language, with namespaced extensions.
+  valid JSON-stat2 Dataset in one language, with namespaced extensions: metadata-only
+  or with observations parsed from provider files for NordicIntel to store and serve.
 - [`provider.schema.json`](schemas/provider.schema.json) currently guarantees only
   `provider_code`. All other Provider content is deliberately open while that model
   is still changing.
 
 [`DATASET-METADATA.md`](docs/DATASET-METADATA.md) records the Dataset metadata decisions, semantic
-invariants that JSON Schema cannot express, and a complete compact example.
+invariants that JSON Schema cannot express, and metadata-only, populated and sparse examples.
 
 The schemas use JSON Schema Draft 2020-12. The collection version is in [`VERSION`](VERSION).
 The prepared `2.0.0` schemas are not yet published; released `1.0.0` files remain
 available from their immutable Git tag.
+
+## Metadata-only and file-backed output
+
+The same schema covers two outputs; its existing filename does not limit it to
+metadata-only documents:
+
+- **Metadata-only:** emit `value: []` with complete dimensions and actual category
+  counts in `size`. Omit `status`.
+- **File-backed observations:** when the original provider offers observations only
+  in files such as XLS/XLSX or CSV, rather than a reachable observations API,
+  scrapers must parse the files into this same JSON-stat2 Dataset **with values**.
+  NordicIntel ingests, stores and serves those observations itself.
+
+Prefer a dense `value` array; sparse objects keyed by zero-based observation index
+are also supported. Values can be numbers, strings or null. Preserve numeric zero,
+use null for missing cells, and preserve suppression/provisional flags in optional
+JSON-stat2 `status` (a string, aligned array or sparse index map). The last dimension
+varies fastest; populated arrays contain `product(size)` cells. An empty sparse
+object `{}` is an all-missing cube, not the metadata-only marker `[]`.
+
+Provider URLs stay in `extension.nordicintel`: `data_url` points to the original
+provider file, and `metadata_url` can be omitted if no separate metadata resource
+exists. Keep the optional `source_url` and `doc_url` as well. These outward-facing
+URLs are not replaced by links to NordicIntel's public API endpoints. No new mode
+flag, public API contract or separate metadata definitions are introduced.
+
+See the [guide](docs/DATASET-METADATA.md#file-backed-observations) for parsing rules,
+status semantics, consumer checks and complete examples, and the
+[generated reference](docs/DATASET-METADATA-REFERENCE.md) for property types.
 
 ## Development hooks
 

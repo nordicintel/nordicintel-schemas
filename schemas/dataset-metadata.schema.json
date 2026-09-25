@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/nordicintel/nordicintel-schemas/v2.0.0/schemas/dataset-metadata.schema.json",
-  "title": "NordicIntel JSON-stat2 Dataset metadata",
-  "description": "Metadata-only JSON-stat2 profile for harvester, scraper and wrapper output, one complete document per language. Standard fields retain JSON-stat2 meaning. All custom metadata lives in namespaced extensions.",
+  "title": "NordicIntel JSON-stat2 Dataset metadata and observations",
+  "description": "JSON-stat2 profile for harvester, scraper and wrapper output, one complete document per language. Supports metadata-only output and observations parsed from provider files for NordicIntel to store and serve. Standard fields retain JSON-stat2 meaning. All custom metadata lives in namespaced extensions.",
   "type": "object",
   "required": [
     "version",
@@ -15,6 +15,11 @@
     "extension"
   ],
   "additionalProperties": false,
+  "if": {
+    "properties": { "value": { "const": [] } },
+    "required": ["value"]
+  },
+  "then": { "not": { "required": ["status"] } },
   "properties": {
     "version": {
       "const": "2.0"
@@ -73,7 +78,7 @@
         "type": "integer",
         "minimum": 1
       },
-      "description": "Actual category counts in id order, even though value is empty. Consumers check correspondence with each dimension's categories.",
+      "description": "Actual category counts in id order, including for metadata-only output. Consumers check correspondence with each dimension's categories and observation count or sparse index bounds against the product of size.",
       "examples": [
         [
           2,
@@ -125,12 +130,40 @@
       }
     },
     "value": {
-      "type": "array",
-      "maxItems": 0,
-      "description": "Always an empty array for metadata-only output. This field is required; size still describes the full category structure.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": { "type": ["number", "string", "null"] }
+        },
+        {
+          "type": "object",
+          "propertyNames": { "pattern": "^(0|[1-9][0-9]*)(?![\\s\\S])" },
+          "additionalProperties": { "type": ["number", "string", "null"] }
+        }
+      ],
+      "description": "Required observations: [] means metadata-only. Otherwise use a dense array in id/category index order (last dimension varies fastest), or a sparse object keyed by zero-based observation index. Values may be numbers, strings or null; preserve zero and represent missing cells as null. Omitted sparse indices are missing; {} is an all-missing cube, not metadata-only. Consumers enforce dense length equal to product(size) and sparse indices below product(size).",
       "examples": [
-        []
+        [],
+        [0, null, 12.5, "text"],
+        { "0": 0, "2": 12.5, "3": "text" },
+        {}
       ]
+    },
+    "status": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "array",
+          "items": { "type": ["string", "null"] }
+        },
+        {
+          "type": "object",
+          "propertyNames": { "pattern": "^(0|[1-9][0-9]*)(?![\\s\\S])" },
+          "additionalProperties": { "type": "string" }
+        }
+      ],
+      "description": "Optional provider observation flags, such as suppression or provisional status. A string applies to every cell; an array aligns with the full flattened cube and uses null for unflagged cells; a sparse object maps zero-based observation indices to strings. Status can describe missing values. Consumers check array length and index bounds against product(size). Omit for metadata-only value: []. Preserve provider flag meanings; no universal code vocabulary is imposed.",
+      "examples": ["p", [null, "s", "p", null], { "1": "s", "2": "p" }]
     },
     "extension": {
       "$ref": "#/$defs/dataset_extension"

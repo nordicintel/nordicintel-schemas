@@ -1,6 +1,6 @@
-# Dataset metadata
+# Dataset metadata and observations
 
-[The schema](../schemas/dataset-metadata.schema.json) defines a JSON-stat2 metadata-only
+[The schema](../schemas/dataset-metadata.schema.json) defines a JSON-stat2
 Dataset for harvester, scraper and wrapper output, one complete document per
 language. Its definitions are local and require no network access. Standard fields
 follow the [published JSON-stat2 Dataset schema](https://json-stat.org/format/schema/2.0/dataset.json)
@@ -8,18 +8,56 @@ follow the [published JSON-stat2 Dataset schema](https://json-stat.org/format/sc
 
 ## Standard structure
 
-Required fields are `version: "2.0"`, `class: "dataset"`, `value: []`, `id`,
+Required fields are `version: "2.0"`, `class: "dataset"`, `value`, `id`,
 `size`, `dimension`, `label` and `extension.nordicintel`.
 
 `id` lists dimension codes in order; `size` lists their actual category counts in
 that same order. Neither changes because observations are omitted. `value` must
-be present and empty. `id` is not a combined Dataset identifier.
+be present: `[]` means metadata-only; a nonempty array or sparse object carries
+observations. `id` is not a combined Dataset identifier. No extra mode flag is used.
 
 Use standard `label`, `source`, `updated`, `note`, `role`
 and `dimension` wherever applicable. Omit unknown standard fields instead of
-emitting null. Public identifiers and populated observation responses belong to
-consuming systems. Standard tools can read the metadata; tools requiring data
-still need observations.
+emitting null (except the explicitly supported missing cells in `value` and `status`
+arrays). Public identifiers and public API responses belong to consuming systems.
+Standard tools can read the metadata; tools requiring data still need observations.
+
+## File-backed observations
+
+When a provider offers observations only in files (XLS, XLSX, CSV, etc.), not through
+a reachable observations API, the scraper must parse those files into this same
+Dataset format **with observations** for NordicIntel to ingest, store and serve.
+Metadata-only output remains available for the existing metadata workflow. The
+schema filename and identity stay unchanged; this is not a public API contract.
+
+Prefer a dense `value` array for ordinary file parsing. Follow dimension order in
+`id` and category order from each dimension's `category.index`; the **last dimension
+varies fastest**. For `id: ["Region", "Time"]`, `size: [2, 2]`, regions `00, 01`
+and times `2024, 2025`, positions are `(00, 2024)`, `(00, 2025)`, `(01, 2024)`,
+`(01, 2025)`. A populated array has exactly `product(size)` cells.
+
+Sparse `value` objects use those same flattened positions as decimal string keys,
+not category codes: `"0"`, `"1"`, etc., without signs or leading zeros. Omitted
+positions mean missing observations. `{}` represents an all-missing cube, whereas
+`[]` specifically means metadata-only. `size` always describes the full cube.
+
+Values may be numbers, strings or null. Parse numeric observations as numbers and
+preserve zero; use null for missing or suppressed cells. Genuine textual observations
+may remain strings. Never turn suppression markers into numbers or silently discard
+their meaning: preserve provider flags in optional root `status` and explain their
+meaning in `note` or the appropriate provider/adapter namespace.
+
+`status` accepts a string applying to all cells, a full-length array of strings/nulls,
+or a sparse index-to-string object. It uses the same flattened positions as `value`,
+including missing cells; a sparse status map is not limited to explicit value keys.
+Null array entries and omitted map entries mean no flag supplied. Omit `status`
+entirely for metadata-only output. Status codes retain provider meaning; this profile
+does not impose a shared code vocabulary.
+
+Keep `extension.nordicintel.data_url` pointing to the **original provider file**, not
+NordicIntel's serving endpoint. `metadata_url` remains optional when the provider
+has no separate metadata resource. All existing identity, language, namespace and
+named URL rules apply unchanged.
 
 ## Namespaces and identity
 
@@ -147,9 +185,16 @@ dimensions, with at most one role per dimension. Check elimination values,
 namespaced category entries and resource category IDs against their enclosing
 dimension, and check namespace ownership and resource duplication.
 
-## Example
+For observation-bearing documents, check that dense `value` length equals
+`product(size)`, sparse value/status indices are below that product, and a status
+array has exactly that many entries. Check ordering against `id` and category
+indices, not object insertion order. Scalar status applies to the entire cube.
+These cross-field checks remain consumer responsibilities; schema validation
+checks value/status types and sparse key syntax, and rejects `status` with `value: []`.
 
-One complete metadata document; further field-level examples live in the schema.
+## Metadata-only example
+
+One complete metadata-only document; further field-level examples live in the schema.
 
 ```json
 {
@@ -227,6 +272,71 @@ One complete metadata document; further field-level examples live in the schema.
     },
     "example": {
       "revision_policy": "Preliminary figures may be revised."
+    }
+  }
+}
+```
+
+## Populated file-backed example
+
+Complete output parsed from a provider CSV. Region varies slowest and Time fastest:
+the four cells are `(00, 2024)`, `(00, 2025)`, `(01, 2024)`, `(01, 2025)`.
+Zero is retained, a suppressed cell is null with a status flag, and a provisional
+value keeps its flag. These example codes are explained in `note`, not imposed on
+other providers. There is no separate metadata endpoint, so `metadata_url` is omitted.
+
+```json
+{
+  "version": "2.0",
+  "class": "dataset",
+  "label": "Reported observations by region and year",
+  "note": ["s = suppressed; p = provisional."],
+  "id": ["Region", "Time"],
+  "size": [2, 2],
+  "dimension": {
+    "Region": { "category": { "index": ["00", "01"] } },
+    "Time": { "category": { "index": ["2024", "2025"] } }
+  },
+  "value": [0, null, 12.5, 18],
+  "status": [null, "s", "p", null],
+  "extension": {
+    "nordicintel": {
+      "provider_code": "example",
+      "dataset_code": "FILE01",
+      "language": "en",
+      "data_url": "https://example.org/downloads/FILE01.csv"
+    }
+  }
+}
+```
+
+## Sparse file-backed example
+
+The same observations and flags using sparse maps. Position `1` is omitted from
+`value` (missing), but its suppression flag is retained in `status`. The complete
+cube still contains four cells. Either status encoding may accompany either value
+encoding; use a scalar string only when a flag applies to every cell.
+
+```json
+{
+  "version": "2.0",
+  "class": "dataset",
+  "label": "Reported observations by region and year",
+  "note": ["s = suppressed; p = provisional."],
+  "id": ["Region", "Time"],
+  "size": [2, 2],
+  "dimension": {
+    "Region": { "category": { "index": ["00", "01"] } },
+    "Time": { "category": { "index": ["2024", "2025"] } }
+  },
+  "value": { "0": 0, "2": 12.5, "3": 18 },
+  "status": { "1": "s", "2": "p" },
+  "extension": {
+    "nordicintel": {
+      "provider_code": "example",
+      "dataset_code": "FILE01",
+      "language": "en",
+      "data_url": "https://example.org/downloads/FILE01.csv"
     }
   }
 }
