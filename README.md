@@ -42,12 +42,15 @@ metadata-only documents:
   scrapers must parse the files into this same JSON-stat2 Dataset **with values**.
   NordicIntel ingests, stores and serves those observations itself.
 
-Prefer a dense `value` array; sparse objects keyed by zero-based observation index
-are also supported. Values can be numbers, strings or null. Preserve numeric zero,
-use null for missing cells, and preserve suppression/provisional flags in optional
-JSON-stat2 `status` (a string, aligned array or sparse index map). The last dimension
-varies fastest; populated arrays contain `product(size)` cells. An empty sparse
-object `{}` is an all-missing cube, not the metadata-only marker `[]`.
+Observations reflect exactly what the source provides, for scrapers and adapters
+alike ([rules](docs/DATASET-METADATA.md#observation-content)): provided values are
+kept (numeric zero stays `0`); marker cells get `null` with the marker in JSON-stat2
+`status`, unless provider documentation states the marker's value, which is then
+used and recorded in a standard substitution note; cells the source has no data for
+are left out. Use a dense `value` array only when the source supplies every cell,
+otherwise a sparse object keyed by zero-based observation index. The last dimension
+varies fastest; dense arrays contain `product(size)` cells. An empty sparse object
+`{}` means the source has no data for any cell, not the metadata-only marker `[]`.
 
 Provider URLs stay in `extension.nordicintel`: `data_url` points to the original
 provider file, and `metadata_url` can be omitted if no separate metadata resource

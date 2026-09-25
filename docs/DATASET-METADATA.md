@@ -18,9 +18,10 @@ observations. `id` is not a combined Dataset identifier. No extra mode flag is u
 
 Use standard `label`, `source`, `updated`, `note`, `role`
 and `dimension` wherever applicable. Omit unknown standard fields instead of
-emitting null (except the explicitly supported missing cells in `value` and `status`
-arrays). Public identifiers and public API responses belong to consuming systems.
-Standard tools can read the metadata; tools requiring data still need observations.
+emitting null (except `null` values for cells presented with a marker and `null`
+entries in `status` arrays). Public identifiers and public API responses belong to
+consuming systems. Standard tools can read the metadata; tools requiring data still
+need observations.
 
 ## File-backed observations
 
@@ -30,26 +31,21 @@ Dataset format **with observations** for NordicIntel to ingest, store and serve.
 Metadata-only output remains available for the existing metadata workflow. The
 schema filename and identity stay unchanged; this is not a public API contract.
 
-Prefer a dense `value` array for ordinary file parsing. Follow dimension order in
-`id` and category order from each dimension's `category.index`; the **last dimension
-varies fastest**. For `id: ["Region", "Time"]`, `size: [2, 2]`, regions `00, 01`
+Cell content follows the [observation content rules](#observation-content). Follow
+dimension order in `id` and category order from each dimension's `category.index`;
+the **last dimension varies fastest**. For `id: ["Region", "Time"]`, `size: [2, 2]`, regions `00, 01`
 and times `2024, 2025`, positions are `(00, 2024)`, `(00, 2025)`, `(01, 2024)`,
 `(01, 2025)`. A populated array has exactly `product(size)` cells.
 
 Sparse `value` objects use those same flattened positions as decimal string keys,
 not category codes: `"0"`, `"1"`, etc., without signs or leading zeros. Omitted
-positions mean missing observations. `{}` represents an all-missing cube, whereas
-`[]` specifically means metadata-only. `size` always describes the full cube.
-
-Values may be numbers, strings or null. Parse numeric observations as numbers and
-preserve zero; use null for missing or suppressed cells. Genuine textual observations
-may remain strings. Never turn suppression markers into numbers or silently discard
-their meaning: preserve provider flags in optional root `status` and explain their
-meaning in `note` or the appropriate provider/adapter namespace.
+positions are cells the source has no data for. `{}` means the source has no data
+for any cell, whereas `[]` specifically means metadata-only. `size` always describes
+the full cube.
 
 `status` accepts a string applying to all cells, a full-length array of strings/nulls,
-or a sparse index-to-string object. It uses the same flattened positions as `value`,
-including missing cells; a sparse status map is not limited to explicit value keys.
+or a sparse index-to-string object. It uses the same flattened positions as `value`;
+a full-length status array also has entries for cells left out of a sparse `value`.
 Null array entries and omitted map entries mean no flag supplied. Omit `status`
 entirely for metadata-only output. Status codes retain provider meaning; this profile
 does not impose a shared code vocabulary.
@@ -58,6 +54,58 @@ Keep `extension.nordicintel.data_url` pointing to the **original provider file**
 NordicIntel's serving endpoint. `metadata_url` remains optional when the provider
 has no separate metadata resource. All existing identity, language, namespace and
 named URL rules apply unchanged.
+
+## Observation content
+
+These rules apply to every observation-bearing output: Dataset documents with
+observations and adapter [retrieval fragments](RETRIEVAL.md#result). Observations
+reflect exactly what the source provides.
+
+1. **Provided values.** A cell the source gives a value for is included with that
+   value. Parse numbers as numbers, keep zero as `0` and keep genuine textual
+   observations as strings.
+2. **Provided markers.** A cell the source presents with a marker instead of a
+   value is included with value `null` and the marker verbatim in `status`, unless
+   rule 3 applies. Explain known marker meanings in `note` or the appropriate
+   provider/adapter namespace.
+3. **Documented equivalents.** A marker becomes a specific value only when the
+   implementation can point to provider documentation (an instruction, note, legend
+   or description) that clearly states it, such as "–" standing for `0`. Those
+   cells get that value and no `status` entry. Each substitution rule applied in a
+   Dataset is recorded once, as one [substitution note](#substitution-notes).
+   Adapters put it in the harvested Dataset document, because retrieval fragments
+   carry no notes.
+4. **No data from the source.** A cell the source provides nothing for (no row, no
+   entry, a blank spreadsheet cell) is left out of both `value` and `status`. Never
+   fill it with `0`, `null`, an estimate, or a value inferred from totals, other
+   cells or other sources.
+5. **Coverage.** `value` and `status` need not cover every cell. Use the sparse
+   encoding whenever the source does not supply every cell; a dense array is only
+   for sources that supply all cells. `size` and category indices still describe
+   the full cube or selection.
+6. **Consumers.** Treat a left-out cell as "the source has no data", never as zero
+   or as a failure.
+
+### Substitution notes
+
+Record each applied substitution rule as one root `note` entry per Dataset.
+Substitution notes are the last entries in `note`, written in the document language:
+
+```text
+en: Substituted marker: "<marker>" = <value>. Source: "<quote>" (<reference>)
+sv: Ersatt markering: "<marker>" = <value>. Källa: "<citat>" (<referens>)
+```
+
+- `<marker>`: the source text exactly as it appears.
+- `<value>`: the JSON number used in its place.
+- `<quote>` / `<citat>`: the provider's defining statement, verbatim and in its
+  original language. When the original text is long, use an excerpt containing
+  the defining statement, with `…` marking omissions.
+- `<reference>` / `<referens>`: absolute URL of the page or file containing the
+  quote, followed by a location when needed, such as `, sheet "Teckenförklaring"`
+  or `, p. 4`.
+
+Example: `Substituted marker: "–" = 0. Source: "– Noll" (https://example.org/statistik/teckenforklaring)`
 
 ## Namespaces and identity
 
@@ -314,10 +362,10 @@ other providers. There is no separate metadata endpoint, so `metadata_url` is om
 
 ## Sparse file-backed example
 
-The same observations and flags using sparse maps. Position `1` is omitted from
-`value` (missing), but its suppression flag is retained in `status`. The complete
-cube still contains four cells. Either status encoding may accompany either value
-encoding; use a scalar string only when a flag applies to every cell.
+The same file, except that it has no entry for `(01, 2025)`: position `3` is left
+out of both maps. The suppressed position `1` is present with `null` and its flag.
+The cube still contains four cells. Either status encoding may accompany either
+value encoding; use a scalar string only when a flag applies to every cell.
 
 ```json
 {
@@ -331,7 +379,7 @@ encoding; use a scalar string only when a flag applies to every cell.
     "Region": { "category": { "index": ["00", "01"] } },
     "Time": { "category": { "index": ["2024", "2025"] } }
   },
-  "value": { "0": 0, "2": 12.5, "3": 18 },
+  "value": { "0": 0, "1": null, "2": 12.5 },
   "status": { "1": "s", "2": "p" },
   "extension": {
     "nordicintel": {

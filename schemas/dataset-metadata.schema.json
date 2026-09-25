@@ -47,7 +47,7 @@
     },
     "note": {
       "$ref": "#/$defs/stringArray",
-      "description": "Dataset-level explanatory notes in the document language; omit when unavailable."
+      "description": "Dataset-level explanatory notes in the document language; omit when unavailable. One substitution note per documented marker equivalent applied, in the standard format, comes last."
     },
     "href": {
       "$ref": "#/$defs/url",
@@ -141,7 +141,7 @@
           "additionalProperties": { "type": ["number", "string", "null"] }
         }
       ],
-      "description": "Required observations: [] means metadata-only. Otherwise use a dense array in id/category index order (last dimension varies fastest), or a sparse object keyed by zero-based observation index. Values may be numbers, strings or null; preserve zero and represent missing cells as null. Omitted sparse indices are missing; {} is an all-missing cube, not metadata-only. Consumers enforce dense length equal to product(size) and sparse indices below product(size).",
+      "description": "Required observations: [] means metadata-only. Otherwise include exactly the cells the source provides: a dense array in id/category index order (last dimension varies fastest) only when the source supplies every cell, else a sparse object keyed by zero-based observation index. Values may be numbers, strings or null; preserve zero, use null only for cells the source presents with a marker (kept in status), and leave out cells the source has no data for. {} means the source has no data for any cell, not metadata-only. Consumers enforce dense length equal to product(size) and sparse indices below product(size).",
       "examples": [
         [],
         [0, null, 12.5, "text"],
@@ -162,7 +162,7 @@
           "additionalProperties": { "type": "string" }
         }
       ],
-      "description": "Optional provider observation flags, such as suppression or provisional status. A string applies to every cell; an array aligns with the full flattened cube and uses null for unflagged cells; a sparse object maps zero-based observation indices to strings. Status can describe missing values. Consumers check array length and index bounds against product(size). Omit for metadata-only value: []. Preserve provider flag meanings; no universal code vocabulary is imposed.",
+      "description": "Optional provider observation flags, such as suppression or provisional status. A string applies to every cell; an array aligns with the full flattened cube and uses null for unflagged cells; a sparse object maps zero-based observation indices to strings. Marker cells have null values; markers replaced by a documented value are not flagged. Consumers check array length and index bounds against product(size). Omit for metadata-only value: []. Preserve provider flag meanings; no universal code vocabulary is imposed.",
       "examples": ["p", [null, "s", "p", null], { "1": "s", "2": "p" }]
     },
     "extension": {

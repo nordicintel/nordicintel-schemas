@@ -42,7 +42,7 @@
           "additionalProperties": { "type": ["number", "string", "null"] }
         }
       ],
-      "description": "Observations in id/category index order (last dimension varies fastest): a nonempty dense array or a sparse object keyed by zero-based observation index. Values may be numbers, strings or null; preserve zero and represent missing cells as null. Omitted sparse indices are missing. Consumers enforce dense length equal to product(size) and sparse indices below product(size).",
+      "description": "Observations in id/category index order (last dimension varies fastest): a nonempty dense array only when the source supplies every selected cell, else a sparse object keyed by zero-based observation index. Values may be numbers, strings or null; preserve zero, use null only for cells the source presents with a marker (kept in status), and leave out cells the source has no data for ({} when it has none). Consumers enforce dense length equal to product(size) and sparse indices below product(size).",
       "examples": [
         [10, null, 0, 12.5],
         { "0": 10, "2": 0, "3": 12.5 }

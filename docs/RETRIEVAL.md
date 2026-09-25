@@ -116,16 +116,19 @@ extensions from the catalog.
   but not required; the fragment makes the order explicit.
 - `size` gives each dimension's category count in `id` order.
 - `value` and `status` follow the
-  [file-backed observation rules](DATASET-METADATA.md#file-backed-observations): dense
-  or sparse, last dimension varying fastest, numeric zero preserved, missing cells as
-  null and provider flags in `status`. A result always contains at least one cell,
-  so an empty dense array is invalid.
+  [observation content rules](DATASET-METADATA.md#observation-content) and the
+  positional encoding of
+  [file-backed observations](DATASET-METADATA.md#file-backed-observations): last
+  dimension varying fastest, provided values kept (zero stays `0`), marker cells as
+  `null` with the marker in `status`, and cells the provider has no data for left
+  out. An empty dense array is invalid; return `value: {}` when the provider has no
+  data for the selection.
 
-No other properties are allowed. The fragment must cover the complete selection;
-cells the provider does not return are missing values, not omitted categories. A
-valid selection for which the provider has no observations returns all cells as
-missing. Explain the `status` codes retrieval can return in the harvested documents,
-in `note` or the provider namespace, as for file-backed output.
+No other properties are allowed. `id`, `size` and the category indices always cover
+the complete selection, even when `value` holds only some cells. Explain the
+`status` codes retrieval can return, and record documented marker substitutions as
+[substitution notes](DATASET-METADATA.md#substitution-notes), in the harvested
+documents.
 
 ### Consumer checks
 
@@ -181,6 +184,9 @@ fragment = await retrieve(
 )
 ```
 
+The provider returned three of the four cells: `(00, 2025)` carries the marker `..`,
+and it has no data for `(01, 2025)`, which is left out.
+
 ```json
 {
   "id": ["Region", "Time"],
@@ -189,8 +195,8 @@ fragment = await retrieve(
     "Region": { "category": { "index": ["00", "01"] } },
     "Time": { "category": { "index": ["2024", "2025"] } }
   },
-  "value": [10, null, 0, 12.5],
-  "status": [null, "..", null, null]
+  "value": { "0": 10, "1": null, "2": 0 },
+  "status": { "1": ".." }
 }
 ```
 
