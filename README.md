@@ -16,9 +16,15 @@ JSON files, and their inline descriptions and examples are the primary reference
 - [`provider.schema.json`](schemas/provider.schema.json) currently guarantees only
   `provider_code`. All other Provider content is deliberately open while that model
   is still changing.
+- [`retrieval-result.schema.json`](schemas/retrieval-result.schema.json) defines the
+  observation fragment returned by an API adapter's live retrieval function. The
+  calling service assembles the complete Dataset from it and its catalog metadata.
 
 [`DATASET-METADATA.md`](docs/DATASET-METADATA.md) records the Dataset metadata decisions, semantic
 invariants that JSON Schema cannot express, and metadata-only, populated and sparse examples.
+
+[`RETRIEVAL.md`](docs/RETRIEVAL.md) is the contract for the separately installable
+retrieval function: packaging, entry-point discovery, inputs, result and errors.
 
 The schemas use JSON Schema Draft 2020-12. The collection version is in [`VERSION`](VERSION).
 The prepared `2.0.0` schemas are not yet published; released `1.0.0` files remain

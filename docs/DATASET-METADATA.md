@@ -147,7 +147,9 @@ These URLs point **outward to the provider**. Current adapters supply both
 `metadata_url` and `data_url` so downstream processes can reuse them directly
 instead of reconstructing URLs from API conventions. Keep supplying them even
 when the endpoint could be derived from other metadata. A URL does not encode
-POST bodies or other retrieval configuration.
+POST bodies or other retrieval configuration. The service passes both URLs verbatim
+to the adapter's [retrieval function](RETRIEVAL.md), together with any values the
+adapter lists in `REQUIRED_METADATA`; emit those values in every harvested document.
 
 This model is for harvesters, scrapers and adapters, not the public API.
 Public API data and metadata links point inward to that API's own endpoints;
